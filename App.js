@@ -6,6 +6,7 @@ import RecipesScreen from './src/screens/RecipesScreen';
 import PlannerScreen from './src/screens/PlannerScreen';
 import GroceryScreen from './src/screens/GroceryScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import KitchenScreen from './src/screens/KitchenScreen';
 import RecipeDetail from './src/components/RecipeDetail';
 import { ToastProvider } from './src/components/Toast';
 import { AppStateProvider, useAppState } from './src/AppState';
@@ -14,6 +15,7 @@ import { ThemeContext, palettes, useStyles } from './src/theme';
 const TABS = [
   { key: 'recipes', label: 'Recipes', icon: '📖' },
   { key: 'planner', label: 'Week', icon: '📅' },
+  { key: 'kitchen', label: 'Kitchen', icon: '🏠' },
   { key: 'grocery', label: 'Groceries', icon: '🛒' },
   { key: 'settings', label: 'Settings', icon: '⚙️' },
 ];
@@ -56,9 +58,11 @@ function Main() {
         {!loaded ? (
           <ActivityIndicator style={{ marginTop: 80 }} />
         ) : tab === 'recipes' ? (
-          <RecipesScreen onOpenRecipe={setOpenRecipe} />
+          <RecipesScreen onOpenRecipe={setOpenRecipe} onGoToKitchen={() => setTab('kitchen')} />
         ) : tab === 'planner' ? (
           <PlannerScreen onOpenRecipe={setOpenRecipe} />
+        ) : tab === 'kitchen' ? (
+          <KitchenScreen />
         ) : tab === 'grocery' ? (
           <GroceryScreen />
         ) : (
@@ -88,6 +92,6 @@ const makeStyles = (c) => ({
   tabBar: { flexDirection: 'row', backgroundColor: c.surface, borderTopWidth: 1, borderTopColor: c.border },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 10 },
   tabIcon: { fontSize: 22 },
-  tabLabel: { fontSize: 12, color: c.muted, marginTop: 2, fontWeight: '600' },
+  tabLabel: { fontSize: 11, color: c.muted, marginTop: 2, fontWeight: '600' },
   tabLabelActive: { color: c.primary },
 });

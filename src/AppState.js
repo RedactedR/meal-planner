@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { catalogItem, keyOf } from './data/ingredients';
 
 // Everything the app remembers between launches: the week plan,
-// settings and the user's own recipe ratings.
+// settings, the user's own recipe ratings and what's in their kitchen.
 
 const STORAGE_KEY = 'meal-planner/state/v2';
 const OLD_PLAN_KEY = 'meal-planner/plan/v1';
@@ -24,6 +25,8 @@ const DEFAULT_STATE = {
     avoid: [], // free-text foods to never suggest
   },
   ratings: {}, // { recipeId: 1..5 }
+  inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }
+  kitchenSetup: false, // true once the first-time kitchen inventory is done
 };
 
 const AppStateContext = createContext(null);
@@ -42,6 +45,8 @@ export function AppStateProvider({ children }) {
             plan: { ...DEFAULT_STATE.plan, ...parsed.plan },
             settings: { ...DEFAULT_STATE.settings, ...parsed.settings },
             ratings: { ...parsed.ratings },
+            inventory: { ...parsed.inventory },
+            kitchenSetup: !!parsed.kitchenSetup,
           });
         } else {
           const oldPlan = await AsyncStorage.getItem(OLD_PLAN_KEY);
@@ -60,7 +65,7 @@ export function AppStateProvider({ children }) {
     if (loaded) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [state, loaded]);
 
-  const { plan, settings, ratings } = state;
+  const { plan, settings, ratings, inventory, kitchenSetup } = state;
   const days = ALL_DAYS.slice(0, plan.dayCount);
 
   const actions = {
@@ -82,12 +87,65 @@ export function AppStateProvider({ children }) {
     rate(recipeId, stars) {
       setState((s) => ({ ...s, ratings: { ...s.ratings, [recipeId]: stars } }));
     },
+
+    // Set an exact amount for one kitchen item (0 removes it).
+    setInventoryQty(name, unit, qty) {
+      setState((s) => ({ ...s, inventory: setQty(s.inventory, name, unit, qty) }));
+    },
+    // Add bought items: [{ name, unit, qty }]
+    addToInventory(items) {
+      setState((s) => {
+        let inv = s.inventory;
+        for (const i of items) {
+          const cur = inv[keyOf(i.name)];
+          const base = cur && cur.unit === i.unit ? cur.qty : 0;
+          inv = setQty(inv, i.name, i.unit, base + i.qty);
+        }
+        return { ...s, inventory: inv };
+      });
+    },
+    // Take cooked ingredients out of the kitchen: [{ name, unit, qty }]
+    consumeInventory(items) {
+      setState((s) => {
+        let inv = s.inventory;
+        for (const i of items) {
+          const cur = inv[keyOf(i.name)];
+          if (cur && cur.unit === i.unit) inv = setQty(inv, i.name, i.unit, cur.qty - i.qty);
+        }
+        return { ...s, inventory: inv };
+      });
+    },
+    finishKitchenSetup(items) {
+      setState((s) => {
+        let inv = s.inventory;
+        for (const i of items) inv = setQty(inv, i.name, i.unit, i.qty);
+        return { ...s, inventory: inv, kitchenSetup: true };
+      });
+    },
   };
 
-  const value = { loaded, plan, days, settings, ratings, ...actions };
+  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, ...actions };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
 
 export function useAppState() {
   return useContext(AppStateContext);
+}
+
+function setQty(inventory, name, unit, qty) {
+  const key = keyOf(name);
+  const next = { ...inventory };
+  const rounded = Math.round(qty * 100) / 100;
+  if (rounded <= 0) {
+    delete next[key];
+  } else {
+    const info = catalogItem(name);
+    next[key] = {
+      name: info?.name ?? name.trim(),
+      unit: info?.unit ?? unit,
+      qty: rounded,
+      category: info?.category ?? 'other',
+    };
+  }
+  return next;
 }

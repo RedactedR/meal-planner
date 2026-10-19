@@ -6,6 +6,7 @@ import { allowedRecipes, sortRecipes } from '../recipeFilters';
 import { DAY_NAMES, useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
 import { useToast } from '../components/Toast';
+import { pairingSuggestions, sharedLabel } from '../pairing';
 import { radius, useStyles, useTheme } from '../theme';
 
 export default function PlannerScreen({ onOpenRecipe }) {
@@ -20,6 +21,21 @@ export default function PlannerScreen({ onOpenRecipe }) {
     [settings, ratings]
   );
   const plannedCount = days.filter((d) => plan.meals[d]).length;
+  const plannedIds = days.map((d) => plan.meals[d]).filter(Boolean);
+  const pairs = useMemo(() => pairingSuggestions(plannedIds, choices), [plannedIds.join(','), choices]);
+
+  // Day picker: pairing suggestions first, then everything else.
+  const pickerRows = useMemo(() => {
+    const pairIds = new Set(pairs.map((p) => p.recipe.id));
+    const rows = [];
+    if (pairs.length) {
+      rows.push({ key: 'h-pairs', header: 'Pairs with your week' });
+      pairs.forEach((p) => rows.push({ key: p.recipe.id, recipe: p.recipe, note: sharedLabel(p.shared) }));
+      rows.push({ key: 'h-all', header: 'All recipes · top rated first' });
+    }
+    choices.filter((r) => !pairIds.has(r.id)).forEach((r) => rows.push({ key: r.id, recipe: r }));
+    return rows;
+  }, [pairs, choices]);
 
   function pick(day, recipe) {
     const replaced = getRecipe(plan.meals[day]);
@@ -114,6 +130,21 @@ export default function PlannerScreen({ onOpenRecipe }) {
           );
         })}
 
+        {pairs.length > 0 && plannedCount < days.length && (
+          <View style={{ marginTop: 18 }}>
+            <Text style={styles.dayLabel}>Pairs with your week</Text>
+            <Text style={styles.pairHint}>These reuse ingredients you're already buying, so less goes to waste.</Text>
+            {pairs.slice(0, 3).map((p) => (
+              <RecipeCard
+                key={p.recipe.id}
+                recipe={p.recipe}
+                note={sharedLabel(p.shared)}
+                onPress={() => onOpenRecipe(p.recipe)}
+              />
+            ))}
+          </View>
+        )}
+
         {plannedCount > 0 && (
           <Pressable onPress={confirmClear} style={{ alignSelf: 'center', marginTop: 12 }}>
             <Text style={{ color: colors.muted }}>Clear week</Text>
@@ -126,17 +157,23 @@ export default function PlannerScreen({ onOpenRecipe }) {
           <View style={styles.pickerHeader}>
             <View>
               <Text style={styles.pickerTitle}>{DAY_NAMES[pickingDay]}</Text>
-              <Text style={styles.pickerSub}>Top rated first</Text>
+              <Text style={styles.pickerSub}>{pairs.length ? 'Best pairings first' : 'Top rated first'}</Text>
             </View>
             <Pressable onPress={() => setPickingDay(null)} hitSlop={12}>
               <Text style={styles.close}>Cancel</Text>
             </Pressable>
           </View>
           <FlatList
-            data={choices}
-            keyExtractor={(r) => r.id}
+            data={choices.length ? pickerRows : []}
+            keyExtractor={(row) => row.key}
             contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
-            renderItem={({ item }) => <RecipeCard recipe={item} onPress={() => pick(pickingDay, item)} />}
+            renderItem={({ item }) =>
+              item.header ? (
+                <Text style={styles.dayLabel}>{item.header}</Text>
+              ) : (
+                <RecipeCard recipe={item.recipe} note={item.note} onPress={() => pick(pickingDay, item.recipe)} />
+              )
+            }
             ListEmptyComponent={
               <Text style={{ color: colors.muted, textAlign: 'center', marginTop: 40 }}>
                 No recipes match your Settings.
@@ -175,6 +212,7 @@ const makeStyles = (c) => ({
     marginBottom: 6,
     marginTop: 6,
   },
+  pairHint: { fontSize: 13, color: c.muted, marginBottom: 10, marginTop: -2 },
   emptySlot: {
     borderWidth: 1.5,
     borderStyle: 'dashed',

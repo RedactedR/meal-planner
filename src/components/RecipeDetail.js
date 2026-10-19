@@ -1,4 +1,4 @@
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { radius, useStyles, useTheme } from '../theme';
 import { DAY_NAMES, useAppState } from '../AppState';
@@ -7,9 +7,12 @@ import { cookingQty, formatQty } from '../grocery';
 import { isExcluded } from '../recipeFilters';
 import { ToastProvider, useToast } from './Toast';
 import Stars from './Stars';
+import CostBreakdown from './CostBreakdown';
+import { Pill, StockIcon } from './Badges';
+import { recipeCosts } from '../pricing';
 
-// Full-screen view of one recipe: your week, rating, nutrition,
-// ingredients and steps.
+// Full-screen view of one recipe: your week, rating, cost breakdown,
+// nutrition, ingredients (with stock icons) and steps.
 export default function RecipeDetail({ recipe, onClose }) {
   return (
     <Modal visible={!!recipe} animationType="slide" onRequestClose={onClose}>
@@ -22,10 +25,27 @@ function DetailContent({ recipe, onClose }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { days, plan, settings, ratings, setMeal, rate } = useAppState();
+  const { days, plan, settings, ratings, inventory, setMeal, rate, consumeInventory } = useAppState();
   const portions = settings.portions;
   const freeDays = days.filter((d) => !plan.meals[d]).length;
   const excluded = isExcluded(recipe, settings);
+  const cost = recipeCosts(recipe, portions, inventory);
+  const stockByName = Object.fromEntries(cost.items.map((i) => [i.name, i.status]));
+
+  function markCooked() {
+    const used = cost.items.filter((i) => i.have > 0);
+    if (used.length === 0) return toast('Nothing from your Kitchen to take out');
+    Alert.alert('Cooked it?', `Take the ingredients for ${portions} out of your Kitchen inventory.`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Update Kitchen',
+        onPress: () => {
+          consumeInventory(used.map((i) => ({ name: i.name, unit: i.unit, qty: Math.min(i.have, i.need) })));
+          toast(`Updated your Kitchen (${used.length} items) ✓`);
+        },
+      },
+    ]);
+  }
 
   function toggleDay(day) {
     const current = plan.meals[day];
@@ -58,6 +78,11 @@ function DetailContent({ recipe, onClose }) {
         <Text style={styles.meta}>
           {recipe.cuisine} · {recipe.minutes} min · amounts for {portions} {portions === 1 ? 'person' : 'people'}
         </Text>
+        <View style={styles.pills}>
+          {recipe.onePan && <Pill label="🍳 One pan — easy cleanup" tone="accent" />}
+          {isBalanced(recipe) && <Pill label="Balanced" />}
+          <Pill label={`${cost.inStockCount}/${cost.items.length} in stock`} tone={cost.inStockCount ? 'primary' : 'warn'} />
+        </View>
 
         {excluded && (
           <View style={styles.warning}>
@@ -105,6 +130,9 @@ function DetailContent({ recipe, onClose }) {
           })}
         </View>
 
+        <Text style={styles.section}>Cost breakdown</Text>
+        <CostBreakdown cost={cost} portions={portions} />
+
         {n && (
           <>
             <View style={styles.sectionRow}>
@@ -136,6 +164,7 @@ function DetailContent({ recipe, onClose }) {
         <Text style={styles.section}>Ingredients</Text>
         {recipe.ingredients.map((ing) => (
           <View key={ing.name} style={styles.ingRow}>
+            <StockIcon status={stockByName[ing.name]} size={18} />
             <Text style={styles.ingName}>{ing.name}</Text>
             <Text style={styles.ingQty}>{formatQty(cookingQty(ing, recipe, portions), ing.unit)}</Text>
           </View>
@@ -148,6 +177,10 @@ function DetailContent({ recipe, onClose }) {
             <Text style={styles.stepText}>{step}</Text>
           </View>
         ))}
+
+        <Pressable onPress={markCooked} style={({ pressed }) => [styles.cookedBtn, pressed && { opacity: 0.7 }]}>
+          <Text style={styles.cookedText}>I cooked this — update my Kitchen</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -220,8 +253,20 @@ const makeStyles = (c) => ({
   nutriValue: { fontSize: 17, fontWeight: '700', color: c.text },
   nutriLabel: { fontSize: 12, color: c.muted, marginTop: 2 },
   footnote: { fontSize: 12, color: c.muted, marginTop: 8 },
+  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 10 },
+  cookedBtn: {
+    marginTop: 20,
+    borderWidth: 1.5,
+    borderColor: c.primary,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  cookedText: { color: c.primary, fontWeight: '700', fontSize: 15 },
   ingRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,

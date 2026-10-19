@@ -7,6 +7,8 @@
 // portion size chosen in Settings.
 // nutrition is an estimate per serving.
 // allergens are keys from ALLERGENS below.
+// onePan means the whole recipe is cooked in a single pan or pot.
+// Ingredient names and units must match src/data/ingredients.js.
 
 const RAW_RECIPES = [
   {
@@ -15,6 +17,7 @@ const RAW_RECIPES = [
     cuisine: 'Indian',
     emoji: '🍛',
     minutes: 40,
+    onePan: false,
     servings: 4,
     allergens: ['dairy'],
     nutrition: { calories: 650, protein: 40, carbs: 60, fat: 25, fiber: 4, veg: 1 },
@@ -42,6 +45,7 @@ const RAW_RECIPES = [
     cuisine: 'Mexican',
     emoji: '🌮',
     minutes: 25,
+    onePan: false,
     servings: 4,
     allergens: [],
     nutrition: { calories: 520, protein: 30, carbs: 40, fat: 26, fiber: 6, veg: 1 },
@@ -67,6 +71,7 @@ const RAW_RECIPES = [
     cuisine: 'Thai',
     emoji: '🍜',
     minutes: 30,
+    onePan: true,
     servings: 4,
     allergens: ['shellfish', 'eggs', 'peanuts', 'fish', 'soy'],
     nutrition: { calories: 600, protein: 32, carbs: 70, fat: 20, fiber: 4, veg: 1.5 },
@@ -93,6 +98,7 @@ const RAW_RECIPES = [
     cuisine: 'Italian',
     emoji: '🍕',
     minutes: 20,
+    onePan: true,
     servings: 2,
     allergens: ['dairy', 'gluten'],
     nutrition: { calories: 620, protein: 28, carbs: 55, fat: 32, fiber: 3, veg: 1 },
@@ -117,6 +123,7 @@ const RAW_RECIPES = [
     cuisine: 'Japanese',
     emoji: '🍣',
     minutes: 25,
+    onePan: false,
     servings: 4,
     allergens: ['fish', 'soy', 'gluten', 'sesame'],
     nutrition: { calories: 700, protein: 40, carbs: 65, fat: 28, fiber: 9, veg: 2 },
@@ -142,6 +149,7 @@ const RAW_RECIPES = [
     cuisine: 'Greek',
     emoji: '🫒',
     minutes: 35,
+    onePan: true,
     servings: 4,
     allergens: ['dairy'],
     nutrition: { calories: 560, protein: 42, carbs: 45, fat: 22, fiber: 6, veg: 2 },
@@ -154,6 +162,7 @@ const RAW_RECIPES = [
       { name: 'Lemons', qty: 1, unit: '' },
       { name: 'Olive oil', qty: 3, unit: 'tbsp' },
       { name: 'Tzatziki', qty: 1, unit: 'tub' },
+      { name: 'Dried oregano', qty: 2, unit: 'tsp' },
     ],
     steps: [
       'Heat the oven to 425°F.',
@@ -168,6 +177,7 @@ const RAW_RECIPES = [
     cuisine: 'Korean',
     emoji: '🥢',
     minutes: 30,
+    onePan: false,
     servings: 4,
     allergens: ['soy', 'gluten', 'sesame', 'fish', 'shellfish'],
     nutrition: { calories: 620, protein: 40, carbs: 60, fat: 22, fiber: 3, veg: 1 },
@@ -192,6 +202,7 @@ const RAW_RECIPES = [
     cuisine: 'Middle Eastern',
     emoji: '🍳',
     minutes: 30,
+    onePan: true,
     servings: 3,
     allergens: ['eggs', 'dairy', 'gluten'],
     nutrition: { calories: 480, protein: 24, carbs: 45, fat: 22, fiber: 7, veg: 2.5 },
@@ -203,6 +214,8 @@ const RAW_RECIPES = [
       { name: 'Garlic', qty: 3, unit: 'cloves' },
       { name: 'Feta cheese', qty: 2, unit: 'oz' },
       { name: 'Crusty bread', qty: 1, unit: 'loaf' },
+      { name: 'Ground cumin', qty: 1, unit: 'tsp' },
+      { name: 'Paprika', qty: 1, unit: 'tsp' },
     ],
     steps: [
       'Cook the onion, pepper and garlic until soft.',
@@ -217,6 +230,7 @@ const RAW_RECIPES = [
     cuisine: 'Cajun',
     emoji: '🦐',
     minutes: 45,
+    onePan: true,
     servings: 6,
     allergens: ['shellfish', 'pork'],
     nutrition: { calories: 580, protein: 38, carbs: 50, fat: 24, fiber: 3, veg: 1.5 },
@@ -229,6 +243,8 @@ const RAW_RECIPES = [
       { name: 'Bell peppers', qty: 1, unit: '' },
       { name: 'Celery', qty: 1, unit: 'bunch' },
       { name: 'Chicken broth', qty: 32, unit: 'oz' },
+      { name: 'Yellow onion', qty: 1, unit: '' },
+      { name: 'Cajun seasoning', qty: 2, unit: 'tbsp' },
     ],
     steps: [
       'Brown the sausage and chicken in a big pot.',
@@ -243,6 +259,7 @@ const RAW_RECIPES = [
     cuisine: 'Vegetarian',
     emoji: '🍔',
     minutes: 30,
+    onePan: true,
     servings: 4,
     allergens: ['eggs', 'gluten', 'dairy'],
     nutrition: { calories: 540, protein: 22, carbs: 70, fat: 18, fiber: 16, veg: 1.5 },
@@ -254,6 +271,8 @@ const RAW_RECIPES = [
       { name: 'Avocado', qty: 1, unit: '' },
       { name: 'Red onion', qty: 1, unit: '' },
       { name: 'Pepper jack cheese', qty: 4, unit: 'slices' },
+      { name: 'Ground cumin', qty: 1, unit: 'tsp' },
+      { name: 'Chili powder', qty: 1, unit: 'tbsp' },
     ],
     steps: [
       'Mash the drained beans, leaving some chunks.',
@@ -268,6 +287,7 @@ const RAW_RECIPES = [
     cuisine: 'Vietnamese',
     emoji: '🍲',
     minutes: 35,
+    onePan: false,
     servings: 4,
     allergens: [],
     nutrition: { calories: 450, protein: 35, carbs: 55, fat: 8, fiber: 3, veg: 1.5 },
@@ -280,6 +300,8 @@ const RAW_RECIPES = [
       { name: 'Fresh basil', qty: 1, unit: 'bunch' },
       { name: 'Limes', qty: 2, unit: '' },
       { name: 'Jalapeño', qty: 1, unit: '' },
+      { name: 'Star anise', qty: 2, unit: '' },
+      { name: 'Cinnamon stick', qty: 1, unit: '' },
     ],
     steps: [
       'Simmer broth with sliced ginger, star anise and cinnamon for 20 minutes.',
@@ -294,6 +316,7 @@ const RAW_RECIPES = [
     cuisine: 'Italian',
     emoji: '🍝',
     minutes: 20,
+    onePan: false,
     servings: 4,
     allergens: ['shellfish', 'gluten', 'dairy'],
     nutrition: { calories: 640, protein: 38, carbs: 85, fat: 18, fiber: 5, veg: 1.5 },
@@ -319,6 +342,7 @@ const RAW_RECIPES = [
     cuisine: 'American',
     emoji: '🌶️',
     minutes: 40,
+    onePan: true,
     servings: 4,
     allergens: [],
     nutrition: { calories: 480, protein: 36, carbs: 45, fat: 16, fiber: 13, veg: 2.5 },
@@ -345,6 +369,7 @@ const RAW_RECIPES = [
     cuisine: 'Indian',
     emoji: '🥘',
     minutes: 30,
+    onePan: false,
     servings: 4,
     allergens: [],
     nutrition: { calories: 470, protein: 21, carbs: 72, fat: 10, fiber: 15, veg: 1.5 },
@@ -371,6 +396,7 @@ const RAW_RECIPES = [
     cuisine: 'Mexican',
     emoji: '🥗',
     minutes: 30,
+    onePan: false,
     servings: 4,
     allergens: ['dairy'],
     nutrition: { calories: 610, protein: 42, carbs: 62, fat: 20, fiber: 12, veg: 2 },

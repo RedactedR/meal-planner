@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { getRecipe } from '../data/recipes';
-import { buildGroceryList, formatQty } from '../grocery';
+import { boughtQty, buildGroceryList, formatQty } from '../grocery';
+import { money } from '../pricing';
 import { useAppState } from '../AppState';
+import { useToast } from '../components/Toast';
+import { StockIcon } from '../components/Badges';
 import { radius, useStyles } from '../theme';
 
 function Check({ on, styles }) {
@@ -11,7 +14,8 @@ function Check({ on, styles }) {
 
 export default function GroceryScreen() {
   const styles = useStyles(makeStyles);
-  const { plan, days, settings } = useAppState();
+  const toast = useToast();
+  const { plan, days, settings, inventory, addToInventory } = useAppState();
 
   // Remember what the user unticked, so new meals start ticked.
   const [skippedDays, setSkippedDays] = useState(new Set());
@@ -21,10 +25,13 @@ export default function GroceryScreen() {
   const selected = planned.filter((p) => !skippedDays.has(p.day));
   const selectedIds = selected.map((p) => p.recipe.id).join(',');
   const items = useMemo(
-    () => buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions),
-    [selectedIds, settings.portions]
+    () => buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions, inventory),
+    [selectedIds, settings.portions, inventory]
   );
-  const itemsToBuy = items.filter((i) => !skippedItems.has(i.key));
+  const needed = items.filter((i) => i.qty > 0);
+  const onHand = items.filter((i) => i.qty === 0);
+  const itemsToBuy = needed.filter((i) => !skippedItems.has(i.key));
+  const estTotal = itemsToBuy.reduce((s, i) => s + i.price, 0);
   const allSelected = selected.length === planned.length;
 
   function toggle(setter, key) {
@@ -37,6 +44,24 @@ export default function GroceryScreen() {
 
   function toggleAll() {
     setSkippedDays(allSelected ? new Set(planned.map((p) => p.day)) : new Set());
+  }
+
+  function markBought() {
+    Alert.alert(
+      'Add to your Kitchen?',
+      `Adds the ${itemsToBuy.length} ticked items to your Kitchen inventory, in whole packages (a head of garlic, a full bag of rice).`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Add',
+          onPress: () => {
+            addToInventory(itemsToBuy.map((i) => ({ name: i.name, unit: i.unit, qty: boughtQty(i) })));
+            setSkippedItems(new Set());
+            toast(`Added ${itemsToBuy.length} items to your Kitchen ✓`);
+          },
+        },
+      ]
+    );
   }
 
   function sendToCart() {
@@ -63,10 +88,10 @@ export default function GroceryScreen() {
     <View style={{ flex: 1 }}>
       <Text style={styles.title}>Groceries</Text>
       <Text style={styles.subtitle}>
-        Amounts for {settings.portions} {settings.portions === 1 ? 'person' : 'people'} per meal
+        Amounts for {settings.portions} {settings.portions === 1 ? 'person' : 'people'} per meal, minus what's in your Kitchen
       </Text>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 170 }}>
         <View style={styles.sectionRow}>
           <Text style={styles.section}>Meals</Text>
           <Pressable onPress={toggleAll} hitSlop={8}>
@@ -93,11 +118,13 @@ export default function GroceryScreen() {
           })}
         </View>
 
-        <Text style={[styles.section, { marginTop: 24 }]}>Shopping list · {itemsToBuy.length} items</Text>
-        <Text style={styles.hint}>Untick anything you already have at home.</Text>
-        {items.length > 0 && (
+        <Text style={[styles.section, { marginTop: 24 }]}>
+          To buy · {itemsToBuy.length} items · est. {money(estTotal)}
+        </Text>
+        <Text style={styles.hint}>Untick anything you don't want to buy.</Text>
+        {needed.length > 0 ? (
           <View style={styles.card}>
-            {items.map((item, i) => {
+            {needed.map((item, i) => {
               const on = !skippedItems.has(item.key);
               return (
                 <Pressable
@@ -108,13 +135,36 @@ export default function GroceryScreen() {
                   <Check on={on} styles={styles} />
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rowText, !on && styles.off]}>{item.name}</Text>
-                    {item.recipes.length > 1 && <Text style={styles.rowSub}>For {item.recipes.length} recipes</Text>}
+                    <Text style={styles.rowSub}>
+                      {item.have > 0 ? `You have ${formatQty(item.have, item.unit)} · ` : ''}
+                      {item.recipes.length > 1 ? `for ${item.recipes.length} recipes` : item.recipes[0]}
+                    </Text>
                   </View>
-                  <Text style={[styles.qty, !on && styles.off]}>{formatQty(item.qty, item.unit)}</Text>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={[styles.qty, !on && styles.off]}>{formatQty(item.qty, item.unit)}</Text>
+                    <Text style={styles.rowSub}>{money(item.price)}</Text>
+                  </View>
                 </Pressable>
               );
             })}
           </View>
+        ) : (
+          <Text style={styles.hint}>You already have everything for these meals. 🎉</Text>
+        )}
+
+        {onHand.length > 0 && (
+          <>
+            <Text style={[styles.section, { marginTop: 24 }]}>Already in your kitchen · {onHand.length}</Text>
+            <View style={styles.card}>
+              {onHand.map((item, i) => (
+                <View key={item.key} style={[styles.row, i > 0 && styles.rowBorder]}>
+                  <StockIcon status="full" />
+                  <Text style={[styles.rowText, { flex: 1 }]}>{item.name}</Text>
+                  <Text style={styles.rowSub}>have {formatQty(item.have, item.unit)}</Text>
+                </View>
+              ))}
+            </View>
+          </>
         )}
       </ScrollView>
 
@@ -125,6 +175,13 @@ export default function GroceryScreen() {
           style={({ pressed }) => [styles.cartBtn, itemsToBuy.length === 0 && { opacity: 0.4 }, pressed && { opacity: 0.8 }]}
         >
           <Text style={styles.cartText}>Add {itemsToBuy.length} items to King Soopers cart</Text>
+        </Pressable>
+        <Pressable
+          onPress={markBought}
+          disabled={itemsToBuy.length === 0}
+          style={({ pressed }) => [styles.boughtBtn, itemsToBuy.length === 0 && { opacity: 0.4 }, pressed && { opacity: 0.7 }]}
+        >
+          <Text style={styles.boughtText}>I bought these — add to my Kitchen</Text>
         </Pressable>
       </View>
     </View>
@@ -151,7 +208,7 @@ const makeStyles = (c) => ({
   rowEmoji: { fontSize: 22 },
   rowText: { fontSize: 15, color: c.text, fontWeight: '500' },
   rowSub: { fontSize: 12, color: c.muted, marginTop: 2 },
-  qty: { fontSize: 14, color: c.muted },
+  qty: { fontSize: 14, color: c.text, fontWeight: '600' },
   off: { color: c.muted, textDecorationLine: 'line-through' },
   check: {
     width: 22,
@@ -170,12 +227,21 @@ const makeStyles = (c) => ({
     right: 0,
     bottom: 0,
     padding: 16,
+    gap: 10,
     backgroundColor: c.background,
     borderTopWidth: 1,
     borderTopColor: c.border,
   },
-  cartBtn: { backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 16, alignItems: 'center' },
+  cartBtn: { backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 15, alignItems: 'center' },
   cartText: { color: c.onPrimary, fontSize: 16, fontWeight: '700' },
+  boughtBtn: {
+    borderWidth: 1.5,
+    borderColor: c.primary,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  boughtText: { color: c.primary, fontSize: 15, fontWeight: '700' },
   emptyWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: c.text, marginTop: 12 },
   emptyText: { fontSize: 15, color: c.muted, textAlign: 'center', marginTop: 6, lineHeight: 22 },

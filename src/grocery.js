@@ -1,4 +1,6 @@
 import { getRecipe } from './data/recipes';
+import { catalogItem } from './data/ingredients';
+import { haveQty, stockStatus } from './pricing';
 
 // Things you can only buy whole: you can't buy half a can or half an onion.
 const WHOLE_UNITS = new Set(['', 'can', 'jar', 'bottle', 'packet', 'bag', 'tub', 'bunch', 'loaf', 'head', 'piece', 'slices']);
@@ -14,20 +16,28 @@ function roundToQuarter(n) {
 // Amount to use when cooking, scaled to the chosen number of people.
 export function cookingQty(ing, recipe, portions) {
   const q = ing.qty * scaleFactor(recipe, portions);
-  if (ing.unit === 'cloves' || ing.unit === 'slices') return Math.max(1, Math.round(q));
+  if (ing.unit === 'cloves' || ing.unit === 'slices' || ing.unit === '') {
+    return ing.unit === '' ? roundToQuarter(q) : Math.max(1, Math.round(q));
+  }
   return roundToQuarter(q);
 }
 
 // Amount to buy at the store.
 function shoppingQty(qty, unit) {
-  if (WHOLE_UNITS.has(unit) || unit === 'cloves') return Math.max(1, Math.ceil(qty - 0.01));
-  if (unit === 'oz') return Math.max(1, Math.ceil(qty - 0.01));
+  if (WHOLE_UNITS.has(unit) || unit === 'cloves' || unit === 'oz') return Math.max(1, Math.ceil(qty - 0.01));
   return roundToQuarter(qty);
 }
 
+// How much ends up in your kitchen when you buy it: whole packages.
+// e.g. needing 3 cloves of garlic means you bring home a 10-clove head.
+export function boughtQty(item) {
+  const pack = catalogItem(item.name)?.pack || 1;
+  return Math.max(item.qty, Math.ceil(item.qty / pack - 0.01) * pack);
+}
+
 // Combines the ingredients of several recipes into one shopping list,
-// adding up anything that appears in more than one recipe.
-export function buildGroceryList(recipeIds, portions) {
+// adding up repeats and subtracting what's already in your Kitchen.
+export function buildGroceryList(recipeIds, portions, inventory = {}) {
   const byKey = new Map();
 
   for (const id of recipeIds) {
@@ -39,16 +49,29 @@ export function buildGroceryList(recipeIds, portions) {
       const existing = byKey.get(key);
       const qty = ing.qty * factor;
       if (existing) {
-        existing.rawQty += qty;
+        existing.need += qty;
         if (!existing.recipes.includes(recipe.name)) existing.recipes.push(recipe.name);
       } else {
-        byKey.set(key, { key, name: ing.name, unit: ing.unit, rawQty: qty, recipes: [recipe.name] });
+        byKey.set(key, { key, name: ing.name, unit: ing.unit, need: qty, recipes: [recipe.name] });
       }
     }
   }
 
   return Array.from(byKey.values())
-    .map((item) => ({ ...item, qty: shoppingQty(item.rawQty, item.unit) }))
+    .map((item) => {
+      const info = catalogItem(item.name);
+      const have = haveQty(inventory, item.name, item.unit);
+      const toBuy = Math.max(0, item.need - have);
+      const qty = toBuy > 0.001 ? shoppingQty(toBuy, item.unit) : 0;
+      return {
+        ...item,
+        have,
+        qty,
+        status: stockStatus(have, item.need),
+        category: info?.category ?? 'other',
+        price: qty * (info?.price ?? 0),
+      };
+    })
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 

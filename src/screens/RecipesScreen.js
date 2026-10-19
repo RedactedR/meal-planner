@@ -4,17 +4,31 @@ import { CUISINES, RECIPES } from '../data/recipes';
 import { allowedRecipes, SORTS, sortRecipes } from '../recipeFilters';
 import { useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
+import { money, recipeCosts } from '../pricing';
 import { radius, useStyles, useTheme } from '../theme';
 
-export default function RecipesScreen({ onOpenRecipe }) {
+export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
-  const { settings, ratings, updateSettings } = useAppState();
+  const { settings, ratings, inventory, kitchenSetup, updateSettings } = useAppState();
   const [query, setQuery] = useState('');
   const [cuisine, setCuisine] = useState('All');
   const [sort, setSort] = useState('rating');
 
   const allowed = useMemo(() => allowedRecipes(settings), [settings]);
+
+  // Price of each allowed recipe after what's already in your Kitchen.
+  const costs = useMemo(
+    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(r, settings.portions, inventory)])),
+    [allowed, settings.portions, inventory]
+  );
+  const deals = useMemo(
+    () =>
+      allowed
+        .filter((r) => costs[r.id].savings >= 0.5)
+        .sort((a, b) => costs[b.id].savings / costs[b.id].total - costs[a.id].savings / costs[a.id].total),
+    [allowed, costs]
+  );
   const hiddenCount = RECIPES.length - allowed.length;
 
   const results = useMemo(() => {
@@ -28,13 +42,47 @@ export default function RecipesScreen({ onOpenRecipe }) {
         r.ingredients.some((i) => i.name.toLowerCase().includes(q))
       );
     });
+    if (sort === 'deal') {
+      return [...filtered].sort((a, b) => costs[a.id].youPay - costs[b.id].youPay);
+    }
     return sortRecipes(filtered, ratings, sort);
-  }, [allowed, query, cuisine, sort, ratings]);
+  }, [allowed, query, cuisine, sort, ratings, costs]);
+
+  const sorts = [...SORTS.slice(0, 1), { key: 'deal', label: 'Best deal' }, ...SORTS.slice(1)];
 
   const header = (
     <View>
       <Text style={styles.title}>Recipes</Text>
       <Text style={styles.subtitle}>Try something new this week</Text>
+
+      {!kitchenSetup ? (
+        <Pressable onPress={onGoToKitchen} style={styles.banner}>
+          <Text style={styles.bannerTitle}>🏠 Tell us what's in your kitchen</Text>
+          <Text style={styles.bannerText}>We'll show discounted meals that use what you already have.</Text>
+        </Pressable>
+      ) : deals.length > 0 ? (
+        <View>
+          <Text style={styles.dealsTitle}>Deals from your kitchen</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dealsRow}>
+            {deals.slice(0, 8).map((r) => {
+              const c = costs[r.id];
+              return (
+                <Pressable key={r.id} onPress={() => onOpenRecipe(r)} style={styles.deal}>
+                  <Text style={styles.dealEmoji}>{r.emoji}</Text>
+                  <Text style={styles.dealName} numberOfLines={2}>
+                    {r.name}
+                  </Text>
+                  <View style={styles.dealPrices}>
+                    <Text style={styles.dealOld}>{money(c.total)}</Text>
+                    <Text style={styles.dealNew}>{money(c.youPay)}</Text>
+                  </View>
+                  <Text style={styles.dealOff}>{Math.round((c.savings / c.total) * 100)}% off with what you have</Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        </View>
+      ) : null}
 
       <TextInput
         value={query}
@@ -56,7 +104,7 @@ export default function RecipesScreen({ onOpenRecipe }) {
 
       <View style={styles.toolbar}>
         <View style={styles.segment}>
-          {SORTS.map((s) => (
+          {sorts.map((s) => (
             <Pressable
               key={s.key}
               onPress={() => setSort(s.key)}
@@ -135,6 +183,7 @@ const makeStyles = (c) => ({
     paddingHorizontal: 20,
     paddingVertical: 14,
     gap: 8,
+    flexWrap: 'wrap',
   },
   segment: { flexDirection: 'row', backgroundColor: c.border, borderRadius: 999, padding: 3 },
   segmentBtn: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999 },
@@ -150,6 +199,31 @@ const makeStyles = (c) => ({
   },
   toggleOn: { backgroundColor: c.primary },
   toggleText: { color: c.primary, fontWeight: '700', fontSize: 13 },
+  banner: {
+    marginHorizontal: 20,
+    marginTop: 14,
+    backgroundColor: c.primarySoft,
+    borderRadius: radius.md,
+    padding: 14,
+  },
+  bannerTitle: { fontSize: 15, fontWeight: '700', color: c.primary },
+  bannerText: { fontSize: 13, color: c.text, marginTop: 4 },
+  dealsTitle: { fontSize: 13, fontWeight: '700', color: c.muted, textTransform: 'uppercase', letterSpacing: 0.8, paddingHorizontal: 20, marginTop: 18 },
+  dealsRow: { paddingHorizontal: 20, paddingTop: 10, gap: 10 },
+  deal: {
+    width: 150,
+    backgroundColor: c.surface,
+    borderWidth: 1,
+    borderColor: c.border,
+    borderRadius: radius.md,
+    padding: 12,
+  },
+  dealEmoji: { fontSize: 28 },
+  dealName: { fontSize: 14, fontWeight: '600', color: c.text, marginTop: 6, minHeight: 36 },
+  dealPrices: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 6 },
+  dealOld: { fontSize: 12, color: c.muted, textDecorationLine: 'line-through' },
+  dealNew: { fontSize: 16, fontWeight: '800', color: c.primary },
+  dealOff: { fontSize: 11, color: c.primary, fontWeight: '600', marginTop: 2 },
   hidden: { fontSize: 13, color: c.muted, paddingHorizontal: 20, marginBottom: 10 },
   empty: { textAlign: 'center', color: c.muted, marginTop: 40 },
 });
