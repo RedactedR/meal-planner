@@ -94,6 +94,38 @@ export default function SettingsScreen() {
         </View>
       </View>
 
+      <Text style={styles.section}>Cooking</Text>
+      <View style={styles.card}>
+        <View style={styles.switchRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>Show pro tips</Text>
+            <Text style={styles.cardText}>
+              Chef tricks under recipe steps — like saving the browned bits in the pan for a sauce.
+            </Text>
+          </View>
+          <Switch
+            value={!!settings.showTips}
+            onValueChange={(showTips) => updateSettings({ showTips })}
+            trackColor={{ true: colors.primary, false: colors.border }}
+            thumbColor="#fff"
+          />
+        </View>
+        <View style={styles.switchRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>Make sauces from scratch</Text>
+            <Text style={styles.cardText}>
+              Swap store-bought sauces and seasoning packets for homemade versions. Grocery lists and costs update to match.
+            </Text>
+          </View>
+          <Switch
+            value={!!settings.scratchSauces}
+            onValueChange={(scratchSauces) => updateSettings({ scratchSauces })}
+            trackColor={{ true: colors.primary, false: colors.border }}
+            thumbColor="#fff"
+          />
+        </View>
+      </View>
+
       <Text style={styles.section}>Allergies</Text>
       <View style={styles.card}>
         <Text style={styles.cardText}>Recipes containing these are never listed or suggested.</Text>

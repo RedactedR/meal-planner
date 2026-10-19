@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { CUISINES, RECIPES } from '../data/recipes';
+import { allRecipes, cuisinesOf, effectiveRecipe } from '../data/recipes';
 import { allowedRecipes, SORTS, sortRecipes } from '../recipeFilters';
 import { useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
+import OnlineBrowser from './OnlineBrowser';
 import { money, recipeCosts } from '../pricing';
 import { radius, useStyles, useTheme } from '../theme';
 
@@ -14,22 +15,25 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const [query, setQuery] = useState('');
   const [cuisine, setCuisine] = useState('All');
   const [sort, setSort] = useState('rating');
+  const [mode, setMode] = useState('library'); // 'library' | 'online'
 
   const allowed = useMemo(() => allowedRecipes(settings), [settings]);
 
   // Price of each allowed recipe after what's already in your Kitchen.
   const costs = useMemo(
-    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(r, settings.portions, inventory)])),
-    [allowed, settings.portions, inventory]
+    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(effectiveRecipe(r, settings), settings.portions, inventory)])),
+    [allowed, settings, inventory]
   );
   const deals = useMemo(
     () =>
       allowed
-        .filter((r) => costs[r.id].savings >= 0.5)
+        .filter((r) => costs[r.id].priced && costs[r.id].savings >= 0.5)
         .sort((a, b) => costs[b.id].savings / costs[b.id].total - costs[a.id].savings / costs[a.id].total),
     [allowed, costs]
   );
-  const hiddenCount = RECIPES.length - allowed.length;
+  const everything = allRecipes();
+  const hiddenCount = everything.length - allowed.length;
+  const CUISINES = useMemo(() => cuisinesOf(everything), [everything.length]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -38,22 +42,48 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
       if (!q) return true;
       return (
         r.name.toLowerCase().includes(q) ||
-        r.cuisine.toLowerCase().includes(q) ||
+        (r.cuisine || '').toLowerCase().includes(q) ||
         r.ingredients.some((i) => i.name.toLowerCase().includes(q))
       );
     });
     if (sort === 'deal') {
-      return [...filtered].sort((a, b) => costs[a.id].youPay - costs[b.id].youPay);
+      const pay = (r) => (costs[r.id].priced ? costs[r.id].youPay : Infinity);
+      return [...filtered].sort((a, b) => pay(a) - pay(b));
     }
     return sortRecipes(filtered, ratings, sort);
   }, [allowed, query, cuisine, sort, ratings, costs]);
 
   const sorts = [...SORTS.slice(0, 1), { key: 'deal', label: 'Best deal' }, ...SORTS.slice(1)];
 
-  const header = (
+  const top = (
     <View>
       <Text style={styles.title}>Recipes</Text>
       <Text style={styles.subtitle}>Try something new this week</Text>
+      <View style={styles.modeRow}>
+        {[
+          ['library', `📖 My recipes · ${everything.length}`],
+          ['online', '🌐 Find online'],
+        ].map(([key, label]) => (
+          <Pressable key={key} onPress={() => setMode(key)} style={[styles.modeBtn, mode === key && styles.modeActive]}>
+            <Text style={[styles.modeText, mode === key && styles.modeTextActive]}>{label}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+
+  if (mode === 'online') {
+    return (
+      <ScrollView contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+        {top}
+        <OnlineBrowser onOpenRecipe={onOpenRecipe} />
+      </ScrollView>
+    );
+  }
+
+  const header = (
+    <View>
+      {top}
 
       {!kitchenSetup ? (
         <Pressable onPress={onGoToKitchen} style={styles.banner}>
@@ -150,6 +180,19 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
 }
 
 const makeStyles = (c) => ({
+  modeRow: { flexDirection: 'row', gap: 8, paddingHorizontal: 20, marginTop: 14 },
+  modeBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  modeActive: { backgroundColor: c.primary, borderColor: c.primary },
+  modeText: { fontWeight: '700', color: c.text, fontSize: 14 },
+  modeTextActive: { color: c.onPrimary },
   title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8 },
   subtitle: { fontSize: 15, color: c.muted, paddingHorizontal: 20, marginTop: 2 },
   search: {

@@ -97,6 +97,40 @@ const CATALOG_ROWS = [
   ['Dried oregano', 'tsp', 0.12, 'spices', 24],
   ['Star anise', '', 0.3, 'spices', 10],
   ['Cinnamon stick', '', 0.4, 'spices', 6],
+
+  // Added for in-depth recipes and from-scratch sauces
+  ['Kosher salt', 'tsp', 0.02, 'spices', 160],
+  ['Black pepper', 'tsp', 0.12, 'spices', 20],
+  ['Garlic powder', 'tsp', 0.12, 'spices', 30],
+  ['Baking soda', 'tsp', 0.02, 'pantry', 100],
+  ['Cornstarch', 'tsp', 0.03, 'pantry', 100],
+  ['Vegetable oil', 'tbsp', 0.06, 'pantry', 96],
+  ['Sesame oil', 'tbsp', 0.35, 'pantry', 14],
+  ['Soy sauce', 'tbsp', 0.12, 'pantry', 32],
+  ['Fish sauce', 'tbsp', 0.18, 'pantry', 46],
+  ['Oyster sauce', 'tbsp', 0.2, 'pantry', 18],
+  ['Tamarind concentrate', 'tbsp', 0.45, 'pantry', 16],
+  ['Mirin', 'tbsp', 0.3, 'pantry', 20],
+  ['Rice vinegar', 'tbsp', 0.15, 'pantry', 24],
+  ['Light brown sugar', 'tbsp', 0.06, 'pantry', 64],
+  ['Dijon mustard', 'tbsp', 0.2, 'pantry', 16],
+  ['Mayonnaise', 'tbsp', 0.12, 'pantry', 60],
+  ['Ketchup', 'tbsp', 0.07, 'pantry', 38],
+  ['Dill pickles', 'jar', 3.49, 'pantry', 1],
+  ['Dry white wine', 'cup', 2.5, 'pantry', 3],
+  ['Arborio rice', 'cup', 1.75, 'pantry', 4],
+  ['Chickpeas', 'can', 1.09, 'pantry', 1],
+  ['Bacon', 'oz', 0.5, 'protein', 16],
+  ['New York strip steak', 'lb', 13.99, 'protein', 1],
+  ['American cheese', 'slices', 0.25, 'dairy', 16],
+  ['Shallot', '', 0.69, 'produce', 1],
+  ['Fresh parsley', 'bunch', 0.99, 'produce', 1],
+  ['Fresh dill', 'bunch', 1.99, 'produce', 1],
+  ['Fresh thyme', 'bunch', 1.99, 'produce', 1],
+  ['Pear', '', 1.29, 'produce', 1],
+  ['Cremini mushrooms', 'oz', 0.37, 'produce', 8],
+  ['Broccoli', 'lb', 1.99, 'produce', 1],
+  ['Frozen peas and carrots', 'cup', 0.6, 'frozen', 4],
 ];
 
 export const CATEGORIES = [
@@ -127,7 +161,10 @@ export function catalogItem(name) {
 
 // Things almost every kitchen has on hand; left out of pairing
 // suggestions because sharing them doesn't save anything.
+const STAPLES = ['olive oil', 'vegetable oil', 'garlic', 'butter', 'water', 'salt', 'pepper', 'oil', 'sugar'];
 export function isStaple(name) {
+  const key = keyOf(name);
   const item = catalogItem(name);
-  return !item || item.category === 'spices' || ['olive oil', 'garlic', 'butter'].includes(keyOf(name));
+  if (item) return item.category === 'spices' || STAPLES.includes(key);
+  return STAPLES.some((s) => key === s || key.endsWith(` ${s}`)) || /\bsalt\b|black pepper|ground pepper/.test(key);
 }

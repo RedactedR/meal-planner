@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { catalogItem, keyOf } from './data/ingredients';
+import { registerRecipes } from './data/recipes';
 
 // Everything the app remembers between launches: the week plan,
 // settings, the user's own recipe ratings and what's in their kitchen.
@@ -23,10 +24,13 @@ const DEFAULT_STATE = {
     balancedOnly: false,
     allergens: [], // keys from ALLERGENS
     avoid: [], // free-text foods to never suggest
+    showTips: true, // pro tips under recipe steps
+    scratchSauces: true, // make sauces/seasonings from scratch instead of buying
   },
   ratings: {}, // { recipeId: 1..5 }
   inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }
   kitchenSetup: false, // true once the first-time kitchen inventory is done
+  savedRecipes: {}, // online or imported recipes the user saved: { id: recipe }
 };
 
 const AppStateContext = createContext(null);
@@ -47,6 +51,7 @@ export function AppStateProvider({ children }) {
             ratings: { ...parsed.ratings },
             inventory: { ...parsed.inventory },
             kitchenSetup: !!parsed.kitchenSetup,
+            savedRecipes: { ...parsed.savedRecipes },
           });
         } else {
           const oldPlan = await AsyncStorage.getItem(OLD_PLAN_KEY);
@@ -65,7 +70,9 @@ export function AppStateProvider({ children }) {
     if (loaded) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [state, loaded]);
 
-  const { plan, settings, ratings, inventory, kitchenSetup } = state;
+  const { plan, settings, ratings, inventory, kitchenSetup, savedRecipes } = state;
+  // Make saved online recipes findable everywhere before anything renders.
+  registerRecipes(Object.values(savedRecipes));
   const days = ALL_DAYS.slice(0, plan.dayCount);
 
   const actions = {
@@ -115,6 +122,17 @@ export function AppStateProvider({ children }) {
         return { ...s, inventory: inv };
       });
     },
+    saveRecipe(recipe) {
+      setState((s) => ({ ...s, savedRecipes: { ...s.savedRecipes, [recipe.id]: recipe } }));
+    },
+    removeSavedRecipe(id) {
+      setState((s) => {
+        const savedRecipes = { ...s.savedRecipes };
+        delete savedRecipes[id];
+        const meals = Object.fromEntries(Object.entries(s.plan.meals).filter(([, v]) => v !== id));
+        return { ...s, savedRecipes, plan: { ...s.plan, meals } };
+      });
+    },
     finishKitchenSetup(items) {
       setState((s) => {
         let inv = s.inventory;
@@ -124,7 +142,7 @@ export function AppStateProvider({ children }) {
     },
   };
 
-  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, ...actions };
+  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, savedRecipes, ...actions };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
 

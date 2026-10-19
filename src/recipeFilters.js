@@ -1,9 +1,10 @@
-import { RECIPES, isBalanced } from './data/recipes';
+import { allRecipes, detectAllergens, effectiveRecipe, isBalanced } from './data/recipes';
 
 // True when a recipe contains an allergen or a food the user said
 // never to suggest.
-export function isExcluded(recipe, settings) {
-  if (recipe.allergens?.some((a) => settings.allergens.includes(a))) return true;
+export function isExcluded(baseRecipe, settings) {
+  const recipe = effectiveRecipe(baseRecipe, settings);
+  if (detectAllergens(recipe).some((a) => settings.allergens.includes(a))) return true;
 
   const words = settings.avoid.map((w) => w.trim().toLowerCase()).filter(Boolean);
   if (words.length === 0) return false;
@@ -15,7 +16,7 @@ export function isExcluded(recipe, settings) {
 
 // Recipes the app is allowed to show or suggest, given the settings.
 export function allowedRecipes(settings) {
-  return RECIPES.filter(
+  return allRecipes().filter(
     (r) => !isExcluded(r, settings) && (!settings.balancedOnly || isBalanced(r))
   );
 }
@@ -28,7 +29,7 @@ export const SORTS = [
 
 export function sortRecipes(list, ratings, sort = 'rating') {
   const copy = [...list];
-  if (sort === 'quick') return copy.sort((a, b) => a.minutes - b.minutes || a.name.localeCompare(b.name));
+  if (sort === 'quick') return copy.sort((a, b) => (a.minutes ?? 999) - (b.minutes ?? 999) || a.name.localeCompare(b.name));
   if (sort === 'name') return copy.sort((a, b) => a.name.localeCompare(b.name));
   // Top rated: highest stars first, unrated recipes after, then A–Z.
   return copy.sort(

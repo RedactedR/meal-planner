@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { getRecipe } from '../data/recipes';
-import { boughtQty, buildGroceryList, formatQty } from '../grocery';
+import { boughtQty, buildGroceryList, formatQty, itemAmount } from '../grocery';
 import { money } from '../pricing';
 import { useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
@@ -25,13 +25,14 @@ export default function GroceryScreen() {
   const selected = planned.filter((p) => !skippedDays.has(p.day));
   const selectedIds = selected.map((p) => p.recipe.id).join(',');
   const items = useMemo(
-    () => buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions, inventory),
-    [selectedIds, settings.portions, inventory]
+    () => buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions, inventory, settings),
+    [selectedIds, settings, inventory]
   );
   const needed = items.filter((i) => i.qty > 0);
   const onHand = items.filter((i) => i.qty === 0);
   const itemsToBuy = needed.filter((i) => !skippedItems.has(i.key));
   const estTotal = itemsToBuy.reduce((s, i) => s + i.price, 0);
+  const unpricedCount = itemsToBuy.filter((i) => i.unpriced).length;
   const allSelected = selected.length === planned.length;
 
   function toggle(setter, key) {
@@ -120,6 +121,7 @@ export default function GroceryScreen() {
 
         <Text style={[styles.section, { marginTop: 24 }]}>
           To buy · {itemsToBuy.length} items · est. {money(estTotal)}
+          {unpricedCount ? ` + ${unpricedCount} unpriced` : ''}
         </Text>
         <Text style={styles.hint}>Untick anything you don't want to buy.</Text>
         {needed.length > 0 ? (
@@ -136,13 +138,13 @@ export default function GroceryScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rowText, !on && styles.off]}>{item.name}</Text>
                     <Text style={styles.rowSub}>
-                      {item.have > 0 ? `You have ${formatQty(item.have, item.unit)} · ` : ''}
+                      {item.have > 0 ? `You have ${formatQty(item.have, item.haveUnit)} · ` : ''}
                       {item.recipes.length > 1 ? `for ${item.recipes.length} recipes` : item.recipes[0]}
                     </Text>
                   </View>
                   <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={[styles.qty, !on && styles.off]}>{formatQty(item.qty, item.unit)}</Text>
-                    <Text style={styles.rowSub}>{money(item.price)}</Text>
+                    <Text style={[styles.qty, !on && styles.off]}>{itemAmount(item)}</Text>
+                    <Text style={styles.rowSub}>{item.unpriced ? 'no price yet' : money(item.price)}</Text>
                   </View>
                 </Pressable>
               );
@@ -160,7 +162,7 @@ export default function GroceryScreen() {
                 <View key={item.key} style={[styles.row, i > 0 && styles.rowBorder]}>
                   <StockIcon status="full" />
                   <Text style={[styles.rowText, { flex: 1 }]}>{item.name}</Text>
-                  <Text style={styles.rowSub}>have {formatQty(item.have, item.unit)}</Text>
+                  <Text style={styles.rowSub}>have {formatQty(item.have, item.haveUnit)}</Text>
                 </View>
               ))}
             </View>
