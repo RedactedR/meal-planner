@@ -6,6 +6,7 @@ import { money } from '../pricing';
 import { useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
 import { StockIcon } from '../components/Badges';
+import CartMatcher from '../components/CartMatcher';
 import { radius, useStyles } from '../theme';
 
 function Check({ on, styles }) {
@@ -15,7 +16,9 @@ function Check({ on, styles }) {
 export default function GroceryScreen() {
   const styles = useStyles(makeStyles);
   const toast = useToast();
-  const { plan, days, settings, inventory, addToInventory } = useAppState();
+  const { plan, days, settings, inventory, addToInventory, kroger } = useAppState();
+  const [cartOpen, setCartOpen] = useState(false);
+  const connected = !!(kroger.serverUrl && kroger.tokens?.accessToken && kroger.store);
 
   // Remember what the user unticked, so new meals start ticked.
   const [skippedDays, setSkippedDays] = useState(new Set());
@@ -56,20 +59,21 @@ export default function GroceryScreen() {
         {
           text: 'Add',
           onPress: () => {
-            addToInventory(itemsToBuy.map((i) => ({ name: i.name, unit: i.unit, qty: boughtQty(i) })));
-            setSkippedItems(new Set());
-            toast(`Added ${itemsToBuy.length} items to your Kitchen ✓`);
+            addBought(itemsToBuy);
           },
         },
       ]
     );
   }
 
+  function addBought(list) {
+    addToInventory(list.map((i) => ({ name: i.name, unit: i.unit, qty: boughtQty(i) })));
+    setSkippedItems(new Set());
+    toast(`Added ${list.length} items to your Kitchen ✓`);
+  }
+
   function sendToCart() {
-    Alert.alert(
-      'King Soopers cart',
-      `${itemsToBuy.length} items are ready. Sending them to your King Soopers cart is the next feature we're building.`
-    );
+    setCartOpen(true);
   }
 
   if (planned.length === 0) {
@@ -176,7 +180,9 @@ export default function GroceryScreen() {
           disabled={itemsToBuy.length === 0}
           style={({ pressed }) => [styles.cartBtn, itemsToBuy.length === 0 && { opacity: 0.4 }, pressed && { opacity: 0.8 }]}
         >
-          <Text style={styles.cartText}>Add {itemsToBuy.length} items to King Soopers cart</Text>
+          <Text style={styles.cartText}>
+            {connected ? `Add ${itemsToBuy.length} items to King Soopers cart` : `Send ${itemsToBuy.length} items to King Soopers`}
+          </Text>
         </Pressable>
         <Pressable
           onPress={markBought}
@@ -186,6 +192,7 @@ export default function GroceryScreen() {
           <Text style={styles.boughtText}>I bought these — add to my Kitchen</Text>
         </Pressable>
       </View>
+      <CartMatcher visible={cartOpen} items={itemsToBuy} onClose={() => setCartOpen(false)} onMarkBought={addBought} />
     </View>
   );
 }

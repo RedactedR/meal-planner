@@ -5,7 +5,7 @@ const files = ['App.js', ...execSync('git ls-files src').toString().trim().split
 const base = 'https://raw.githubusercontent.com/RedactedR/meal-planner/main/';
 const map = {};
 for (const f of files) map[f] = { type: 'CODE', url: base + f };
-const deps = '@react-native-async-storage/async-storage,react-native-safe-area-context,expo-status-bar,react-native-webview';
+const deps = '@react-native-async-storage/async-storage,react-native-safe-area-context,expo-status-bar,react-native-webview,expo-web-browser,expo-linking';
 console.log(
   'https://snack.expo.dev/?name=' + encodeURIComponent('Meal Planner') +
   '&dependencies=' + encodeURIComponent(deps) +

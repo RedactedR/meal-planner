@@ -2,7 +2,7 @@
   "expo": {
     "name": "Meal Planner",
     "slug": "meal-planner",
-    "version": "0.1.0",
+    "version": "0.5.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -10,6 +10,7 @@
     },
     "android": {
       "edgeToEdgeEnabled": true
-    }
+    },
+    "scheme": "mealplanner"
   }
 }

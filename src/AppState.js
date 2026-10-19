@@ -31,6 +31,13 @@ const DEFAULT_STATE = {
   inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }
   kitchenSetup: false, // true once the first-time kitchen inventory is done
   savedRecipes: {}, // online or imported recipes the user saved: { id: recipe }
+  kroger: {
+    serverUrl: '', // your King Soopers connection server (see server/README.md)
+    tokens: null, // { accessToken, refreshToken, expiresAt } after sign-in
+    store: null, // { locationId, name, address }
+    modality: 'PICKUP', // 'PICKUP' | 'DELIVERY'
+    productPrefs: {}, // ingredient key -> product you picked last time
+  },
 };
 
 const AppStateContext = createContext(null);
@@ -52,6 +59,7 @@ export function AppStateProvider({ children }) {
             inventory: { ...parsed.inventory },
             kitchenSetup: !!parsed.kitchenSetup,
             savedRecipes: { ...parsed.savedRecipes },
+            kroger: { ...DEFAULT_STATE.kroger, ...parsed.kroger },
           });
         } else {
           const oldPlan = await AsyncStorage.getItem(OLD_PLAN_KEY);
@@ -70,7 +78,7 @@ export function AppStateProvider({ children }) {
     if (loaded) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [state, loaded]);
 
-  const { plan, settings, ratings, inventory, kitchenSetup, savedRecipes } = state;
+  const { plan, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger } = state;
   // Make saved online recipes findable everywhere before anything renders.
   registerRecipes(Object.values(savedRecipes));
   const days = ALL_DAYS.slice(0, plan.dayCount);
@@ -122,6 +130,13 @@ export function AppStateProvider({ children }) {
         return { ...s, inventory: inv };
       });
     },
+    updateKroger(changes) {
+      setState((s) => ({ ...s, kroger: { ...s.kroger, ...changes } }));
+    },
+    // Remember which store product you picked for an ingredient.
+    rememberProducts(prefs) {
+      setState((s) => ({ ...s, kroger: { ...s.kroger, productPrefs: { ...s.kroger.productPrefs, ...prefs } } }));
+    },
     saveRecipe(recipe) {
       setState((s) => ({ ...s, savedRecipes: { ...s.savedRecipes, [recipe.id]: recipe } }));
     },
@@ -142,7 +157,7 @@ export function AppStateProvider({ children }) {
     },
   };
 
-  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, savedRecipes, ...actions };
+  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger, ...actions };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
 

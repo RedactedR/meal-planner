@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-nati
 import { ALLERGENS, BALANCED_RULES } from '../data/recipes';
 import { PORTION_OPTIONS, useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
+import KrogerSettings from '../components/KrogerSettings';
 import { radius, useStyles, useTheme } from '../theme';
 
 const THEMES = [
@@ -58,6 +59,9 @@ export default function SettingsScreen() {
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
       <Text style={styles.title}>Settings</Text>
+
+      <Text style={styles.section}>Store</Text>
+      <KrogerSettings />
 
       <Text style={styles.section}>Appearance</Text>
       <View style={styles.card}>
