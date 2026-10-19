@@ -1,8 +1,14 @@
 // The built-in recipe library.
-// Each ingredient has a name, a quantity and a unit so the grocery list
-// can add up the same ingredient across several recipes.
+//
+// Every recipe must have steps. Any recipe without instructions is
+// dropped below, so the app never lists or suggests one.
+//
+// qty is for the recipe's own `servings`; the app scales it to the
+// portion size chosen in Settings.
+// nutrition is an estimate per serving.
+// allergens are keys from ALLERGENS below.
 
-export const RECIPES = [
+const RAW_RECIPES = [
   {
     id: 'chicken-tikka',
     name: 'Chicken Tikka Masala',
@@ -10,6 +16,8 @@ export const RECIPES = [
     emoji: '🍛',
     minutes: 40,
     servings: 4,
+    allergens: ['dairy'],
+    nutrition: { calories: 650, protein: 40, carbs: 60, fat: 25, fiber: 4, veg: 1 },
     ingredients: [
       { name: 'Chicken thighs', qty: 1.5, unit: 'lb' },
       { name: 'Plain yogurt', qty: 1, unit: 'cup' },
@@ -35,6 +43,8 @@ export const RECIPES = [
     emoji: '🌮',
     minutes: 25,
     servings: 4,
+    allergens: [],
+    nutrition: { calories: 520, protein: 30, carbs: 40, fat: 26, fiber: 6, veg: 1 },
     ingredients: [
       { name: 'Ground beef', qty: 1, unit: 'lb' },
       { name: 'Corn tortillas', qty: 12, unit: '' },
@@ -58,6 +68,8 @@ export const RECIPES = [
     emoji: '🍜',
     minutes: 30,
     servings: 4,
+    allergens: ['shellfish', 'eggs', 'peanuts', 'fish', 'soy'],
+    nutrition: { calories: 600, protein: 32, carbs: 70, fat: 20, fiber: 4, veg: 1.5 },
     ingredients: [
       { name: 'Rice noodles', qty: 8, unit: 'oz' },
       { name: 'Shrimp', qty: 1, unit: 'lb' },
@@ -82,6 +94,8 @@ export const RECIPES = [
     emoji: '🍕',
     minutes: 20,
     servings: 2,
+    allergens: ['dairy', 'gluten'],
+    nutrition: { calories: 620, protein: 28, carbs: 55, fat: 32, fiber: 3, veg: 1 },
     ingredients: [
       { name: 'Naan or flatbread', qty: 2, unit: '' },
       { name: 'Fresh mozzarella', qty: 8, unit: 'oz' },
@@ -104,6 +118,8 @@ export const RECIPES = [
     emoji: '🍣',
     minutes: 25,
     servings: 4,
+    allergens: ['fish', 'soy', 'gluten', 'sesame'],
+    nutrition: { calories: 700, protein: 40, carbs: 65, fat: 28, fiber: 9, veg: 2 },
     ingredients: [
       { name: 'Salmon fillets', qty: 4, unit: '' },
       { name: 'Teriyaki sauce', qty: 1, unit: 'bottle' },
@@ -127,6 +143,8 @@ export const RECIPES = [
     emoji: '🫒',
     minutes: 35,
     servings: 4,
+    allergens: ['dairy'],
+    nutrition: { calories: 560, protein: 42, carbs: 45, fat: 22, fiber: 6, veg: 2 },
     ingredients: [
       { name: 'Chicken breasts', qty: 1.5, unit: 'lb' },
       { name: 'Baby potatoes', qty: 1.5, unit: 'lb' },
@@ -151,6 +169,8 @@ export const RECIPES = [
     emoji: '🥢',
     minutes: 30,
     servings: 4,
+    allergens: ['soy', 'gluten', 'sesame', 'fish', 'shellfish'],
+    nutrition: { calories: 620, protein: 40, carbs: 60, fat: 22, fiber: 3, veg: 1 },
     ingredients: [
       { name: 'Flank steak', qty: 1.5, unit: 'lb' },
       { name: 'Bulgogi marinade', qty: 1, unit: 'bottle' },
@@ -173,6 +193,8 @@ export const RECIPES = [
     emoji: '🍳',
     minutes: 30,
     servings: 3,
+    allergens: ['eggs', 'dairy', 'gluten'],
+    nutrition: { calories: 480, protein: 24, carbs: 45, fat: 22, fiber: 7, veg: 2.5 },
     ingredients: [
       { name: 'Eggs', qty: 6, unit: '' },
       { name: 'Crushed tomatoes', qty: 1, unit: 'can' },
@@ -196,6 +218,8 @@ export const RECIPES = [
     emoji: '🦐',
     minutes: 45,
     servings: 6,
+    allergens: ['shellfish', 'pork'],
+    nutrition: { calories: 580, protein: 38, carbs: 50, fat: 24, fiber: 3, veg: 1.5 },
     ingredients: [
       { name: 'Andouille sausage', qty: 12, unit: 'oz' },
       { name: 'Chicken thighs', qty: 1, unit: 'lb' },
@@ -220,6 +244,8 @@ export const RECIPES = [
     emoji: '🍔',
     minutes: 30,
     servings: 4,
+    allergens: ['eggs', 'gluten', 'dairy'],
+    nutrition: { calories: 540, protein: 22, carbs: 70, fat: 18, fiber: 16, veg: 1.5 },
     ingredients: [
       { name: 'Black beans', qty: 2, unit: 'can' },
       { name: 'Breadcrumbs', qty: 0.5, unit: 'cup' },
@@ -243,6 +269,8 @@ export const RECIPES = [
     emoji: '🍲',
     minutes: 35,
     servings: 4,
+    allergens: [],
+    nutrition: { calories: 450, protein: 35, carbs: 55, fat: 8, fiber: 3, veg: 1.5 },
     ingredients: [
       { name: 'Chicken broth', qty: 64, unit: 'oz' },
       { name: 'Chicken breasts', qty: 1, unit: 'lb' },
@@ -267,6 +295,8 @@ export const RECIPES = [
     emoji: '🍝',
     minutes: 20,
     servings: 4,
+    allergens: ['shellfish', 'gluten', 'dairy'],
+    nutrition: { calories: 640, protein: 38, carbs: 85, fat: 18, fiber: 5, veg: 1.5 },
     ingredients: [
       { name: 'Spaghetti', qty: 1, unit: 'lb' },
       { name: 'Shrimp', qty: 1, unit: 'lb' },
@@ -283,10 +313,132 @@ export const RECIPES = [
       'Toss with parmesan and serve.',
     ],
   },
+  {
+    id: 'turkey-chili',
+    name: 'Turkey & Veggie Chili',
+    cuisine: 'American',
+    emoji: '🌶️',
+    minutes: 40,
+    servings: 4,
+    allergens: [],
+    nutrition: { calories: 480, protein: 36, carbs: 45, fat: 16, fiber: 13, veg: 2.5 },
+    ingredients: [
+      { name: 'Ground turkey', qty: 1, unit: 'lb' },
+      { name: 'Kidney beans', qty: 1, unit: 'can' },
+      { name: 'Black beans', qty: 1, unit: 'can' },
+      { name: 'Diced tomatoes', qty: 1, unit: 'can' },
+      { name: 'Bell peppers', qty: 2, unit: '' },
+      { name: 'Zucchini', qty: 1, unit: '' },
+      { name: 'Yellow onion', qty: 1, unit: '' },
+      { name: 'Chili powder', qty: 2, unit: 'tbsp' },
+    ],
+    steps: [
+      'Brown the turkey with the chopped onion in a large pot.',
+      'Add diced peppers and zucchini and cook 5 minutes.',
+      'Stir in tomatoes, drained beans, chili powder and a cup of water.',
+      'Simmer 20 minutes, stirring now and then. Season with salt to taste.',
+    ],
+  },
+  {
+    id: 'lentil-dal',
+    name: 'Red Lentil Dal with Spinach',
+    cuisine: 'Indian',
+    emoji: '🥘',
+    minutes: 30,
+    servings: 4,
+    allergens: [],
+    nutrition: { calories: 470, protein: 21, carbs: 72, fat: 10, fiber: 15, veg: 1.5 },
+    ingredients: [
+      { name: 'Red lentils', qty: 1.5, unit: 'cup' },
+      { name: 'Coconut milk', qty: 1, unit: 'can' },
+      { name: 'Diced tomatoes', qty: 1, unit: 'can' },
+      { name: 'Baby spinach', qty: 5, unit: 'oz' },
+      { name: 'Yellow onion', qty: 1, unit: '' },
+      { name: 'Garlic', qty: 3, unit: 'cloves' },
+      { name: 'Curry powder', qty: 2, unit: 'tbsp' },
+      { name: 'Basmati rice', qty: 1, unit: 'cup' },
+    ],
+    steps: [
+      'Cook the onion and garlic in a little oil until soft, then stir in the curry powder.',
+      'Add rinsed lentils, tomatoes, coconut milk and 2 cups of water.',
+      'Simmer 20 minutes until the lentils break down, stirring often.',
+      'Stir in the spinach until wilted and serve over rice.',
+    ],
+  },
+  {
+    id: 'burrito-bowls',
+    name: 'Chicken Burrito Bowls',
+    cuisine: 'Mexican',
+    emoji: '🥗',
+    minutes: 30,
+    servings: 4,
+    allergens: ['dairy'],
+    nutrition: { calories: 610, protein: 42, carbs: 62, fat: 20, fiber: 12, veg: 2 },
+    ingredients: [
+      { name: 'Chicken breasts', qty: 1.5, unit: 'lb' },
+      { name: 'Brown rice', qty: 1, unit: 'cup' },
+      { name: 'Black beans', qty: 1, unit: 'can' },
+      { name: 'Frozen corn', qty: 1, unit: 'cup' },
+      { name: 'Romaine lettuce', qty: 1, unit: 'head' },
+      { name: 'Tomatoes', qty: 2, unit: '' },
+      { name: 'Avocado', qty: 1, unit: '' },
+      { name: 'Shredded cheddar', qty: 4, unit: 'oz' },
+      { name: 'Taco seasoning', qty: 1, unit: 'packet' },
+    ],
+    steps: [
+      'Cook the brown rice.',
+      'Season the chicken with taco seasoning and pan-sear until cooked through, then slice.',
+      'Warm the beans and corn together.',
+      'Build bowls with rice, chopped lettuce, beans, corn, chicken, tomato, avocado and cheese.',
+    ],
+  },
 ];
 
-export const CUISINES = ['All', ...Array.from(new Set(RECIPES.map((r) => r.cuisine)))];
+function hasInstructions(recipe) {
+  return Array.isArray(recipe.steps) && recipe.steps.some((s) => s && s.trim().length > 0);
+}
+
+export const RECIPES = RAW_RECIPES.filter(hasInstructions);
+
+export const CUISINES = ['All', ...Array.from(new Set(RECIPES.map((r) => r.cuisine))).sort()];
 
 export function getRecipe(id) {
   return RECIPES.find((r) => r.id === id);
+}
+
+// Common allergens a user can switch off in Settings.
+export const ALLERGENS = [
+  { key: 'dairy', label: 'Dairy' },
+  { key: 'eggs', label: 'Eggs' },
+  { key: 'gluten', label: 'Gluten' },
+  { key: 'peanuts', label: 'Peanuts' },
+  { key: 'treenuts', label: 'Tree nuts' },
+  { key: 'shellfish', label: 'Shellfish' },
+  { key: 'fish', label: 'Fish' },
+  { key: 'soy', label: 'Soy' },
+  { key: 'sesame', label: 'Sesame' },
+  { key: 'pork', label: 'Pork' },
+];
+
+// A dinner counts as "balanced" when one serving has solid protein,
+// good fiber, real vegetables and sensible calories.
+export const BALANCED_RULES = {
+  minProtein: 20,
+  minFiber: 5,
+  minVeg: 1.5,
+  minCalories: 400,
+  maxCalories: 800,
+};
+
+export function isBalanced(recipe) {
+  const n = recipe.nutrition;
+  const r = BALANCED_RULES;
+  return (
+    !!n &&
+    n.protein >= r.minProtein &&
+    n.fiber >= r.minFiber &&
+    n.veg >= r.minVeg &&
+    n.calories >= r.minCalories &&
+    n.calories <= r.maxCalories
+  );
 }

@@ -1,16 +1,25 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { CUISINES, RECIPES } from '../data/recipes';
+import { allowedRecipes, SORTS, sortRecipes } from '../recipeFilters';
+import { useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
-import { colors, radius } from '../theme';
+import { radius, useStyles, useTheme } from '../theme';
 
 export default function RecipesScreen({ onOpenRecipe }) {
+  const styles = useStyles(makeStyles);
+  const colors = useTheme();
+  const { settings, ratings, updateSettings } = useAppState();
   const [query, setQuery] = useState('');
   const [cuisine, setCuisine] = useState('All');
+  const [sort, setSort] = useState('rating');
+
+  const allowed = useMemo(() => allowedRecipes(settings), [settings]);
+  const hiddenCount = RECIPES.length - allowed.length;
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return RECIPES.filter((r) => {
+    const filtered = allowed.filter((r) => {
       if (cuisine !== 'All' && r.cuisine !== cuisine) return false;
       if (!q) return true;
       return (
@@ -19,10 +28,11 @@ export default function RecipesScreen({ onOpenRecipe }) {
         r.ingredients.some((i) => i.name.toLowerCase().includes(q))
       );
     });
-  }, [query, cuisine]);
+    return sortRecipes(filtered, ratings, sort);
+  }, [allowed, query, cuisine, sort, ratings]);
 
-  return (
-    <View style={styles.screen}>
+  const header = (
+    <View>
       <Text style={styles.title}>Recipes</Text>
       <Text style={styles.subtitle}>Try something new this week</Text>
 
@@ -33,65 +43,113 @@ export default function RecipesScreen({ onOpenRecipe }) {
         placeholderTextColor={colors.muted}
         style={styles.search}
         clearButtonMode="while-editing"
+        keyboardAppearance={colors.mode}
       />
 
-      <View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chips}
-        >
-          {CUISINES.map((c) => (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+        {CUISINES.map((c) => (
+          <Pressable key={c} onPress={() => setCuisine(c)} style={[styles.chip, cuisine === c && styles.chipActive]}>
+            <Text style={[styles.chipText, cuisine === c && styles.chipTextActive]}>{c}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <View style={styles.toolbar}>
+        <View style={styles.segment}>
+          {SORTS.map((s) => (
             <Pressable
-              key={c}
-              onPress={() => setCuisine(c)}
-              style={[styles.chip, cuisine === c && styles.chipActive]}
+              key={s.key}
+              onPress={() => setSort(s.key)}
+              style={[styles.segmentBtn, sort === s.key && styles.segmentActive]}
             >
-              <Text style={[styles.chipText, cuisine === c && styles.chipTextActive]}>{c}</Text>
+              <Text style={[styles.segmentText, sort === s.key && styles.segmentTextActive]}>{s.label}</Text>
             </Pressable>
           ))}
-        </ScrollView>
+        </View>
+        <Pressable
+          onPress={() => updateSettings({ balancedOnly: !settings.balancedOnly })}
+          style={[styles.toggle, settings.balancedOnly && styles.toggleOn]}
+        >
+          <Text style={[styles.toggleText, settings.balancedOnly && { color: colors.onPrimary }]}>
+            {settings.balancedOnly ? '✓ ' : ''}Balanced
+          </Text>
+        </Pressable>
       </View>
 
-      <FlatList
-        data={results}
-        keyExtractor={(r) => r.id}
-        renderItem={({ item }) => <RecipeCard recipe={item} onPress={() => onOpenRecipe(item)} />}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
-        ListEmptyComponent={<Text style={styles.empty}>No recipes match that search.</Text>}
-        keyboardShouldPersistTaps="handled"
-      />
+      {hiddenCount > 0 && (
+        <Text style={styles.hidden}>
+          {hiddenCount} {hiddenCount === 1 ? 'recipe is' : 'recipes are'} hidden by your Settings or the Balanced filter.
+        </Text>
+      )}
     </View>
+  );
+
+  return (
+    <FlatList
+      data={results}
+      keyExtractor={(r) => r.id}
+      ListHeaderComponent={header}
+      renderItem={({ item }) => (
+        <View style={{ paddingHorizontal: 20 }}>
+          <RecipeCard recipe={item} onPress={() => onOpenRecipe(item)} />
+        </View>
+      )}
+      contentContainerStyle={{ paddingBottom: 24 }}
+      ListEmptyComponent={<Text style={styles.empty}>No recipes match.</Text>}
+      keyboardShouldPersistTaps="handled"
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  title: { fontSize: 30, fontWeight: '800', color: colors.text, paddingHorizontal: 20, marginTop: 8 },
-  subtitle: { fontSize: 15, color: colors.muted, paddingHorizontal: 20, marginTop: 2 },
+const makeStyles = (c) => ({
+  title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8 },
+  subtitle: { fontSize: 15, color: c.muted, paddingHorizontal: 20, marginTop: 2 },
   search: {
     marginHorizontal: 20,
     marginTop: 16,
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: c.border,
     borderRadius: radius.md,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: colors.text,
+    color: c.text,
   },
-  chips: { paddingHorizontal: 20, paddingVertical: 14, gap: 8 },
+  chips: { paddingHorizontal: 20, paddingTop: 14, gap: 8 },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: c.border,
   },
-  chipActive: { backgroundColor: colors.text, borderColor: colors.text },
-  chipText: { color: colors.text, fontWeight: '600' },
-  chipTextActive: { color: '#fff' },
-  empty: { textAlign: 'center', color: colors.muted, marginTop: 40 },
+  chipActive: { backgroundColor: c.text, borderColor: c.text },
+  chipText: { color: c.text, fontWeight: '600' },
+  chipTextActive: { color: c.background },
+  toolbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    gap: 8,
+  },
+  segment: { flexDirection: 'row', backgroundColor: c.border, borderRadius: 999, padding: 3 },
+  segmentBtn: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999 },
+  segmentActive: { backgroundColor: c.surface },
+  segmentText: { color: c.muted, fontWeight: '600', fontSize: 13 },
+  segmentTextActive: { color: c.text },
+  toggle: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: c.primary,
+  },
+  toggleOn: { backgroundColor: c.primary },
+  toggleText: { color: c.primary, fontWeight: '700', fontSize: 13 },
+  hidden: { fontSize: 13, color: c.muted, paddingHorizontal: 20, marginBottom: 10 },
+  empty: { textAlign: 'center', color: c.muted, marginTop: 40 },
 });

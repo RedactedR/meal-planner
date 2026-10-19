@@ -1,27 +1,55 @@
-import { useState } from 'react';
-import { Alert, FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Alert, FlatList, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RECIPES, getRecipe } from '../data/recipes';
+import { getRecipe } from '../data/recipes';
+import { allowedRecipes, sortRecipes } from '../recipeFilters';
+import { DAY_NAMES, useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
-import { colors, radius } from '../theme';
+import { useToast } from '../components/Toast';
+import { radius, useStyles, useTheme } from '../theme';
 
-const DAY_NAMES = {
-  Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday',
-  Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday',
-};
-
-export default function PlannerScreen({ planState, onOpenRecipe }) {
-  const { plan, days, setMeal, setDayCount, clearWeek } = planState;
+export default function PlannerScreen({ onOpenRecipe }) {
+  const styles = useStyles(makeStyles);
+  const colors = useTheme();
+  const toast = useToast();
+  const { plan, days, settings, ratings, setMeal, setMeals, setDayCount, clearWeek } = useAppState();
   const [pickingDay, setPickingDay] = useState(null);
 
+  const choices = useMemo(
+    () => sortRecipes(allowedRecipes(settings), ratings, 'rating'),
+    [settings, ratings]
+  );
   const plannedCount = days.filter((d) => plan.meals[d]).length;
+
+  function pick(day, recipe) {
+    const replaced = getRecipe(plan.meals[day]);
+    setMeal(day, recipe.id);
+    setPickingDay(null);
+    toast(
+      replaced
+        ? `Swapped in ${recipe.name} for ${DAY_NAMES[day]}`
+        : `Added ${recipe.name} to ${DAY_NAMES[day]} ✓`
+    );
+  }
 
   function surpriseMe() {
     const used = new Set(days.map((d) => plan.meals[d]).filter(Boolean));
-    const pool = RECIPES.filter((r) => !used.has(r.id)).sort(() => Math.random() - 0.5);
-    days.forEach((d) => {
-      if (!plan.meals[d] && pool.length) setMeal(d, pool.pop().id);
+    const pool = choices.filter((r) => !used.has(r.id)).sort(() => Math.random() - 0.5);
+    const empty = days.filter((d) => !plan.meals[d]);
+    if (empty.length === 0) return toast('Your week is already full');
+    if (pool.length === 0) return toast('No more recipes match your Settings');
+    const fills = {};
+    empty.forEach((d) => {
+      if (pool.length) fills[d] = pool.pop().id;
     });
+    setMeals(fills);
+    const n = Object.keys(fills).length;
+    toast(`Added ${n} ${n === 1 ? 'meal' : 'meals'} to your week ✓`);
+  }
+
+  function remove(day) {
+    setMeal(day, null);
+    toast(`Cleared ${DAY_NAMES[day]}`);
   }
 
   function confirmClear() {
@@ -35,7 +63,8 @@ export default function PlannerScreen({ planState, onOpenRecipe }) {
     <View style={{ flex: 1 }}>
       <Text style={styles.title}>This Week</Text>
       <Text style={styles.subtitle}>
-        {plannedCount} of {days.length} dinners planned
+        {plannedCount} of {days.length} dinners planned · {settings.portions}{' '}
+        {settings.portions === 1 ? 'person' : 'people'}
       </Text>
 
       <View style={styles.toolbar}>
@@ -46,9 +75,7 @@ export default function PlannerScreen({ planState, onOpenRecipe }) {
               onPress={() => setDayCount(n)}
               style={[styles.segmentBtn, plan.dayCount === n && styles.segmentActive]}
             >
-              <Text style={[styles.segmentText, plan.dayCount === n && styles.segmentTextActive]}>
-                {n} days
-              </Text>
+              <Text style={[styles.segmentText, plan.dayCount === n && styles.segmentTextActive]}>{n} days</Text>
             </Pressable>
           ))}
         </View>
@@ -72,7 +99,7 @@ export default function PlannerScreen({ planState, onOpenRecipe }) {
                       <Pressable onPress={() => setPickingDay(day)} hitSlop={8} style={styles.iconBtn}>
                         <Text style={styles.iconText}>⇄</Text>
                       </Pressable>
-                      <Pressable onPress={() => setMeal(day, null)} hitSlop={8} style={styles.iconBtn}>
+                      <Pressable onPress={() => remove(day)} hitSlop={8} style={styles.iconBtn}>
                         <Text style={styles.iconText}>✕</Text>
                       </Pressable>
                     </View>
@@ -94,31 +121,27 @@ export default function PlannerScreen({ planState, onOpenRecipe }) {
         )}
       </ScrollView>
 
-      <Modal
-        visible={!!pickingDay}
-        animationType="slide"
-        onRequestClose={() => setPickingDay(null)}
-      >
+      <Modal visible={!!pickingDay} animationType="slide" onRequestClose={() => setPickingDay(null)}>
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
           <View style={styles.pickerHeader}>
-            <Text style={styles.pickerTitle}>{DAY_NAMES[pickingDay]}</Text>
+            <View>
+              <Text style={styles.pickerTitle}>{DAY_NAMES[pickingDay]}</Text>
+              <Text style={styles.pickerSub}>Top rated first</Text>
+            </View>
             <Pressable onPress={() => setPickingDay(null)} hitSlop={12}>
               <Text style={styles.close}>Cancel</Text>
             </Pressable>
           </View>
           <FlatList
-            data={RECIPES}
+            data={choices}
             keyExtractor={(r) => r.id}
             contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
-            renderItem={({ item }) => (
-              <RecipeCard
-                recipe={item}
-                onPress={() => {
-                  setMeal(pickingDay, item.id);
-                  setPickingDay(null);
-                }}
-              />
-            )}
+            renderItem={({ item }) => <RecipeCard recipe={item} onPress={() => pick(pickingDay, item)} />}
+            ListEmptyComponent={
+              <Text style={{ color: colors.muted, textAlign: 'center', marginTop: 40 }}>
+                No recipes match your Settings.
+              </Text>
+            }
           />
         </SafeAreaView>
       </Modal>
@@ -126,9 +149,9 @@ export default function PlannerScreen({ planState, onOpenRecipe }) {
   );
 }
 
-const styles = StyleSheet.create({
-  title: { fontSize: 30, fontWeight: '800', color: colors.text, paddingHorizontal: 20, marginTop: 8 },
-  subtitle: { fontSize: 15, color: colors.muted, paddingHorizontal: 20, marginTop: 2 },
+const makeStyles = (c) => ({
+  title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8 },
+  subtitle: { fontSize: 15, color: c.muted, paddingHorizontal: 20, marginTop: 2 },
   toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -136,27 +159,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
   },
-  segment: {
-    flexDirection: 'row',
-    backgroundColor: colors.border,
-    borderRadius: 999,
-    padding: 3,
-  },
+  segment: { flexDirection: 'row', backgroundColor: c.border, borderRadius: 999, padding: 3 },
   segmentBtn: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 999 },
-  segmentActive: { backgroundColor: colors.surface },
-  segmentText: { color: colors.muted, fontWeight: '600' },
-  segmentTextActive: { color: colors.text },
-  toolBtn: {
-    backgroundColor: colors.accentSoft,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 999,
-  },
-  toolBtnText: { color: colors.accent, fontWeight: '700' },
+  segmentActive: { backgroundColor: c.surface },
+  segmentText: { color: c.muted, fontWeight: '600' },
+  segmentTextActive: { color: c.text },
+  toolBtn: { backgroundColor: c.accentSoft, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999 },
+  toolBtnText: { color: c.accent, fontWeight: '700' },
   dayLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: colors.muted,
+    color: c.muted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 6,
@@ -165,15 +178,15 @@ const styles = StyleSheet.create({
   emptySlot: {
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: colors.border,
+    borderColor: c.border,
     borderRadius: radius.md,
     paddingVertical: 22,
     alignItems: 'center',
     marginBottom: 10,
   },
-  emptyText: { color: colors.primary, fontWeight: '600', fontSize: 15 },
+  emptyText: { color: c.primary, fontWeight: '600', fontSize: 15 },
   iconBtn: { padding: 6 },
-  iconText: { fontSize: 16, color: colors.muted },
+  iconText: { fontSize: 16, color: c.muted },
   pickerHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -181,6 +194,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
-  pickerTitle: { fontSize: 22, fontWeight: '700', color: colors.text },
-  close: { fontSize: 16, color: colors.primary, fontWeight: '600' },
+  pickerTitle: { fontSize: 22, fontWeight: '700', color: c.text },
+  pickerSub: { fontSize: 13, color: c.muted, marginTop: 2 },
+  close: { fontSize: 16, color: c.primary, fontWeight: '600' },
 });

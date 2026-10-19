@@ -1,40 +1,69 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import RecipesScreen from './src/screens/RecipesScreen';
 import PlannerScreen from './src/screens/PlannerScreen';
 import GroceryScreen from './src/screens/GroceryScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import RecipeDetail from './src/components/RecipeDetail';
-import { usePlan } from './src/usePlan';
-import { colors } from './src/theme';
+import { ToastProvider } from './src/components/Toast';
+import { AppStateProvider, useAppState } from './src/AppState';
+import { ThemeContext, palettes, useStyles } from './src/theme';
 
 const TABS = [
   { key: 'recipes', label: 'Recipes', icon: '📖' },
   { key: 'planner', label: 'Week', icon: '📅' },
   { key: 'grocery', label: 'Groceries', icon: '🛒' },
+  { key: 'settings', label: 'Settings', icon: '⚙️' },
 ];
 
 export default function App() {
-  const [tab, setTab] = useState('recipes');
-  const [openRecipe, setOpenRecipe] = useState(null);
-  const planState = usePlan();
-
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <View style={{ flex: 1 }}>
-          {!planState.loaded ? (
-            <ActivityIndicator style={{ marginTop: 80 }} color={colors.primary} />
-          ) : tab === 'recipes' ? (
-            <RecipesScreen onOpenRecipe={setOpenRecipe} />
-          ) : tab === 'planner' ? (
-            <PlannerScreen planState={planState} onOpenRecipe={setOpenRecipe} />
-          ) : (
-            <GroceryScreen planState={planState} />
-          )}
-        </View>
+      <AppStateProvider>
+        <ThemedApp />
+      </AppStateProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function ThemedApp() {
+  const { settings } = useAppState();
+  const system = useColorScheme();
+  const mode = settings.theme === 'system' ? (system === 'dark' ? 'dark' : 'light') : settings.theme;
+  const colors = palettes[mode];
+
+  return (
+    <ThemeContext.Provider value={colors}>
+      <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
+      <ToastProvider>
+        <Main />
+      </ToastProvider>
+    </ThemeContext.Provider>
+  );
+}
+
+function Main() {
+  const styles = useStyles(makeStyles);
+  const { loaded } = useAppState();
+  const [tab, setTab] = useState('recipes');
+  const [openRecipe, setOpenRecipe] = useState(null);
+
+  return (
+    <View style={styles.root}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        {!loaded ? (
+          <ActivityIndicator style={{ marginTop: 80 }} />
+        ) : tab === 'recipes' ? (
+          <RecipesScreen onOpenRecipe={setOpenRecipe} />
+        ) : tab === 'planner' ? (
+          <PlannerScreen onOpenRecipe={setOpenRecipe} />
+        ) : tab === 'grocery' ? (
+          <GroceryScreen />
+        ) : (
+          <SettingsScreen />
+        )}
       </SafeAreaView>
 
       <SafeAreaView style={styles.tabBar} edges={['bottom']}>
@@ -49,27 +78,16 @@ export default function App() {
         })}
       </SafeAreaView>
 
-      <RecipeDetail
-        recipe={openRecipe}
-        onClose={() => setOpenRecipe(null)}
-        days={planState.days}
-        meals={planState.plan.meals}
-        onAddToDay={planState.setMeal}
-      />
-    </SafeAreaProvider>
+      <RecipeDetail recipe={openRecipe} onClose={() => setOpenRecipe(null)} />
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
+const makeStyles = (c) => ({
+  root: { flex: 1, backgroundColor: c.background },
+  tabBar: { flexDirection: 'row', backgroundColor: c.surface, borderTopWidth: 1, borderTopColor: c.border },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 10 },
   tabIcon: { fontSize: 22 },
-  tabLabel: { fontSize: 12, color: colors.muted, marginTop: 2, fontWeight: '600' },
-  tabLabelActive: { color: colors.primary },
+  tabLabel: { fontSize: 12, color: c.muted, marginTop: 2, fontWeight: '600' },
+  tabLabelActive: { color: c.primary },
 });
