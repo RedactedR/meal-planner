@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
-import { FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { allRecipes, cuisinesOf, effectiveRecipe } from '../data/recipes';
-import { allowedRecipes, SORTS, sortRecipes } from '../recipeFilters';
+import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
+import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
 import { useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
 import OnlineBrowser from './OnlineBrowser';
@@ -15,7 +17,8 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const [query, setQuery] = useState('');
   const [cuisine, setCuisine] = useState('All');
   const [sort, setSort] = useState('rating');
-  const [mode, setMode] = useState('library'); // 'library' | 'online'
+  const [importOpen, setImportOpen] = useState(false);
+  const web = useWebRecipes(query, cuisine, settings);
 
   const allowed = useMemo(() => allowedRecipes(settings), [settings]);
 
@@ -57,29 +60,15 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
 
   const top = (
     <View>
-      <Text style={styles.title}>Recipes</Text>
-      <Text style={styles.subtitle}>Try something new this week</Text>
-      <View style={styles.modeRow}>
-        {[
-          ['library', `📖 My recipes · ${everything.length}`],
-          ['online', '🌐 Find online'],
-        ].map(([key, label]) => (
-          <Pressable key={key} onPress={() => setMode(key)} style={[styles.modeBtn, mode === key && styles.modeActive]}>
-            <Text style={[styles.modeText, mode === key && styles.modeTextActive]}>{label}</Text>
-          </Pressable>
-        ))}
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>Recipes</Text>
+        <Pressable onPress={() => setImportOpen(true)} style={styles.importBtn} hitSlop={6}>
+          <Text style={styles.importText}>🔗 Import</Text>
+        </Pressable>
       </View>
+      <Text style={styles.subtitle}>{everything.length} recipes, plus thousands more from the web</Text>
     </View>
   );
-
-  if (mode === 'online') {
-    return (
-      <ScrollView contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
-        {top}
-        <OnlineBrowser onOpenRecipe={onOpenRecipe} />
-      </ScrollView>
-    );
-  }
 
   const header = (
     <View>
@@ -162,24 +151,140 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
     </View>
   );
 
-  return (
-    <FlatList
-      data={results}
-      keyExtractor={(r) => r.id}
-      ListHeaderComponent={header}
-      renderItem={({ item }) => (
-        <View style={{ paddingHorizontal: 20 }}>
-          <RecipeCard recipe={item} onPress={() => onOpenRecipe(item)} />
-        </View>
+  async function openWeb(r) {
+    if (!r.partial) return onOpenRecipe(r);
+    web.setOpening(r.id);
+    try {
+      const full = await mealDbLookup(r.mealDbId);
+      onOpenRecipe(full);
+    } catch {
+      // Leave it; the card stays tappable.
+    } finally {
+      web.setOpening(null);
+    }
+  }
+
+  const footer = (
+    <View style={{ paddingHorizontal: 20, marginTop: 8 }}>
+      <Text style={styles.webTitle}>🌐 More from the web</Text>
+      <Text style={styles.webSub}>
+        {query.trim().length >= 2
+          ? `Results for "${query.trim()}"`
+          : cuisine !== 'All'
+          ? `${cuisine} recipes from TheMealDB`
+          : 'Ideas from TheMealDB. Search or pick a cuisine to see more.'}
+      </Text>
+      {web.loading && <ActivityIndicator style={{ marginVertical: 16 }} color={colors.primary} />}
+      {web.error && <Text style={styles.webSub}>{web.error}</Text>}
+      {!web.loading && !web.error && web.results.length === 0 && (
+        <Text style={styles.webSub}>Nothing on the web for that yet.</Text>
       )}
-      contentContainerStyle={{ paddingBottom: 24 }}
-      ListEmptyComponent={<Text style={styles.empty}>No recipes match.</Text>}
-      keyboardShouldPersistTaps="handled"
-    />
+      {web.results.map((r) => (
+        <View key={r.id}>
+          <RecipeCard recipe={r.partial ? { ...r, ingredients: [], steps: [] } : r} onPress={() => openWeb(r)} />
+          {web.opening === r.id && <ActivityIndicator style={styles.webSpinner} color={colors.primary} />}
+        </View>
+      ))}
+    </View>
+  );
+
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={results}
+        keyExtractor={(r) => r.id}
+        ListHeaderComponent={header}
+        ListFooterComponent={footer}
+        renderItem={({ item }) => (
+          <View style={{ paddingHorizontal: 20 }}>
+            <RecipeCard recipe={item} onPress={() => onOpenRecipe(item)} />
+          </View>
+        )}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        ListEmptyComponent={<Text style={styles.empty}>None of your recipes match. Try the web results below.</Text>}
+        keyboardShouldPersistTaps="handled"
+      />
+      <Modal visible={importOpen} animationType="slide" onRequestClose={() => setImportOpen(false)}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Import a recipe</Text>
+            <Pressable onPress={() => setImportOpen(false)} hitSlop={12}>
+              <Text style={styles.modalClose}>Close</Text>
+            </Pressable>
+          </View>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <OnlineBrowser
+              importOnly
+              onOpenRecipe={(r) => {
+                setImportOpen(false);
+                onOpenRecipe(r);
+              }}
+            />
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
+    </View>
   );
 }
 
+// Online recipes that match what you're looking at: your search, the
+// cuisine you picked, or a few random ideas. Hides ones you've already
+// saved and ones that clash with your allergy or avoid lists.
+function useWebRecipes(query, cuisine, settings) {
+  const [raw, setRaw] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [opening, setOpening] = useState(null);
+  const ideas = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const q = query.trim();
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let list;
+        if (q.length >= 2) list = await searchMealDb(q);
+        else if (cuisine !== 'All') list = (await mealDbByCuisine(cuisine)).slice(0, 25);
+        else {
+          if (!ideas.current) ideas.current = await mealDbRandom(6);
+          list = ideas.current;
+        }
+        if (!cancelled) setRaw(list);
+      } catch {
+        if (!cancelled) {
+          setRaw([]);
+          setError("Couldn't reach online recipes. Check your connection.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }, q ? 500 : 0);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, cuisine]);
+
+  const results = useMemo(() => {
+    const saved = new Set(allRecipes().map((r) => r.id));
+    return raw.filter((r) => !saved.has(r.id) && (r.partial || !isExcluded(r, settings)));
+  }, [raw, settings]);
+
+  return { results, loading, error, opening, setOpening };
+}
+
 const makeStyles = (c) => ({
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: 20 },
+  importBtn: { borderWidth: 1, borderColor: c.border, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, marginTop: 8 },
+  importText: { color: c.text, fontWeight: '600', fontSize: 13 },
+  webTitle: { fontSize: 18, fontWeight: '800', color: c.text, marginTop: 14 },
+  webSub: { fontSize: 13, color: c.muted, marginTop: 2, marginBottom: 10 },
+  webSpinner: { position: 'absolute', right: 16, top: 26 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 14 },
+  modalTitle: { fontSize: 20, fontWeight: '800', color: c.text },
+  modalClose: { color: c.primary, fontWeight: '700', fontSize: 16 },
   modeRow: { flexDirection: 'row', gap: 8, paddingHorizontal: 20, marginTop: 14 },
   modeBtn: {
     flex: 1,

@@ -19,7 +19,7 @@ const IMPORT_SITES = [
   { name: "America's Test Kitchen", url: 'https://www.americastestkitchen.com' },
 ];
 
-export default function OnlineBrowser({ onOpenRecipe }) {
+export default function OnlineBrowser({ onOpenRecipe, importOnly = false }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
@@ -53,6 +53,7 @@ export default function OnlineBrowser({ onOpenRecipe }) {
   }
 
   useEffect(() => {
+    if (importOnly) return;
     mealDbCategories().then(setCategories).catch(() => {});
     load('Ideas for tonight', () => mealDbRandom(8));
   }, []);
@@ -144,6 +145,8 @@ export default function OnlineBrowser({ onOpenRecipe }) {
         </Text>
       </View>
 
+      {importOnly ? null : (
+      <>
       <Text style={styles.section}>🌐 Browse thousands of recipes</Text>
       <View style={[styles.row, { paddingHorizontal: 20 }]}>
         <TextInput
@@ -199,6 +202,8 @@ export default function OnlineBrowser({ onOpenRecipe }) {
         )}
       </View>
       <Text style={styles.credit}>Recipe database by TheMealDB.com</Text>
+      </>
+      )}
     </View>
   );
 }

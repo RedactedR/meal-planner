@@ -1,5 +1,6 @@
 import { catalogItem, keyOf } from './data/ingredients';
 import { packOf, packPrice, packsFor } from './packages';
+import { effectiveRecipe, getRecipe } from './data/recipes';
 
 // How much of an ingredient you have in your Kitchen, in the recipe's unit.
 export function haveQty(inventory, name, unit) {
@@ -99,6 +100,29 @@ export function recipeCosts(recipe, portions, inventory = {}) {
     inStockCount: items.filter((i) => i.status === 'full').length,
     priced: items.length > 0 && items.every((i) => !i.unpriced),
   };
+}
+
+// What your Kitchen will hold after you shop for and cook the meals
+// already on your week: whole packages bought, recipe amounts used, the
+// rest left over. Used to price "pairs with your week" suggestions.
+export function weekLeftovers(inventory, plannedIds, portions, settings) {
+  const inv = { ...inventory };
+  for (const id of plannedIds) {
+    const recipe = effectiveRecipe(getRecipe(id), settings);
+    if (!recipe) continue;
+    const factor = portions / recipe.servings;
+    for (const ing of recipe.ingredients) {
+      if (ing.qty == null) continue;
+      const key = keyOf(ing.name);
+      const cur = inv[key] && inv[key].unit === ing.unit ? inv[key].qty : 0;
+      const need = ing.qty * factor;
+      const bought = packsFor(ing.name, Math.max(0, need - cur)) * packOf(ing.name);
+      const left = Math.max(0, cur + bought - need);
+      const info = catalogItem(ing.name);
+      inv[key] = { name: info?.name ?? ing.name, unit: ing.unit, qty: left, category: info?.category ?? 'other' };
+    }
+  }
+  return inv;
 }
 
 export function money(n) {

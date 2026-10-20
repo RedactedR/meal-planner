@@ -8,11 +8,11 @@ import { Pill } from './Badges';
 
 // One recipe in a list: name, rating, price (with your kitchen discount),
 // how many ingredients you already have, and badges.
-export default function RecipeCard({ recipe, onPress, right, note }) {
+export default function RecipeCard({ recipe, onPress, right, note, inventoryOverride, savingsLabel }) {
   const styles = useStyles(makeStyles);
   const { ratings, settings, inventory } = useAppState();
   const rating = ratings[recipe.id] || 0;
-  const cost = recipeCosts(effectiveRecipe(recipe, settings), settings.portions, inventory);
+  const cost = recipeCosts(effectiveRecipe(recipe, settings), settings.portions, inventoryOverride || inventory);
   const discounted = cost.savings >= 0.01;
 
   return (
@@ -41,7 +41,10 @@ export default function RecipeCard({ recipe, onPress, right, note }) {
             <>
               <Text style={styles.oldPrice}>{money(cost.total)}</Text>
               <Text style={styles.price}>{money(cost.youPay)}</Text>
-              <Text style={styles.save}>save {money(cost.savings)}</Text>
+              <Text style={styles.save}>
+                save {money(cost.savings)}
+                {savingsLabel ? ` ${savingsLabel}` : ''}
+              </Text>
             </>
           ) : (
             <Text style={styles.price}>{money(cost.total)}</Text>

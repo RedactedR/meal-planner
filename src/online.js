@@ -89,6 +89,32 @@ export async function mealDbByCategory(category) {
   }));
 }
 
+// TheMealDB groups recipes by country ("area"). Maps the app's cuisine
+// names onto theirs; cuisines with no match return nothing.
+const AREA_FOR_CUISINE = {
+  Indian: 'Indian', Mexican: 'Mexican', Thai: 'Thai', Italian: 'Italian', Japanese: 'Japanese',
+  Greek: 'Greek', Chinese: 'Chinese', American: 'American', Vietnamese: 'Vietnamese', French: 'French',
+  British: 'British', Irish: 'Irish', Spanish: 'Spanish', Moroccan: 'Moroccan', Jamaican: 'Jamaican',
+  Turkish: 'Turkish', Korean: 'Korean', Filipino: 'Filipino', Canadian: 'Canadian', Malaysian: 'Malaysian',
+  'Middle Eastern': 'Egyptian', Cajun: 'American', Vegetarian: null,
+};
+
+export async function mealDbByCuisine(cuisine) {
+  if (cuisine === 'Vegetarian') return mealDbByCategory('Vegetarian');
+  const area = AREA_FOR_CUISINE[cuisine] ?? cuisine;
+  if (!area) return [];
+  const data = await getJson(`${MEALDB}/filter.php?a=${encodeURIComponent(area)}`);
+  return (data.meals || []).map((m) => ({
+    id: `mealdb-${m.idMeal}`,
+    mealDbId: m.idMeal,
+    partial: true,
+    source: 'mealdb',
+    name: m.strMeal,
+    image: m.strMealThumb,
+    cuisine,
+  }));
+}
+
 export async function mealDbLookup(mealDbId) {
   const data = await getJson(`${MEALDB}/lookup.php?i=${encodeURIComponent(mealDbId)}`);
   const m = data.meals && data.meals[0];

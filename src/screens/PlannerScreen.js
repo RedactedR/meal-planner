@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import { Alert, FlatList, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getRecipe } from '../data/recipes';
+import { effectiveRecipe, getRecipe } from '../data/recipes';
 import { allowedRecipes, sortRecipes } from '../recipeFilters';
 import { DAY_NAMES, useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
 import { useToast } from '../components/Toast';
 import { pairingSuggestions, sharedLabel } from '../pairing';
+import { recipeCosts, weekLeftovers } from '../pricing';
 import { radius, useStyles, useTheme } from '../theme';
 
 export default function PlannerScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { plan, days, settings, ratings, setMeal, setMeals, setDayCount, clearWeek } = useAppState();
+  const { plan, days, settings, ratings, inventory, setMeal, setMeals, setDayCount, clearWeek } = useAppState();
   const [pickingDay, setPickingDay] = useState(null);
 
   const choices = useMemo(
@@ -22,7 +23,23 @@ export default function PlannerScreen({ onOpenRecipe }) {
   );
   const plannedCount = days.filter((d) => plan.meals[d]).length;
   const plannedIds = days.map((d) => plan.meals[d]).filter(Boolean);
-  const pairs = useMemo(() => pairingSuggestions(plannedIds, choices), [plannedIds.join(','), choices]);
+  const rawPairs = useMemo(() => pairingSuggestions(plannedIds, choices), [plannedIds.join(','), choices]);
+  // Your Kitchen after shopping for and cooking this week's meals, so
+  // pairings show what they'd really cost with the leftovers.
+  const leftovers = useMemo(
+    () => weekLeftovers(inventory, plannedIds, settings.portions, settings),
+    [inventory, plannedIds.join(','), settings]
+  );
+  // Best savings first.
+  const pairs = useMemo(() => {
+    const saved = (r) => {
+      const c = recipeCosts(effectiveRecipe(r, settings), settings.portions, leftovers);
+      return c.priced ? c.savings : 0;
+    };
+    return rawPairs
+      .map((p) => ({ ...p, saved: saved(p.recipe) }))
+      .sort((a, b) => b.saved - a.saved || b.shared.length - a.shared.length);
+  }, [rawPairs, leftovers, settings]);
 
   // Day picker: pairing suggestions first, then everything else.
   const pickerRows = useMemo(() => {
@@ -30,7 +47,7 @@ export default function PlannerScreen({ onOpenRecipe }) {
     const rows = [];
     if (pairs.length) {
       rows.push({ key: 'h-pairs', header: 'Pairs with your week' });
-      pairs.forEach((p) => rows.push({ key: p.recipe.id, recipe: p.recipe, note: sharedLabel(p.shared) }));
+      pairs.forEach((p) => rows.push({ key: p.recipe.id, recipe: p.recipe, note: sharedLabel(p.shared), paired: true }));
       rows.push({ key: 'h-all', header: 'All recipes · top rated first' });
     }
     choices.filter((r) => !pairIds.has(r.id)).forEach((r) => rows.push({ key: r.id, recipe: r }));
@@ -139,6 +156,8 @@ export default function PlannerScreen({ onOpenRecipe }) {
                 key={p.recipe.id}
                 recipe={p.recipe}
                 note={sharedLabel(p.shared)}
+                inventoryOverride={leftovers}
+                savingsLabel="with your week"
                 onPress={() => onOpenRecipe(p.recipe)}
               />
             ))}
@@ -165,13 +184,20 @@ export default function PlannerScreen({ onOpenRecipe }) {
           </View>
           <FlatList
             data={choices.length ? pickerRows : []}
+            extraData={leftovers}
             keyExtractor={(row) => row.key}
             contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
             renderItem={({ item }) =>
               item.header ? (
                 <Text style={styles.dayLabel}>{item.header}</Text>
               ) : (
-                <RecipeCard recipe={item.recipe} note={item.note} onPress={() => pick(pickingDay, item.recipe)} />
+                <RecipeCard
+                  recipe={item.recipe}
+                  note={item.note}
+                  inventoryOverride={item.paired ? leftovers : undefined}
+                  savingsLabel={item.paired ? 'with your week' : undefined}
+                  onPress={() => pick(pickingDay, item.recipe)}
+                />
               )
             }
             ListEmptyComponent={
