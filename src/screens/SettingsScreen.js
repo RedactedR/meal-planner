@@ -128,6 +128,21 @@ export default function SettingsScreen() {
             thumbColor="#fff"
           />
         </View>
+        <View style={styles.switchRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>Use what you have</Text>
+            <Text style={styles.cardText}>
+              Swap in close matches from your Kitchen instead of buying something new — olive oil for vegetable oil,
+              basmati for jasmine rice, pinto for black beans. Never swaps in your allergies or foods you avoid.
+            </Text>
+          </View>
+          <Switch
+            value={settings.swaps !== false}
+            onValueChange={(swaps) => updateSettings({ swaps })}
+            trackColor={{ true: colors.primary, false: colors.border }}
+            thumbColor="#fff"
+          />
+        </View>
       </View>
 
       <Text style={styles.section}>Allergies</Text>

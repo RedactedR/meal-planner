@@ -24,7 +24,7 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
 
   // Price of each allowed recipe after what's already in your Kitchen.
   const costs = useMemo(
-    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(effectiveRecipe(r, settings), settings.portions, inventory)])),
+    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(effectiveRecipe(r, settings), settings.portions, inventory, settings)])),
     [allowed, settings, inventory]
   );
   const deals = useMemo(

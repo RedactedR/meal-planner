@@ -1,6 +1,7 @@
 import { effectiveRecipe, getRecipe } from './data/recipes';
 import { catalogItem } from './data/ingredients';
-import { findInventoryItem, haveQty, stockStatus } from './pricing';
+import { findInventoryItem, stockStatus } from './pricing';
+import { findSubstitute, stockFor } from './substitutes';
 import { packLabel, packOf, packPrice, packsFor } from './packages';
 
 // Things you can only buy whole: you can't buy half a can or half an onion.
@@ -69,23 +70,27 @@ export function buildGroceryList(recipeIds, portions, inventory = {}, settings) 
     .map((item) => {
       const info = catalogItem(item.name);
       if (item.unpriced) {
-        const found = findInventoryItem(inventory, item.name);
+        const exact = findInventoryItem(inventory, item.name);
+        const found = exact || findSubstitute(inventory, item.name, settings);
         return {
           ...item,
           have: found ? found.qty : 0,
           haveUnit: found?.unit,
+          using: !exact && found ? found.name : null,
           qty: found ? 0 : 1,
           status: found ? 'full' : 'none',
           category: info?.category ?? 'other',
           price: 0,
         };
       }
-      const have = haveQty(inventory, item.name, item.unit);
+      const { have, using } = stockFor(inventory, item.name, item.unit, item.need, settings);
       const packs = packsFor(item.name, Math.max(0, item.need - have));
       return {
         ...item,
         have,
         haveUnit: item.unit,
+        // Stand-in from your Kitchen used instead (e.g. basmati for jasmine).
+        using,
         packs,
         // Amount you bring home, in recipe units.
         qty: packs * packOf(item.name),

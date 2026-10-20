@@ -1,6 +1,7 @@
 import { catalogItem, keyOf } from './data/ingredients';
 import { packOf, packPrice, packsFor } from './packages';
 import { effectiveRecipe, getRecipe } from './data/recipes';
+import { findSubstitute, stockFor } from './substitutes';
 
 // How much of an ingredient you have in your Kitchen, in the recipe's unit.
 export function haveQty(inventory, name, unit) {
@@ -32,12 +33,14 @@ export function stockStatus(have, need) {
 // Full cost picture for one recipe at the chosen portion size. Prices
 // are for whole packages (a jar of paprika, not 1 tsp of it); anything
 // already in your Kitchen is taken off, and leftovers stay there.
-export function recipeCosts(recipe, portions, inventory = {}) {
+// `settings` decides which stand-ins are allowed (see substitutes.js).
+export function recipeCosts(recipe, portions, inventory = {}, settings) {
   const factor = portions / recipe.servings;
   const items = recipe.ingredients.map((ing) => {
     if (ing.qty == null) {
       // Online recipe: no exact amount, so no price; just check stock.
-      const found = findInventoryItem(inventory, ing.name);
+      const exact = findInventoryItem(inventory, ing.name);
+      const found = exact || findSubstitute(inventory, ing.name, settings);
       return {
         name: ing.name,
         unit: ing.unit,
@@ -48,12 +51,13 @@ export function recipeCosts(recipe, portions, inventory = {}) {
         savings: 0,
         category: catalogItem(ing.name)?.category ?? 'other',
         status: found ? 'full' : 'none',
+        using: !exact && found ? found.name : null,
         unpriced: true,
       };
     }
     const info = catalogItem(ing.name);
     const need = ing.qty * factor;
-    const have = haveQty(inventory, ing.name, ing.unit);
+    const { have, using } = stockFor(inventory, ing.name, ing.unit, need, settings);
     const pack = packOf(ing.name);
     const price = packPrice(ing.name);
     // Full price: the whole packages you'd buy with an empty kitchen.
@@ -74,7 +78,11 @@ export function recipeCosts(recipe, portions, inventory = {}) {
       buyCost,
       savings: cost - buyCost,
       usedValue: need * (info?.price ?? 0),
-      leftover: Math.max(0, have + buyPacks * pack - need),
+      // Stand-in you're cooking with instead (e.g. olive oil for vegetable oil).
+      using,
+      // Left in your Kitchen afterward. With a stand-in that fully covers
+      // the recipe, this is what's left of the stand-in.
+      leftover: using && buyPacks > 0 ? buyPacks * pack - Math.max(0, need - have) : Math.max(0, have + buyPacks * pack - need),
       category: info?.category ?? 'other',
       status: stockStatus(have, need),
     };
@@ -113,12 +121,23 @@ export function weekLeftovers(inventory, plannedIds, portions, settings) {
     const factor = portions / recipe.servings;
     for (const ing of recipe.ingredients) {
       if (ing.qty == null) continue;
-      const key = keyOf(ing.name);
-      const cur = inv[key] && inv[key].unit === ing.unit ? inv[key].qty : 0;
       const need = ing.qty * factor;
-      const bought = packsFor(ing.name, Math.max(0, need - cur)) * packOf(ing.name);
-      const left = Math.max(0, cur + bought - need);
+      const { have, using } = stockFor(inv, ing.name, ing.unit, need, settings);
+      const key = keyOf(ing.name);
       const info = catalogItem(ing.name);
+      const bought = packsFor(ing.name, Math.max(0, need - have)) * packOf(ing.name);
+      if (using) {
+        // Cook with the stand-in first, then whatever was bought.
+        const subKey = keyOf(using);
+        const fromSub = Math.min(have, need);
+        inv[subKey] = { ...inv[subKey], qty: Math.max(0, inv[subKey].qty - fromSub) };
+        if (bought > 0) {
+          const cur = inv[key] && inv[key].unit === ing.unit ? inv[key].qty : 0;
+          inv[key] = { name: info?.name ?? ing.name, unit: ing.unit, qty: cur + bought - (need - fromSub), category: info?.category ?? 'other' };
+        }
+        continue;
+      }
+      const left = Math.max(0, have + bought - need);
       inv[key] = { name: info?.name ?? ing.name, unit: ing.unit, qty: left, category: info?.category ?? 'other' };
     }
   }

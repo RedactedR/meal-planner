@@ -12,7 +12,7 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
   const styles = useStyles(makeStyles);
   const { ratings, settings, inventory } = useAppState();
   const rating = ratings[recipe.id] || 0;
-  const cost = recipeCosts(effectiveRecipe(recipe, settings), settings.portions, inventoryOverride || inventory);
+  const cost = recipeCosts(effectiveRecipe(recipe, settings), settings.portions, inventoryOverride || inventory, settings);
   const discounted = cost.savings >= 0.01;
 
   return (

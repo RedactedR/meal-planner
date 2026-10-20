@@ -80,6 +80,7 @@ export default function CostBreakdown({ cost, portions }) {
                 uses {formatQty(Math.round(i.need * 100) / 100, i.unit)}
                 {i.leftover > 0.01 ? ` · ${leftoverText(i)} left over` : ''}
               </Text>
+              {i.using ? <Text style={styles.swap}>🔄 Using your {i.using.toLowerCase()} instead</Text> : null}
             </View>
           </View>
         ))}
@@ -94,7 +95,7 @@ export default function CostBreakdown({ cost, portions }) {
 }
 
 function leftoverText(i) {
-  const approx = approxAmount(i.name, i.leftover);
+  const approx = approxAmount(i.using && i.buyPacks === 0 ? i.using : i.name, i.leftover);
   if (approx) return approx;
   return formatQty(Math.round(i.leftover * 100) / 100, i.unit);
 }
@@ -125,5 +126,6 @@ const makeStyles = (c) => ({
   cost: { fontSize: 14, color: c.text, fontWeight: '600' },
   track: { height: 6, backgroundColor: c.border, borderRadius: 3, marginTop: 5, overflow: 'hidden' },
   have: { fontSize: 12, color: c.muted, marginTop: 3 },
+  swap: { fontSize: 12, color: c.primary, marginTop: 2, fontWeight: '600' },
   footnote: { fontSize: 12, color: c.muted, marginTop: 12, lineHeight: 17 },
 });

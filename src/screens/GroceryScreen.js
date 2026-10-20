@@ -142,7 +142,9 @@ export default function GroceryScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rowText, !on && styles.off]}>{item.name}</Text>
                     <Text style={styles.rowSub}>
-                      {item.have > 0 ? `You have ${formatQty(item.have, item.haveUnit)} · ` : ''}
+                      {item.have > 0
+                        ? `You have ${formatQty(item.have, item.haveUnit)}${item.using ? ` ${item.using.toLowerCase()}` : ''} · `
+                        : ''}
                       {item.recipes.length > 1 ? `for ${item.recipes.length} recipes` : item.recipes[0]}
                     </Text>
                   </View>
@@ -165,7 +167,10 @@ export default function GroceryScreen() {
               {onHand.map((item, i) => (
                 <View key={item.key} style={[styles.row, i > 0 && styles.rowBorder]}>
                   <StockIcon status="full" />
-                  <Text style={[styles.rowText, { flex: 1 }]}>{item.name}</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.rowText}>{item.name}</Text>
+                    {item.using ? <Text style={styles.rowSub}>🔄 using your {item.using.toLowerCase()}</Text> : null}
+                  </View>
                   <Text style={styles.rowSub}>have {formatQty(item.have, item.haveUnit)}</Text>
                 </View>
               ))}

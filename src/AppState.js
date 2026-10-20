@@ -26,6 +26,7 @@ const DEFAULT_STATE = {
     avoid: [], // free-text foods to never suggest
     showTips: true, // pro tips under recipe steps
     scratchSauces: true, // make sauces/seasonings from scratch instead of buying
+    swaps: true, // use a stand-in you have (olive oil for vegetable oil) instead of buying
   },
   ratings: {}, // { recipeId: 1..5 }
   inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }

@@ -33,7 +33,7 @@ export default function PlannerScreen({ onOpenRecipe }) {
   // Best savings first.
   const pairs = useMemo(() => {
     const saved = (r) => {
-      const c = recipeCosts(effectiveRecipe(r, settings), settings.portions, leftovers);
+      const c = recipeCosts(effectiveRecipe(r, settings), settings.portions, leftovers, settings);
       return c.priced ? c.savings : 0;
     };
     return rawPairs

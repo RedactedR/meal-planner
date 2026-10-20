@@ -41,8 +41,9 @@ function DetailContent({ baseRecipe, onClose }) {
   const isSaved = isOnline && !!savedRecipes[baseRecipe.id];
   const freeDays = days.filter((d) => !plan.meals[d]).length;
   const excluded = isExcluded(baseRecipe, settings);
-  const cost = recipeCosts(recipe, portions, inventory);
+  const cost = recipeCosts(recipe, portions, inventory, settings);
   const stockByName = Object.fromEntries(cost.items.map((i) => [i.name, i.status]));
+  const swapByName = Object.fromEntries(cost.items.filter((i) => i.using).map((i) => [i.name, i.using]));
   const diff = DIFFICULTY[recipe.difficulty];
 
   // Cost with and without the homemade sauce, to show what scratch saves.
@@ -70,7 +71,7 @@ function DetailContent({ baseRecipe, onClose }) {
       {
         text: 'Update Kitchen',
         onPress: () => {
-          consumeInventory(used.map((i) => ({ name: i.name, unit: i.unit, qty: Math.min(i.have, i.need) })));
+          consumeInventory(used.map((i) => ({ name: i.using || i.name, unit: i.unit, qty: Math.min(i.have, i.need) })));
           toast(`Updated your Kitchen (${used.length} items) ✓`);
         },
       },
@@ -275,7 +276,12 @@ function DetailContent({ baseRecipe, onClose }) {
         {recipe.ingredients.map((ing, i) => (
           <View key={`${ing.name}-${i}`} style={styles.ingRow}>
             <StockIcon status={stockByName[ing.name]} size={18} />
-            <Text style={styles.ingName}>{ing.name}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.ingNameText}>{ing.name}</Text>
+              {swapByName[ing.name] ? (
+                <Text style={styles.swapNote}>🔄 Using your {swapByName[ing.name].toLowerCase()}</Text>
+              ) : null}
+            </View>
             <Text style={styles.ingQty}>
               {ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions)}
             </Text>
@@ -444,7 +450,8 @@ const makeStyles = (c) => ({
     borderBottomWidth: 1,
     borderBottomColor: c.border,
   },
-  ingName: { fontSize: 15, color: c.text, flex: 1 },
+  ingNameText: { fontSize: 15, color: c.text },
+  swapNote: { fontSize: 12, color: c.primary, marginTop: 2, fontWeight: '600' },
   ingQty: { fontSize: 15, color: c.muted },
   stepRow: { flexDirection: 'row', gap: 12, marginBottom: 14 },
   stepNum: {
