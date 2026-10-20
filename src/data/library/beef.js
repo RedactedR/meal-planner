@@ -1,0 +1,273 @@
+import { R } from './build';
+
+export default [
+  R('beef-stew', 'Classic Beef Stew', 'American', '🍲', 150, 6, 'medium', true,
+    [560, 40, 34, 26, 5, 1.5],
+    'Beef stew meat 2.5 lb; All-purpose flour 3 tbsp; Yellow onion 1; Carrots 4; Celery 0.25 bunch; Russet potatoes 1.5 lb; Garlic 4 cloves; Tomato paste 2 tbsp; Red wine 1 cup; Beef broth 32 oz; Worcestershire sauce 1 tbsp; Dried thyme 1 tsp; Bay leaves 2; Vegetable oil 3 tbsp; Fresh parsley 1 bunch; Kosher salt 2.5 tsp; Black pepper 1 tsp',
+    [
+      ['Pat the beef very dry and season with salt and pepper. Brown it in batches in the oil in a Dutch oven over medium-high, 4–5 minutes per batch.', "Don't crowd the pot. Crowded meat steams gray instead of browning, and the browning is where stew gets its deep flavor.", 'how to brown beef for stew'],
+      'Lower the heat. Cook the onion, celery and garlic 5 minutes, then stir in the tomato paste and flour for 1 minute.',
+      ['Pour in the wine and scrape up every browned bit from the bottom. Simmer 2 minutes.', 'This is deglazing: the wine lifts the fond (browned bits) off the pot and turns it into the backbone of the gravy.'],
+      'Return the beef with the broth, Worcestershire, thyme and bay leaves. Cover and simmer very gently (or bake at 325°F) for 1½ hours.',
+      'Add the carrots and potatoes in chunks and cook 40 minutes more until the beef falls apart and the vegetables are tender.',
+      ['Season to taste and finish with parsley.', 'Stew is even better the next day. As it cools, the gelatin from the beef thickens the gravy and the flavors settle.'],
+    ]),
+
+  R('beef-chili', 'Beef & Bean Chili', 'American', '🌶️', 75, 6, 'easy', true,
+    [520, 36, 38, 24, 12, 1.5],
+    'Ground beef 2 lb; Yellow onion 1; Bell peppers 1; Garlic 4 cloves; Chili powder 3 tbsp; Ground cumin 2 tsp; Smoked paprika 1 tsp; Dried oregano 1 tsp; Tomato paste 2 tbsp; Crushed tomatoes 1 can; Kidney beans 2 can; Beef broth 16 oz; Kosher salt 2 tsp; Shredded cheddar 4 oz; Sour cream 0.5 cup',
+    [
+      ['Brown the beef in a large pot over medium-high, pressing it flat and leaving it alone for 4 minutes before breaking it up.', 'A hard sear before stirring gives the chili a meaty, roasted depth.'],
+      'Add the onion and pepper and cook 6 minutes. Add the garlic for 1 minute.',
+      ['Stir in the chili powder, cumin, paprika, oregano and tomato paste and cook 2 minutes.', 'Toasting spices in the fat wakes them up. Raw chili powder tastes dusty.'],
+      'Add the tomatoes, beans, broth and salt. Simmer uncovered 45 minutes, stirring now and then, until thick.',
+      'Serve with cheddar and sour cream.',
+    ]),
+
+  R('beef-stroganoff', 'Beef Stroganoff', 'Russian', '🍄', 35, 4, 'medium', false,
+    [690, 40, 54, 34, 3, 1],
+    'Sirloin steak 1.25 lb; Cremini mushrooms 16 oz; Yellow onion 1; Garlic 2 cloves; Butter 3 tbsp; All-purpose flour 2 tbsp; Beef broth 16 oz; Dijon mustard 1 tbsp; Sour cream 0.75 cup; Egg noodles 12 oz; Fresh parsley 1 bunch; Vegetable oil 1 tbsp; Kosher salt 1.5 tsp; Black pepper 0.5 tsp',
+    [
+      'Boil the noodles in salted water until tender.',
+      ['Slice the steak into thin strips against the grain. Season and sear in the oil over high heat in batches, 1 minute per side. Move to a plate.', 'Sear quickly and remove: thin strips of steak overcook in seconds. They finish warming in the sauce.'],
+      'Melt the butter and cook the sliced mushrooms until browned, 6–8 minutes. Add the onion and garlic for 3 minutes.',
+      'Stir in the flour, then the broth and Dijon. Simmer 4 minutes until thickened.',
+      ['Lower the heat, stir in the sour cream and return the beef. Warm through without boiling, then serve over the noodles with parsley.', 'Boiling sour cream makes it curdle and turn grainy. Keep it just under a simmer.'],
+    ]),
+
+  R('steak-fajitas', 'Steak Fajitas', 'Mexican', '🥩', 35, 4, 'medium', false,
+    [600, 38, 46, 28, 5, 1.5],
+    'Flank steak 1.5 lb; Bell peppers 3; Yellow onion 1; Limes 2; Garlic 2 cloves; Chili powder 2 tsp; Ground cumin 1 tsp; Vegetable oil 3 tbsp; Flour tortillas 8; Avocado 1; Sour cream 0.5 cup; Cilantro 1 bunch; Kosher salt 1.5 tsp',
+    [
+      'Marinate the steak in the juice of 1 lime, garlic, chili powder, cumin, 1 tbsp oil and salt for 20 minutes.',
+      ['Sear the steak in a very hot cast-iron skillet, 4–5 minutes per side for medium-rare. Rest 10 minutes.', 'Flank steak is best medium-rare and sliced thin. Cooked past medium, it turns chewy.'],
+      'In the same pan, cook the sliced peppers and onion in the remaining oil over high heat until charred at the edges, 6–8 minutes.',
+      ['Slice the steak thinly against the grain.', 'Look for the long lines of muscle and cut across them. It shortens the fibers so every bite is tender.', 'how to slice flank steak against the grain'],
+      'Serve in warm tortillas with the vegetables, avocado, sour cream, cilantro and lime.',
+    ]),
+
+  R('shepherds-pie', "Shepherd's Pie", 'British', '🥧', 70, 6, 'medium', false,
+    [560, 30, 46, 28, 6, 1.5],
+    'Ground beef 1.5 lb; Russet potatoes 2.5 lb; Butter 4 tbsp; Milk 0.5 cup; Yellow onion 1; Carrots 2; Frozen peas 1 cup; Garlic 2 cloves; Tomato paste 2 tbsp; All-purpose flour 1 tbsp; Beef broth 8 oz; Worcestershire sauce 1 tbsp; Dried thyme 1 tsp; Shredded cheddar 3 oz; Kosher salt 2.5 tsp; Black pepper 0.5 tsp',
+    [
+      ['Peel and chunk the potatoes. Start them in cold salted water, bring to a boil and cook 15 minutes until tender. Drain well and mash with the butter, warm milk and 1 tsp salt.', 'Starting potatoes in cold water cooks them evenly, so the outsides don\'t turn to mush before the centers are done.'],
+      'Brown the beef in a skillet, then add the diced onion and carrots and cook 6 minutes. Add the garlic, tomato paste and flour for 1 minute.',
+      'Stir in the broth, Worcestershire and thyme and simmer 8 minutes until thick. Add the peas and season.',
+      'Heat the oven to 400°F. Spread the filling in a baking dish, top with the mash and rough up the surface with a fork.',
+      ['Sprinkle with cheddar and bake 25 minutes until golden at the peaks.', 'Those fork ridges become crispy, browned edges. Run it under the broiler for a minute at the end if you want more color.'],
+    ]),
+
+  R('korean-beef-bowls', 'Korean Ground Beef Bowls', 'Korean', '🍚', 25, 4, 'easy', false,
+    [620, 32, 68, 22, 3, 1],
+    'Ground beef 1.25 lb; Soy sauce 4 tbsp; Light brown sugar 2 tbsp; Sesame oil 1 tbsp; Garlic 4 cloves; Fresh ginger 1 piece; Gochujang 1 tbsp; Green onions 1 bunch; Cucumber 1; Rice vinegar 2 tbsp; Jasmine rice 1.5 cup; Sesame seeds 1 tbsp',
+    [
+      'Rinse and cook the rice (2¼ cups water; boil, cover, lowest heat 15 minutes, rest 10).',
+      'Thinly slice the cucumber and toss with the vinegar and a pinch of salt.',
+      'Brown the beef in a large skillet over high heat, letting it crisp in spots. Drain excess fat.',
+      ['Add the garlic and grated ginger for 30 seconds, then the soy sauce, sugar, gochujang and sesame oil. Toss 2 minutes until glossy.', 'Gochujang is a Korean chili paste with sweet, savory heat. Use more for spicier bowls.'],
+      'Serve over rice with the quick-pickled cucumber, green onions and sesame seeds.',
+    ]),
+
+  R('meatballs-marinara', 'Italian Meatballs in Marinara', 'Italian', '🍝', 60, 6, 'medium', false,
+    [690, 36, 68, 28, 5, 1],
+    'Ground beef 1 lb; Ground pork 0.5 lb; Panko 0.5 cup; Milk 0.33 cup; Eggs 1; Parmesan 3 oz; Garlic 5 cloves; Fresh parsley 1 bunch; Crushed tomatoes 2 can; Olive oil 3 tbsp; Red pepper flakes 0.5 tsp; Fresh basil 1 bunch; Spaghetti 1 lb; Kosher salt 2.5 tsp',
+    [
+      ['Soak the panko in the milk for 5 minutes. Mix gently with the beef, pork, egg, half the Parmesan, 2 minced garlic cloves, chopped parsley and 1½ tsp salt.', "This milk-and-crumb paste (a panade) keeps meatballs tender. Mix with your hands only until combined, since overworking makes them tough."],
+      'Roll into 1½-inch balls and brown them in 2 tbsp oil in a wide pot, turning, about 8 minutes. They don\'t need to be cooked through.',
+      'Spoon off most of the fat. Cook the remaining sliced garlic and pepper flakes in the last 1 tbsp oil for 1 minute.',
+      'Add the tomatoes, 1 tsp salt and the meatballs. Cover and simmer gently 25 minutes.',
+      'Cook the spaghetti and serve with the meatballs, sauce, torn basil and the rest of the Parmesan.',
+    ]),
+
+  R('philly-cheesesteaks', 'Philly Cheesesteaks', 'American', '🥖', 30, 4, 'medium', false,
+    [720, 44, 50, 36, 3, 1],
+    'Sirloin steak 1.5 lb; Yellow onion 2; Bell peppers 1; Provolone 8 slices; Hoagie rolls 4; Vegetable oil 2 tbsp; Butter 2 tbsp; Kosher salt 1.5 tsp; Black pepper 0.5 tsp',
+    [
+      ['Freeze the steak for 30 minutes, then slice it as thin as possible.', "Partly frozen steak slices paper-thin with an ordinary knife. That's how real cheesesteak shops get their texture."],
+      'Cook the sliced onions and pepper in the butter over medium heat for 10 minutes until soft and golden. Move aside.',
+      'Heat the oil in the skillet over high. Add the steak in a thin layer, season, and cook 2 minutes, chopping with a spatula as it browns.',
+      ['Mix the vegetables back in, divide into four piles, lay 2 slices of provolone on each and cover for 1 minute to melt.', 'Melting the cheese right on the meat in the pan helps it bind into a gooey filling instead of sitting on top.'],
+      'Slide each pile into a toasted roll.',
+    ]),
+
+  R('beef-tacos-crispy', 'Crispy Baked Beef Tacos', 'Mexican', '🌮', 30, 4, 'easy', false,
+    [580, 30, 40, 32, 6, 1],
+    'Ground beef 1 lb; Corn tortillas 12; Yellow onion 1; Garlic 2 cloves; Chili powder 1 tbsp; Ground cumin 1 tsp; Tomato paste 1 tbsp; Shredded cheddar 4 oz; Romaine lettuce 1 head; Tomatoes 2; Sour cream 0.5 cup; Vegetable oil 2 tbsp; Kosher salt 1 tsp',
+    [
+      'Heat the oven to 400°F. Brown the beef with the onion, then add garlic, chili powder, cumin, tomato paste, salt and ¼ cup water. Simmer 3 minutes.',
+      ['Brush the tortillas with oil and warm them so they bend. Fill each with beef and a little cheese, fold, and lay on a sheet pan.', 'Warm tortillas fold without cracking; the oil crisps them in the oven like fried taco shells.'],
+      'Bake 12–15 minutes until crisp.',
+      'Open and stuff with shredded lettuce, diced tomato and sour cream.',
+    ]),
+
+  R('mongolian-beef', 'Mongolian Beef', 'Chinese', '🥩', 30, 4, 'medium', false,
+    [640, 36, 72, 22, 2, 0.5],
+    'Flank steak 1.25 lb; Cornstarch 8 tsp; Soy sauce 5 tbsp; Light brown sugar 3 tbsp; Garlic 4 cloves; Fresh ginger 1 piece; Green onions 2 bunch; Vegetable oil 4 tbsp; Jasmine rice 1.5 cup',
+    [
+      'Rinse and cook the rice (2¼ cups water; boil, cover, lowest heat 15 minutes, rest 10).',
+      ['Slice the steak thinly against the grain and toss with 6 tsp cornstarch.', 'The cornstarch coating crisps in the hot oil and then thickens the sauce into a glaze.'],
+      'Fry the beef in 3 tbsp oil over high heat in two batches, 2 minutes each, until crisp. Move to a plate.',
+      'Wipe the pan. Cook the garlic and ginger in the last 1 tbsp oil for 30 seconds, then add the soy sauce, sugar and ¼ cup water and simmer 2 minutes.',
+      'Return the beef with the green onions cut into 2-inch pieces. Toss until glossy. Serve over rice.',
+    ]),
+
+  R('pot-roast', 'Sunday Pot Roast', 'American', '🍖', 210, 6, 'easy', true,
+    [580, 46, 32, 28, 5, 1.5],
+    'Beef chuck roast 3 lb; Yellow onion 2; Carrots 5; Baby potatoes 1.5 lb; Garlic 6 cloves; Tomato paste 2 tbsp; Beef broth 16 oz; Red wine 0.5 cup; Fresh thyme 1 bunch; Fresh rosemary 1 bunch; Vegetable oil 2 tbsp; Kosher salt 3 tsp; Black pepper 1 tsp',
+    [
+      'Heat the oven to 300°F. Season the roast generously with salt and pepper.',
+      ['Sear the roast in the oil in a Dutch oven over medium-high, 4–5 minutes per side, until deeply browned.', "Pat the roast dry first and don't move it until it releases on its own. That deep crust becomes the gravy."],
+      'Remove the roast. Cook the onion wedges 4 minutes, then stir in the garlic and tomato paste. Deglaze with the wine.',
+      'Return the roast with the broth and herbs. Cover and braise in the oven 2½ hours.',
+      ['Add the carrots and potatoes around the roast and cook 45 minutes more, until the beef pulls apart with a fork.', 'Chuck is full of connective tissue that only melts with long, low, moist heat. If it\'s tough, it needs more time, not less.'],
+      'Skim the fat from the juices and serve the roast and vegetables with the pan juices spooned over.',
+    ]),
+
+  R('sloppy-joes', 'Homemade Sloppy Joes', 'American', '🍔', 30, 4, 'easy', true,
+    [560, 30, 48, 26, 3, 1],
+    'Ground beef 1.25 lb; Yellow onion 1; Bell peppers 1; Garlic 2 cloves; Tomato sauce 1 can; Ketchup 4 tbsp; Light brown sugar 1 tbsp; Worcestershire sauce 1 tbsp; Dijon mustard 1 tbsp; Burger buns 4; Kosher salt 1 tsp',
+    [
+      'Brown the beef in a skillet, breaking it up. Drain most of the fat.',
+      'Add the diced onion and pepper and cook 6 minutes. Add the garlic for 1 minute.',
+      ['Stir in the tomato sauce, ketchup, sugar, Worcestershire, mustard and salt. Simmer 10 minutes until thick.', "Mustard and Worcestershire keep the sauce from tasting like plain ketchup. They add tang and savory depth."],
+      'Toast the buns and pile in the filling.',
+    ]),
+
+  R('beef-lo-mein', 'Beef Lo Mein', 'Chinese', '🍜', 30, 4, 'medium', false,
+    [640, 34, 70, 22, 4, 1.5],
+    'Flank steak 1 lb; Spaghetti 12 oz; Broccoli 1 lb; Carrots 2; Green onions 1 bunch; Garlic 3 cloves; Soy sauce 4 tbsp; Oyster sauce 2 tbsp; Sesame oil 1 tbsp; Light brown sugar 1 tbsp; Cornstarch 1 tsp; Vegetable oil 3 tbsp',
+    [
+      ['Cook the spaghetti 1 minute less than the package says, drain and toss with the sesame oil.', 'Spaghetti is a great stand-in for lo mein noodles. Tossing it with oil keeps the strands from sticking.'],
+      'Slice the steak thinly against the grain and toss with 1 tbsp soy sauce and the cornstarch.',
+      'Whisk the rest of the soy sauce, the oyster sauce, sugar and 2 tbsp water.',
+      'Sear the beef in 2 tbsp oil over high heat, 2 minutes. Move to a plate. Stir-fry the broccoli and sliced carrots in the last 1 tbsp oil for 3 minutes, adding the garlic at the end.',
+      'Add the noodles, beef, sauce and green onions and toss with tongs until everything is coated and hot.',
+    ]),
+
+  R('stuffed-peppers', 'Stuffed Bell Peppers', 'American', '🫑', 60, 4, 'easy', false,
+    [560, 32, 46, 26, 6, 2],
+    'Bell peppers 4; Ground beef 1 lb; Long grain rice 0.75 cup; Yellow onion 1; Garlic 2 cloves; Diced tomatoes 1 can; Tomato sauce 1 can; Italian seasoning 2 tsp; Shredded mozzarella 4 oz; Olive oil 1 tbsp; Kosher salt 1.5 tsp',
+    [
+      'Cook the rice (1½ cups water; boil, cover, lowest heat 15 minutes). Heat the oven to 375°F.',
+      'Cut the tops off the peppers and remove the seeds. Stand them in a baking dish.',
+      'Brown the beef with the diced onion in the oil, then add garlic, Italian seasoning and salt. Stir in the rice, diced tomatoes and half the tomato sauce.',
+      ['Fill the peppers, pour the remaining sauce around them, cover with foil and bake 35 minutes.', 'Covering lets the peppers steam until tender. Uncover only for the cheese at the end.'],
+      'Uncover, top with mozzarella and bake 10 minutes more until bubbling.',
+    ]),
+
+  R('steak-frites', 'Steak Frites with Herb Butter', 'French', '🥩', 50, 2, 'advanced', false,
+    [820, 46, 52, 48, 5, 0.3],
+    'New York strip steak 1 lb; Russet potatoes 1.5 lb; Butter 4 tbsp; Garlic 1 cloves; Fresh parsley 1 bunch; Lemons 1; Vegetable oil 4 tbsp; Kosher salt 2.5 tsp; Black pepper 1 tsp',
+    [
+      'Salt the steaks and leave them uncovered in the fridge for at least 45 minutes.',
+      ['Cut the potatoes into ¼-inch fries, soak in cold water 10 minutes, then dry very well. Toss with 3 tbsp oil and salt and roast at 450°F for 30–35 minutes, flipping halfway.', 'Soaking rinses off surface starch so the fries crisp instead of sticking and going limp.'],
+      'Mash the soft butter with minced garlic, chopped parsley, lemon zest and a pinch of salt.',
+      ['Pat the steaks dry, season with pepper and sear in the remaining oil in a very hot skillet, flipping every minute, until 125°F inside for medium-rare.', 'Flipping often cooks the steak more evenly from edge to center.'],
+      'Rest 5 minutes, top with a slice of herb butter and serve with the fries.',
+    ]),
+
+  R('beef-bolognese', 'Beef Bolognese', 'Italian', '🍝', 90, 6, 'medium', true,
+    [680, 34, 76, 24, 6, 1],
+    'Ground beef 1 lb; Ground pork 0.5 lb; Yellow onion 1; Carrots 2; Celery 0.25 bunch; Garlic 3 cloves; Tomato paste 3 tbsp; Dry white wine 0.5 cup; Milk 0.5 cup; Crushed tomatoes 1 can; Bay leaves 1; Parmesan 2 oz; Fettuccine 1 lb; Olive oil 2 tbsp; Kosher salt 2 tsp',
+    [
+      ['Finely chop the onion, carrots and celery and cook in the oil over medium-low for 10 minutes until soft and sweet.', 'This mix (soffritto) is the flavor base of most Italian sauces. Cooking it slowly builds sweetness.'],
+      'Add the beef and pork and cook, breaking it up, until no longer pink. Add the garlic and tomato paste for 2 minutes.',
+      'Pour in the wine and simmer until it evaporates, then add the milk and simmer until absorbed.',
+      ['Add the tomatoes, bay leaf and salt. Simmer gently, partly covered, for 1 hour, adding a splash of water if it gets thick.', 'Milk sounds odd in a meat sauce, but it\'s traditional in Bologna: it tenderizes the meat and rounds off the tomato\'s acidity.'],
+      'Cook the fettuccine, then toss it in the sauce with a splash of pasta water. Serve with Parmesan.',
+    ]),
+
+  R('beef-kofta', 'Beef Kofta with Tahini Sauce', 'Middle Eastern', '🍢', 35, 4, 'medium', false,
+    [600, 34, 40, 34, 6, 1.5],
+    'Ground beef 1.5 lb; Yellow onion 1; Garlic 3 cloves; Fresh parsley 1 bunch; Ground cumin 2 tsp; Ground coriander 1 tsp; Smoked paprika 1 tsp; Ground cinnamon 0.25 tsp; Tahini 4 tbsp; Lemons 2; Cucumber 1; Tomatoes 2; Pita bread 4; Kosher salt 2 tsp',
+    [
+      ['Grate the onion and squeeze out its juice. Mix with the beef, 2 cloves grated garlic, chopped parsley, spices and 1½ tsp salt.', 'Grating the onion (instead of chopping) melts it into the meat, keeping kofta juicy without chunks that make them fall apart.'],
+      'Shape into 12 oval logs and chill 10 minutes if you have time.',
+      'Cook under a hot broiler or in a grill pan, 4–5 minutes per side, until charred and cooked through.',
+      ['Whisk the tahini with the juice of 1 lemon, the last garlic clove, a pinch of salt and enough cold water to make it pourable.', 'Tahini seizes up and looks broken when you add lemon. Keep whisking in water and it turns smooth and creamy.'],
+      'Serve in warm pitas with diced cucumber and tomato, the tahini sauce and lemon wedges.',
+    ]),
+
+  R('cheeseburger-sliders', 'Cheeseburger Sliders', 'American', '🍔', 30, 4, 'easy', true,
+    [690, 36, 42, 40, 2, 0.3],
+    'Ground beef 1.5 lb; Slider buns 12; American cheese 8 slices; Yellow onion 1; Dill pickles 1 jar; Butter 3 tbsp; Garlic powder 0.5 tsp; Sesame seeds 1 tsp; Kosher salt 1.5 tsp; Black pepper 0.5 tsp',
+    [
+      'Heat the oven to 375°F. Press the beef into a thin, even rectangle on a sheet pan roughly the size of the buns laid out, season with salt and pepper, and scatter the minced onion on top.',
+      ['Bake 15 minutes, then drain the juices and blot the top.', 'Baking all the beef as one sheet guarantees every slider is the same size and cooked evenly.'],
+      'Set the bottom buns in a baking dish. Lay the meat on top (cut to fit), then the cheese and pickles, then the bun tops.',
+      'Brush the tops with melted butter mixed with garlic powder, sprinkle with sesame seeds and bake 10 minutes until golden. Cut apart and serve.',
+    ]),
+
+  R('beef-pho', 'Beef Pho', 'Vietnamese', '🍜', 60, 4, 'advanced', false,
+    [520, 36, 62, 12, 3, 1],
+    'Sirloin steak 0.75 lb; Beef broth 64 oz; Yellow onion 1; Fresh ginger 1 piece; Star anise 3; Cinnamon stick 1; Fish sauce 2 tbsp; Light brown sugar 1 tsp; Rice noodles 12 oz; Bean sprouts 2 cup; Fresh basil 1 bunch; Limes 2; Jalapeño 1; Hoisin sauce 2 tbsp; Sriracha 2 tbsp',
+    [
+      ['Halve the onion and ginger and char them cut-side down in a dry pot until blackened in spots, 5 minutes.', 'Charring is the secret to pho\'s deep, slightly smoky broth.', 'charring onion ginger for pho'],
+      'Add the star anise and cinnamon and toast 1 minute, then the broth, fish sauce and sugar. Simmer 30 minutes and strain.',
+      ['Freeze the steak 20 minutes and slice it paper thin.', 'The steak goes into the bowl raw; the boiling broth cooks it in seconds. That only works if it\'s sliced very thin.'],
+      'Soak or cook the noodles according to the package and divide among bowls. Lay the raw steak slices on top.',
+      'Bring the broth back to a rolling boil and ladle it over the steak. Serve with sprouts, basil, lime, sliced jalapeño, hoisin and sriracha.',
+    ]),
+
+  R('beef-enchilada-casserole', 'Beef Enchilada Casserole', 'Mexican', '🫕', 50, 6, 'easy', false,
+    [580, 32, 44, 30, 8, 1],
+    'Ground beef 1.5 lb; Yellow onion 1; Black beans 1 can; Enchilada sauce 2 can; Corn tortillas 12; Shredded cheddar 8 oz; Chili powder 2 tsp; Ground cumin 1 tsp; Frozen corn 1 cup; Sour cream 0.5 cup; Cilantro 1 bunch; Kosher salt 1 tsp',
+    [
+      'Heat the oven to 375°F. Brown the beef with the onion, then stir in the spices, salt, beans, corn and 1 cup enchilada sauce.',
+      'Spread ½ cup sauce in a baking dish. Layer 4 tortillas, a third of the beef and a third of the cheese. Repeat twice, ending with sauce and cheese.',
+      ['Cover and bake 20 minutes, then uncover and bake 10 more until bubbling.', 'Rest it 10 minutes before cutting so the layers set and slice cleanly.'],
+      'Top with sour cream and cilantro.',
+    ]),
+
+  R('teriyaki-beef-skewers', 'Teriyaki Steak Skewers', 'Japanese', '🍢', 35, 4, 'easy', false,
+    [580, 36, 62, 18, 4, 1.5],
+    'Sirloin steak 1.5 lb; Soy sauce 4 tbsp; Mirin 3 tbsp; Light brown sugar 1 tbsp; Garlic 2 cloves; Fresh ginger 1 piece; Bell peppers 2; Red onion 1; Vegetable oil 1 tbsp; Jasmine rice 1.5 cup; Sesame seeds 1 tbsp',
+    [
+      'Rinse and cook the rice.',
+      'Cube the steak and marinate in half the soy sauce, mirin, sugar, garlic and ginger for 20 minutes.',
+      'Thread the steak onto skewers with chunks of pepper and onion. Brush with oil.',
+      ['Simmer the remaining soy, mirin, sugar and the leftover marinade for 3 minutes until syrupy.', 'Always boil used marinade before serving it as a sauce, since it touched raw meat.'],
+      'Broil or grill the skewers 3–4 minutes per side, brushing with the glaze at the end. Serve over rice with sesame seeds.',
+    ]),
+
+  R('swedish-meatballs', 'Swedish Meatballs', 'Swedish', '🍽️', 45, 4, 'medium', false,
+    [680, 36, 52, 36, 2, 0.3],
+    'Ground beef 0.75 lb; Ground pork 0.75 lb; Panko 0.5 cup; Milk 0.33 cup; Eggs 1; Yellow onion 1; Ground allspice 0.5 tsp; Butter 4 tbsp; All-purpose flour 3 tbsp; Beef broth 16 oz; Heavy cream 0.5 cup; Worcestershire sauce 1 tsp; Egg noodles 12 oz; Fresh parsley 1 bunch; Kosher salt 2 tsp',
+    [
+      'Soak the panko in the milk. Mix with the meats, egg, grated onion, allspice and 1½ tsp salt. Roll into 1-inch balls.',
+      'Brown the meatballs in 2 tbsp butter in a large skillet, 8–10 minutes, until cooked through. Move to a plate.',
+      ['Melt the rest of the butter in the pan, whisk in the flour and cook 1 minute. Slowly whisk in the broth, then the cream and Worcestershire, and simmer until thick.', 'Whisking the broth in slowly keeps the gravy smooth. Dumped in all at once, the flour lumps up.'],
+      'Return the meatballs to the gravy and simmer 3 minutes. Serve over egg noodles with parsley.',
+    ]),
+
+  R('beef-barbacoa-bowls', 'Slow-Braised Barbacoa Bowls', 'Mexican', '🌯', 210, 6, 'easy', true,
+    [620, 42, 50, 26, 8, 1],
+    'Beef chuck roast 2.5 lb; Chipotles in adobo 1 can; Limes 2; Apple cider vinegar 2 tbsp; Garlic 5 cloves; Ground cumin 2 tsp; Dried oregano 1 tsp; Ground cloves 0.25 tsp; Bay leaves 2; Beef broth 8 oz; Long grain rice 1.5 cup; Black beans 1 can; Cilantro 1 bunch; Kosher salt 2.5 tsp',
+    [
+      'Blend 3 chipotles plus 2 tbsp adobo sauce with the lime juice, vinegar, garlic, cumin, oregano, cloves, broth and salt.',
+      ['Cut the beef into 3-inch chunks, pour the sauce over in a Dutch oven, add the bay leaves, cover and braise at 300°F for 3 hours until it shreds easily.', 'Big chunks stay juicy during a long braise. Small pieces dry out.'],
+      'Cook the rice with chopped cilantro and a squeeze of lime. Warm the beans.',
+      'Shred the beef in its juices. Build bowls with rice, beans and barbacoa.',
+    ]),
+
+  R('mapo-tofu-beef', 'Mapo Tofu with Ground Beef', 'Chinese', '🌶️', 30, 4, 'medium', false,
+    [520, 30, 50, 22, 3, 0.5],
+    'Firm tofu 1 block; Ground beef 0.5 lb; Gochujang 2 tbsp; Garlic 3 cloves; Fresh ginger 1 piece; Soy sauce 2 tbsp; Chicken broth 8 oz; Cornstarch 2 tsp; Sesame oil 1 tsp; Green onions 1 bunch; Red pepper flakes 1 tsp; Vegetable oil 1 tbsp; Jasmine rice 1.5 cup',
+    [
+      'Rinse and cook the rice. Cut the tofu into ¾-inch cubes.',
+      ['Gently simmer the tofu cubes in salted water for 2 minutes, then drain.', 'A quick simmer firms up the tofu so it holds together in the sauce.'],
+      'Brown the beef in the oil until crisp, then add the garlic, ginger, pepper flakes and gochujang for 1 minute.',
+      'Add the broth and soy sauce, then the tofu. Simmer 4 minutes, shaking the pan instead of stirring.',
+      'Stir in the cornstarch mixed with 1 tbsp water until glossy. Finish with sesame oil and green onions. Serve over rice.',
+    ], { allergens: ['soy'] }),
+
+  R('irish-beef-stew', 'Irish Beef Stew', 'Irish', '🍀', 160, 6, 'medium', true,
+    [580, 40, 36, 24, 5, 1.5],
+    'Beef stew meat 2.5 lb; Stout beer 12 oz; Beef broth 16 oz; Yellow onion 2; Carrots 4; Russet potatoes 1.5 lb; Garlic 3 cloves; Tomato paste 2 tbsp; All-purpose flour 3 tbsp; Fresh thyme 1 bunch; Bay leaves 2; Vegetable oil 3 tbsp; Fresh parsley 1 bunch; Kosher salt 2.5 tsp',
+    [
+      'Season the beef, toss with the flour and brown in batches in the oil in a Dutch oven.',
+      'Cook the onions 6 minutes, then the garlic and tomato paste for 1 minute.',
+      ['Pour in the stout and scrape the pot. Add the broth, thyme, bay leaves and beef. Cover and simmer gently 1½ hours.', 'Stout adds a deep, slightly bitter malt flavor. It mellows completely during the long simmer.'],
+      'Add the carrots and potatoes and cook 45 minutes more. Season and finish with parsley.',
+    ]),
+];

@@ -277,7 +277,7 @@ function DetailContent({ baseRecipe, onClose }) {
             <StockIcon status={stockByName[ing.name]} size={18} />
             <Text style={styles.ingName}>{ing.name}</Text>
             <Text style={styles.ingQty}>
-              {ing.qty == null ? ing.measure || '' : formatQty(cookingQty(ing, recipe, portions), ing.unit)}
+              {ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions)}
             </Text>
           </View>
         ))}
@@ -324,6 +324,16 @@ function DetailContent({ baseRecipe, onClose }) {
       <VideoPlayer url={video?.url} title={video?.title} onClose={() => setVideo(null)} />
     </SafeAreaView>
   );
+}
+
+// Shows the recipe's own wording ("1 tsp") scaled to your portions, even
+// when the Kitchen tracks that item in another unit.
+function displayAmount(ing, recipe, portions) {
+  if (ing.displayUnit) {
+    const q = (ing.displayQty * portions) / recipe.servings;
+    return formatQty(Math.max(0.25, Math.round(q * 4) / 4), ing.displayUnit);
+  }
+  return formatQty(cookingQty(ing, recipe, portions), ing.unit);
 }
 
 const makeStyles = (c) => ({

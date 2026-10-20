@@ -19,6 +19,10 @@
 //                  swaps out when "Make sauces from scratch" is on.
 //
 // Ingredient names and units must match src/data/ingredients.js.
+//
+// Most recipes live in src/data/library/, written in a compact format.
+
+import LIBRARY from './library';
 
 const RAW_RECIPES = [
   {
@@ -1192,7 +1196,7 @@ function hasInstructions(recipe) {
   );
 }
 
-export const RECIPES = RAW_RECIPES.filter(hasInstructions);
+export const RECIPES = [...RAW_RECIPES, ...LIBRARY].filter(hasInstructions);
 
 // Recipes saved from online sources or imported from links. The app
 // registers them here at startup so the rest of the code can find them.
@@ -1229,7 +1233,7 @@ export function effectiveRecipe(recipe, settings) {
   const add = (ing) => {
     const key = `${ing.name.toLowerCase()}|${ing.unit}`;
     const cur = merged.get(key);
-    if (cur) merged.set(key, { ...cur, qty: cur.qty + ing.qty });
+    if (cur) merged.set(key, { name: cur.name, unit: cur.unit, qty: cur.qty + ing.qty });
     else merged.set(key, { ...ing });
   };
   recipe.ingredients.filter((i) => !scratch.replaces.includes(i.name)).forEach(add);
