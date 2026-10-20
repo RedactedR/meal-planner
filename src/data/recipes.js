@@ -1217,7 +1217,21 @@ export function getRecipe(id) {
 }
 
 export function cuisinesOf(list) {
-  return ['All', ...Array.from(new Set(list.map((r) => r.cuisine).filter(Boolean))).sort()];
+  const named = Array.from(new Set(list.map((r) => r.cuisine).filter((c) => c && c !== 'Vegetarian'))).sort();
+  return ['All', 'Vegetarian', ...named];
+}
+
+// No meat, poultry or seafood, including hidden ones like chicken broth,
+// fish sauce or Worcestershire (anchovies).
+const MEAT_WORDS = /\b(chicken|beef|steak|pork|turkey|lamb|sausage|bacon|ham|chorizo|pepperoni|salami|andouille|anchov\w*|fish|salmon|tuna|cod|shrimp|scallops?|crab|clams?|seafood|oyster sauce|worcestershire|prosciutto|pancetta|gelatin)\b/i;
+export function isVegetarian(recipe) {
+  return !!recipe.ingredients?.length && !recipe.ingredients.some((i) => MEAT_WORDS.test(i.name));
+}
+
+export function matchesCuisine(recipe, cuisine) {
+  if (cuisine === 'All') return true;
+  if (cuisine === 'Vegetarian') return isVegetarian(recipe);
+  return recipe.cuisine === cuisine;
 }
 
 export function stepText(step) {
@@ -1274,16 +1288,16 @@ export const ALLERGENS = [
 // and imported recipes, which don't come with allergen tags, and as a
 // second check on built-in ones.
 const ALLERGEN_WORDS = {
-  dairy: ['queso', 'paneer', 'milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
+  dairy: ['gouda', 'swiss', 'croissants', 'buttermilk', 'queso', 'paneer', 'milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
   eggs: ['egg', 'eggs', 'mayonnaise', 'mayo', 'aioli'],
-  gluten: ['barley', 'tortellini', 'dumplings', 'phyllo', 'gnocchi', 'ditalini', 'rigatoni', 'rotini', 'fettuccine', 'lasagna', 'orzo', 'udon', 'ramen', 'shells', 'puff pastry', 'stout', 'hoagie', 'rolls', 'flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
+  gluten: ['croissants', 'ciabatta', 'pizza dough', 'pancake', 'barbecue sauce', 'barley', 'tortellini', 'dumplings', 'phyllo', 'gnocchi', 'ditalini', 'rigatoni', 'rotini', 'fettuccine', 'lasagna', 'orzo', 'udon', 'ramen', 'shells', 'puff pastry', 'stout', 'hoagie', 'rolls', 'flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
   peanuts: ['peanut', 'peanuts'],
-  treenuts: ['almond', 'almonds', 'walnut', 'walnuts', 'pecan', 'pecans', 'cashew', 'cashews', 'pistachio', 'pistachios', 'hazelnut', 'hazelnuts', 'macadamia', 'pine nut', 'pine nuts'],
+  treenuts: ['pecans', 'almond', 'almonds', 'walnut', 'walnuts', 'pecan', 'pecans', 'cashew', 'cashews', 'pistachio', 'pistachios', 'hazelnut', 'hazelnuts', 'macadamia', 'pine nut', 'pine nuts'],
   shellfish: ['seafood', 'crab meat', 'old bay', 'shrimp', 'prawn', 'prawns', 'crab', 'lobster', 'scallop', 'scallops', 'clam', 'clams', 'mussel', 'mussels', 'oyster', 'oysters', 'oyster sauce', 'crawfish'],
   fish: ['seafood', 'anchovy fillets', 'worcestershire', 'salmon', 'tuna', 'cod', 'anchovy', 'anchovies', 'fish', 'fish sauce', 'tilapia', 'halibut', 'trout', 'sardine', 'sardines', 'haddock', 'mackerel'],
   soy: ['soy', 'soy sauce', 'tofu', 'edamame', 'miso', 'tempeh', 'teriyaki'],
   sesame: ['sesame', 'tahini'],
-  pork: ['pork', 'bacon', 'ham', 'pancetta', 'prosciutto', 'chorizo', 'andouille', 'sausage', 'lard'],
+  pork: ['salami', 'pepperoni', 'breakfast sausage', 'pork', 'bacon', 'ham', 'pancetta', 'prosciutto', 'chorizo', 'andouille', 'sausage', 'lard'],
 };
 
 // Exceptions where a word appears but the allergen doesn't.
@@ -1293,19 +1307,26 @@ const ALLERGEN_EXCEPTIONS = {
   gluten: ['rice noodles', 'corn tortillas', 'gluten-free'],
 };
 
+// One compiled pattern per allergen, built once.
+const ALLERGEN_PATTERNS = Object.fromEntries(
+  Object.entries(ALLERGEN_WORDS).map(([key, words]) => [key, new RegExp(`\\b(${words.join('|')})\\b`)])
+);
+const allergenCache = new Map();
+
 export function detectAllergens(recipe) {
+  const cacheKey = `${recipe.id}|${recipe.usingScratch ? 1 : 0}|${recipe.ingredients.length}`;
+  if (recipe.id && allergenCache.has(cacheKey)) return allergenCache.get(cacheKey);
   const found = new Set(recipe.allergens || []);
   const names = recipe.ingredients.map((i) => i.name.toLowerCase());
-  for (const [key, words] of Object.entries(ALLERGEN_WORDS)) {
+  for (const [key, pattern] of Object.entries(ALLERGEN_PATTERNS)) {
     if (found.has(key)) continue;
     const exceptions = ALLERGEN_EXCEPTIONS[key] || [];
-    const hit = names.some((n) => {
-      if (exceptions.some((e) => n.includes(e))) return false;
-      return words.some((w) => new RegExp(`\\b${w}\\b`).test(n));
-    });
+    const hit = names.some((n) => !exceptions.some((e) => n.includes(e)) && pattern.test(n));
     if (hit) found.add(key);
   }
-  return Array.from(found);
+  const result = Array.from(found);
+  if (recipe.id) allergenCache.set(cacheKey, result);
+  return result;
 }
 
 // A dinner counts as "balanced" when one serving has solid protein,

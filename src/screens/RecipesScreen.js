@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { allRecipes, cuisinesOf, effectiveRecipe } from '../data/recipes';
+import { allRecipes, cuisinesOf, effectiveRecipe, matchesCuisine } from '../data/recipes';
 import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
 import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
 import { useAppState } from '../AppState';
@@ -41,7 +41,7 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     const filtered = allowed.filter((r) => {
-      if (cuisine !== 'All' && r.cuisine !== cuisine) return false;
+      if (!matchesCuisine(r, cuisine)) return false;
       if (!q) return true;
       return (
         r.name.toLowerCase().includes(q) ||

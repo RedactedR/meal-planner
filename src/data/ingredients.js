@@ -301,6 +301,29 @@ const CATALOG_ROWS = [
   ['Harissa paste', 'tbsp', 0.4, 'pantry', 10],
   ['Maple syrup', 'tbsp', 0.35, 'pantry', 24],
   ['Rotel tomatoes', 'can', 1.29, 'pantry', 1],
+
+  // Library batch 7
+  ['Pepperoni', 'oz', 0.6, 'protein', 6],
+  ['Chorizo', 'oz', 0.5, 'protein', 9],
+  ['Breakfast sausage', 'oz', 0.35, 'protein', 12],
+  ['Deli roast beef', 'lb', 9.99, 'protein', 0.5],
+  ['Deli ham', 'lb', 6.99, 'protein', 0.5],
+  ['Salami', 'oz', 0.9, 'protein', 4],
+  ['Grapes', 'cup', 1.0, 'produce', 4],
+  ['Napa cabbage', 'head', 2.99, 'produce', 1],
+  ['Buttermilk', 'cup', 0.55, 'dairy', 4],
+  ['Swiss cheese', 'slices', 0.45, 'dairy', 10],
+  ['Smoked gouda', 'oz', 0.9, 'dairy', 7],
+  ['Goat cheese', 'oz', 0.9, 'dairy', 4],
+  ['Pizza dough', 'lb', 2.99, 'bakery', 1],
+  ['Croissants', '', 0.75, 'bakery', 6],
+  ['Ciabatta rolls', '', 0.8, 'bakery', 4],
+  ['Pizza sauce', 'jar', 2.99, 'pantry', 1],
+  ['Pecans', 'cup', 7.0, 'pantry', 1],
+  ['Yellow mustard', 'tbsp', 0.07, 'pantry', 28],
+  ['Pepperoncini', 'cup', 2.5, 'pantry', 1.5],
+  ['Barbecue sauce', 'tbsp', 0.1, 'pantry', 36],
+  ['Ground nutmeg', 'tsp', 0.3, 'spices', 20],
 ];
 
 export const CATEGORIES = [

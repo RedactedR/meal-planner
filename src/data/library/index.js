@@ -7,5 +7,6 @@ import pasta from './pasta';
 import vegetarian from './vegetarian';
 import soups from './soups';
 import bowls from './bowls';
+import handhelds from './handhelds';
 
-export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls];
+export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls, ...handhelds];
