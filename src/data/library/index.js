@@ -5,5 +5,7 @@ import pork from './pork';
 import seafood from './seafood';
 import pasta from './pasta';
 import vegetarian from './vegetarian';
+import soups from './soups';
+import bowls from './bowls';
 
-export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian];
+export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls];

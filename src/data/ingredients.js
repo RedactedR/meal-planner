@@ -282,6 +282,25 @@ const CATALOG_ROWS = [
   ['Paneer', 'oz', 0.6, 'dairy', 12],
   ['Blue cheese', 'oz', 0.9, 'dairy', 4],
   ['Phyllo dough', '', 0.25, 'frozen', 20],
+
+  // Library batch 5
+  ['Poblano peppers', '', 0.99, 'produce', 1],
+  ['Bamboo shoots', 'can', 1.49, 'pantry', 1],
+  ['Pearl barley', 'cup', 1.0, 'pantry', 3],
+  ['Bottled clam juice', 'oz', 0.4, 'pantry', 8],
+  ['Baking powder', 'tsp', 0.03, 'pantry', 100],
+  ['Sherry vinegar', 'tbsp', 0.25, 'pantry', 25],
+  ['White pepper', 'tsp', 0.3, 'spices', 15],
+  ['Cheese tortellini', 'oz', 0.35, 'dairy', 20],
+  ['Frozen dumplings', '', 0.4, 'frozen', 24],
+
+  // Library batch 6
+  ['Quinoa', 'cup', 1.6, 'pantry', 2.5],
+  ['Hummus', 'cup', 2.5, 'dairy', 1.25],
+  ['Nori sheets', '', 0.4, 'pantry', 10],
+  ['Harissa paste', 'tbsp', 0.4, 'pantry', 10],
+  ['Maple syrup', 'tbsp', 0.35, 'pantry', 24],
+  ['Rotel tomatoes', 'can', 1.29, 'pantry', 1],
 ];
 
 export const CATEGORIES = [
