@@ -1,6 +1,7 @@
 import { effectiveRecipe, getRecipe } from './data/recipes';
 import { catalogItem } from './data/ingredients';
 import { findInventoryItem, haveQty, stockStatus } from './pricing';
+import { packLabel, packOf, packPrice, packsFor } from './packages';
 
 // Things you can only buy whole: you can't buy half a can or half an onion.
 const WHOLE_UNITS = new Set(['', 'can', 'jar', 'bottle', 'packet', 'bag', 'tub', 'bunch', 'loaf', 'head', 'piece', 'slices']);
@@ -22,22 +23,17 @@ export function cookingQty(ing, recipe, portions) {
   return roundToQuarter(q);
 }
 
-// Amount to buy at the store.
-function shoppingQty(qty, unit) {
-  if (WHOLE_UNITS.has(unit) || unit === 'cloves' || unit === 'oz') return Math.max(1, Math.ceil(qty - 0.01));
-  return roundToQuarter(qty);
-}
-
 // How much ends up in your kitchen when you buy it: whole packages.
 // e.g. needing 3 cloves of garlic means you bring home a 10-clove head.
 export function boughtQty(item) {
-  const pack = catalogItem(item.name)?.pack || 1;
+  const pack = packOf(item.name);
   if (item.unpriced) return pack;
-  return Math.max(item.qty, Math.ceil(item.qty / pack - 0.01) * pack);
+  return (item.packs || 0) * pack;
 }
 
 // Combines the ingredients of several recipes into one shopping list,
 // adding up repeats and subtracting what's already in your Kitchen.
+// Each item is bought in whole packages and priced that way.
 // Online recipes have no exact amounts, so their items list the
 // recipe's measures (e.g. "2 cups") and have no price.
 export function buildGroceryList(recipeIds, portions, inventory = {}, settings) {
@@ -85,16 +81,17 @@ export function buildGroceryList(recipeIds, portions, inventory = {}, settings) 
         };
       }
       const have = haveQty(inventory, item.name, item.unit);
-      const toBuy = Math.max(0, item.need - have);
-      const qty = toBuy > 0.001 ? shoppingQty(toBuy, item.unit) : 0;
+      const packs = packsFor(item.name, Math.max(0, item.need - have));
       return {
         ...item,
         have,
         haveUnit: item.unit,
-        qty,
+        packs,
+        // Amount you bring home, in recipe units.
+        qty: packs * packOf(item.name),
         status: stockStatus(have, item.need),
         category: info?.category ?? 'other',
-        price: qty * (info?.price ?? 0),
+        price: packs * packPrice(item.name),
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -103,7 +100,7 @@ export function buildGroceryList(recipeIds, portions, inventory = {}, settings) 
 // What to show for an item's amount on the shopping list.
 export function itemAmount(item) {
   if (item.unpriced) return item.measures.length ? item.measures.join(' + ') : 'as needed';
-  return formatQty(item.qty, item.unit);
+  return packLabel(item.name, item.unit, item.packs);
 }
 
 const FRACTIONS = { 0.25: '¼', 0.5: '½', 0.75: '¾' };

@@ -2,6 +2,7 @@ import { Text, View } from 'react-native';
 import { CATEGORIES } from '../data/ingredients';
 import { formatQty } from '../grocery';
 import { money } from '../pricing';
+import { approxAmount, packLabel } from '../packages';
 import { radius, useStyles, useTheme } from '../theme';
 import { StockIcon } from './Badges';
 
@@ -19,15 +20,15 @@ export default function CostBreakdown({ cost, portions }) {
       <View style={styles.summary}>
         <View style={styles.summaryCell}>
           <Text style={styles.big}>{money(cost.total)}</Text>
-          <Text style={styles.small}>total</Text>
-        </View>
-        <View style={styles.summaryCell}>
-          <Text style={styles.big}>{money(cost.perServing)}</Text>
-          <Text style={styles.small}>per serving</Text>
+          <Text style={styles.small}>full price</Text>
         </View>
         <View style={styles.summaryCell}>
           <Text style={[styles.big, { color: c.primary }]}>{money(cost.youPay)}</Text>
-          <Text style={styles.small}>{cost.savings > 0.005 ? `after ${money(cost.savings)} on hand` : 'to buy'}</Text>
+          <Text style={styles.small}>{cost.savings > 0.005 ? `you pay · ${money(cost.savings)} on hand` : 'you pay'}</Text>
+        </View>
+        <View style={styles.summaryCell}>
+          <Text style={styles.big}>{money(cost.usedValue)}</Text>
+          <Text style={styles.small}>this meal uses</Text>
         </View>
       </View>
 
@@ -59,7 +60,9 @@ export default function CostBreakdown({ cost, portions }) {
                 <Text style={styles.name} numberOfLines={1}>
                   {i.name}
                 </Text>
-                <Text style={styles.cost}>{money(i.cost)}</Text>
+                <Text style={[styles.cost, i.buyPacks === 0 && styles.costHave]}>
+                  {i.buyPacks === 0 ? 'have it' : money(i.buyCost)}
+                </Text>
               </View>
               <View style={styles.track}>
                 <View
@@ -72,25 +75,32 @@ export default function CostBreakdown({ cost, portions }) {
                   }}
                 />
               </View>
-              {i.have > 0 && (
-                <Text style={styles.have}>
-                  You have {formatQty(Math.round(i.have * 100) / 100, i.unit)}
-                  {i.status === 'partial' ? ' — not quite enough' : ''}
-                </Text>
-              )}
+              <Text style={styles.have}>
+                {i.buyPacks > 0 ? `Buy ${packLabel(i.name, i.unit, i.buyPacks)} · ` : ''}
+                uses {formatQty(Math.round(i.need * 100) / 100, i.unit)}
+                {i.leftover > 0.01 ? ` · ${leftoverText(i)} left over` : ''}
+              </Text>
             </View>
           </View>
         ))}
       </View>
       <Text style={styles.footnote}>
-        Estimated King Soopers prices for {portions} {portions === 1 ? 'serving' : 'servings'}, counting only the
-        amount the recipe uses. Live prices come when we connect your King Soopers account.
+        Estimated King Soopers prices for {portions} {portions === 1 ? 'serving' : 'servings'}, buying whole packages.
+        Leftovers stay in your Kitchen, so the next recipe that uses them costs less. Live prices show when you send
+        your list to your cart.
       </Text>
     </View>
   );
 }
 
+function leftoverText(i) {
+  const approx = approxAmount(i.name, i.leftover);
+  if (approx) return approx;
+  return formatQty(Math.round(i.leftover * 100) / 100, i.unit);
+}
+
 const makeStyles = (c) => ({
+  costHave: { color: c.primary },
   summary: { flexDirection: 'row', gap: 8 },
   summaryCell: {
     flex: 1,

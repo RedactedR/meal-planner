@@ -3,6 +3,7 @@ import { Alert, Modal, Pressable, ScrollView, Text, TextInput, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CATALOG, CATEGORIES, catalogItem, keyOf } from '../data/ingredients';
 import { formatQty } from '../grocery';
+import { approxAmount, packOf } from '../packages';
 import { money } from '../pricing';
 import { useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
@@ -10,9 +11,13 @@ import { radius, useStyles, useTheme } from '../theme';
 
 const CATALOG_LIST = Object.values(CATALOG).sort((a, b) => a.name.localeCompare(b.name));
 
-function stepFor(unit) {
-  if (unit === 'lb') return 0.25;
-  if (unit === 'cup') return 0.5;
+// − and + move a quarter package at a time for things like a jar of
+// paprika (24 tsp), and one at a time for things you count.
+function stepFor(item) {
+  const pack = packOf(item.name);
+  if (item.unit !== '' && pack >= 4) return pack / 4;
+  if (item.unit === 'lb') return 0.25;
+  if (item.unit === 'cup') return 0.5;
   return 1;
 }
 
@@ -127,12 +132,17 @@ export default function KitchenScreen() {
             <View style={styles.card}>
               {g.items.map((item, i) => (
                 <View key={item.name} style={[styles.row, i > 0 && styles.rowBorder]}>
-                  <Text style={styles.rowName}>{item.name}</Text>
-                  <Pressable onPress={() => change(item, -stepFor(item.unit))} style={styles.stepBtn} hitSlop={6}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.rowName}>{item.name}</Text>
+                    {approxAmount(item.name, item.qty) && (
+                      <Text style={styles.approx}>{approxAmount(item.name, item.qty)}</Text>
+                    )}
+                  </View>
+                  <Pressable onPress={() => change(item, -stepFor(item))} style={styles.stepBtn} hitSlop={6}>
                     <Text style={styles.stepText}>−</Text>
                   </Pressable>
-                  <Text style={styles.qty}>{formatQty(item.qty, item.unit)}</Text>
-                  <Pressable onPress={() => change(item, stepFor(item.unit))} style={styles.stepBtn} hitSlop={6}>
+                  <Text style={styles.qty}>{formatQty(Math.round(item.qty * 100) / 100, item.unit)}</Text>
+                  <Pressable onPress={() => change(item, stepFor(item))} style={styles.stepBtn} hitSlop={6}>
                     <Text style={styles.stepText}>+</Text>
                   </Pressable>
                 </View>
@@ -290,7 +300,8 @@ const makeStyles = (c) => ({
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingVertical: 9 },
   rowBorder: { borderTopWidth: 1, borderTopColor: c.border },
-  rowName: { flex: 1, fontSize: 15, color: c.text },
+  rowName: { fontSize: 15, color: c.text },
+  approx: { fontSize: 12, color: c.muted, marginTop: 2 },
   qty: { minWidth: 70, textAlign: 'center', fontSize: 14, color: c.text, fontWeight: '600' },
   stepBtn: {
     width: 30,

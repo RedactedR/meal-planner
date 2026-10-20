@@ -135,7 +135,7 @@ function Matcher({ items, onClose, onMarkBought }) {
           </Pressable>
           <Pressable
             onPress={() => {
-              onMarkBought(picked.map((r) => r.item));
+              onMarkBought(picked.map((r) => ({ ...r.item, packs: r.qty })));
               onClose();
             }}
             style={styles.secondaryBtn}

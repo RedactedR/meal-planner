@@ -1,6 +1,7 @@
 // Every ingredient the recipes use, with:
 //   unit     – the unit recipes and your Kitchen inventory measure it in
-//   price    – estimated King Soopers price per unit (USD). These are
+//   price    – estimated King Soopers price per unit (USD); a whole
+//              package costs price × pack. These are
 //              estimates, not live prices; live prices come with the
 //              King Soopers connection later.
 //   category – store section, used for grouping and the cost chart
@@ -26,7 +27,7 @@ const CATALOG_ROWS = [
   ['Feta cheese', 'oz', 0.75, 'dairy', 6],
   ['Tzatziki', 'tub', 4.49, 'dairy', 1],
   ['Pepper jack cheese', 'slices', 0.4, 'dairy', 10],
-  ['Butter', 'tbsp', 0.3, 'dairy', 16],
+  ['Butter', 'tbsp', 0.15, 'dairy', 32],
   ['Parmesan', 'oz', 1.25, 'dairy', 5],
   ['Shredded cheddar', 'oz', 0.4, 'dairy', 8],
 
@@ -102,25 +103,25 @@ const CATALOG_ROWS = [
   ['Kosher salt', 'tsp', 0.02, 'spices', 160],
   ['Black pepper', 'tsp', 0.12, 'spices', 20],
   ['Garlic powder', 'tsp', 0.12, 'spices', 30],
-  ['Baking soda', 'tsp', 0.02, 'pantry', 100],
+  ['Baking soda', 'tsp', 0.01, 'pantry', 100],
   ['Cornstarch', 'tsp', 0.03, 'pantry', 100],
   ['Vegetable oil', 'tbsp', 0.06, 'pantry', 96],
   ['Sesame oil', 'tbsp', 0.35, 'pantry', 14],
   ['Soy sauce', 'tbsp', 0.12, 'pantry', 32],
-  ['Fish sauce', 'tbsp', 0.18, 'pantry', 46],
+  ['Fish sauce', 'tbsp', 0.09, 'pantry', 46],
   ['Oyster sauce', 'tbsp', 0.2, 'pantry', 18],
-  ['Tamarind concentrate', 'tbsp', 0.45, 'pantry', 16],
-  ['Mirin', 'tbsp', 0.3, 'pantry', 20],
+  ['Tamarind concentrate', 'tbsp', 0.25, 'pantry', 16],
+  ['Mirin', 'tbsp', 0.25, 'pantry', 20],
   ['Rice vinegar', 'tbsp', 0.15, 'pantry', 24],
   ['Light brown sugar', 'tbsp', 0.06, 'pantry', 64],
   ['Dijon mustard', 'tbsp', 0.2, 'pantry', 16],
-  ['Mayonnaise', 'tbsp', 0.12, 'pantry', 60],
+  ['Mayonnaise', 'tbsp', 0.075, 'pantry', 60],
   ['Ketchup', 'tbsp', 0.07, 'pantry', 38],
   ['Dill pickles', 'jar', 3.49, 'pantry', 1],
   ['Dry white wine', 'cup', 2.5, 'pantry', 3],
   ['Arborio rice', 'cup', 1.75, 'pantry', 4],
   ['Chickpeas', 'can', 1.09, 'pantry', 1],
-  ['Bacon', 'oz', 0.5, 'protein', 16],
+  ['Bacon', 'oz', 0.4, 'protein', 16],
   ['New York strip steak', 'lb', 13.99, 'protein', 1],
   ['American cheese', 'slices', 0.25, 'dairy', 16],
   ['Shallot', '', 0.69, 'produce', 1],

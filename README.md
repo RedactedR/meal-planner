@@ -6,7 +6,7 @@ Plan a week of dinners from a recipe library, then turn them into a grocery list
 
 - **Recipes**: 23 built-in recipes with in-depth, step-by-step instructions, 80 pro tips (toggle them off in Settings), "Watch how" technique videos, difficulty levels, and homemade versions of store-bought sauces and seasonings. Search, filter by cuisine, sort by top rated or best deal, and rate recipes yourself.
 - **Find online**: browse and search thousands of recipes from TheMealDB (with full recipe videos), or import any recipe by pasting a link from sites like Serious Eats, Budget Bytes or Allrecipes. Saved recipes join your library and work with the planner, Kitchen and grocery list.
-- **Costs**: every recipe shows an estimated King Soopers cost, cost per serving, and a chart breaking it down by ingredient and store section.
+- **Costs**: recipes are priced by the whole packages you'd buy (a jar of paprika, not 1 tsp of it), minus what's already in your Kitchen, with a chart by ingredient and store section. Leftovers stay in your Kitchen with an approximate amount ("≈ ¾ jar").
 - **Kitchen**: your food inventory. A first-time checklist fills it in; groceries you mark as bought get added, and meals you cook get taken out. Recipes show ✓ for ingredients you have.
 - **Deals**: meals that cost less because you already have some of the ingredients, with the discount shown.
 - **Week**: fill 5 or 7 days, or tap "Surprise me". Suggestions for meals that reuse ingredients from your week. The recipe page shows your week so you can see which days are free.

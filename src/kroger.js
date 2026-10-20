@@ -1,6 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { catalogItem } from './data/ingredients';
 
 // Talks to your King Soopers connection server (server/kroger-worker.js),
 // which talks to Kroger. King Soopers is a Kroger store, so it uses
@@ -115,15 +114,10 @@ export function searchTerm(name) {
 }
 
 // How many of a product to add for a shopping-list item.
-// Items counted by the piece (3 limes, 2 bell peppers) use the count,
-// packs are rounded up (2 eggs -> 1 dozen), and everything else starts
-// at 1 package. The user can adjust before adding.
+// Matches the shopping list's whole packages (4 onions, 1 jar of
+// paprika). The user can adjust before adding.
 export function suggestedQuantity(item) {
   if (item.unpriced) return 1;
-  if (item.unit === '' || item.unit === 'can') {
-    // Things sold in packs (a dozen eggs, a bag of tortillas) count packs.
-    const pack = catalogItem(item.name)?.pack || 1;
-    return Math.max(1, Math.ceil(item.qty / pack - 0.01));
-  }
-  return 1;
+  // The shopping list already works in whole packages (4 onions, 1 jar).
+  return Math.max(1, item.packs || 1);
 }
