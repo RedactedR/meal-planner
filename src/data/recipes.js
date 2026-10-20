@@ -1274,9 +1274,9 @@ export const ALLERGENS = [
 // and imported recipes, which don't come with allergen tags, and as a
 // second check on built-in ones.
 const ALLERGEN_WORDS = {
-  dairy: ['milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
+  dairy: ['queso', 'paneer', 'milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
   eggs: ['egg', 'eggs', 'mayonnaise', 'mayo', 'aioli'],
-  gluten: ['flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
+  gluten: ['phyllo', 'gnocchi', 'ditalini', 'rigatoni', 'rotini', 'fettuccine', 'lasagna', 'orzo', 'udon', 'ramen', 'shells', 'puff pastry', 'stout', 'hoagie', 'rolls', 'flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
   peanuts: ['peanut', 'peanuts'],
   treenuts: ['almond', 'almonds', 'walnut', 'walnuts', 'pecan', 'pecans', 'cashew', 'cashews', 'pistachio', 'pistachios', 'hazelnut', 'hazelnuts', 'macadamia', 'pine nut', 'pine nuts'],
   shellfish: ['seafood', 'crab meat', 'old bay', 'shrimp', 'prawn', 'prawns', 'crab', 'lobster', 'scallop', 'scallops', 'clam', 'clams', 'mussel', 'mussels', 'oyster', 'oysters', 'oyster sauce', 'crawfish'],

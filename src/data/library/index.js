@@ -4,5 +4,6 @@ import beef from './beef';
 import pork from './pork';
 import seafood from './seafood';
 import pasta from './pasta';
+import vegetarian from './vegetarian';
 
-export default [...chicken, ...beef, ...pork, ...seafood, ...pasta];
+export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian];

@@ -264,6 +264,24 @@ const CATALOG_ROWS = [
   ['Red wine vinegar', 'tbsp', 0.1, 'pantry', 32],
   ['Green curry paste', 'tbsp', 0.8, 'pantry', 4],
   ['Old Bay seasoning', 'tsp', 0.15, 'spices', 30],
+
+  // Library batch 4
+  ['Eggplant', '', 1.79, 'produce', 1],
+  ['Leeks', '', 1.29, 'produce', 1],
+  ['Cauliflower', '', 2.99, 'produce', 1],
+  ['Portobello mushrooms', '', 1.5, 'produce', 2],
+  ['Artichoke hearts', 'can', 2.79, 'pantry', 1],
+  ['Brown lentils', 'cup', 0.9, 'pantry', 4],
+  ['Couscous', 'cup', 1.5, 'pantry', 2],
+  ['Polenta', 'cup', 1.0, 'pantry', 4],
+  ['Pinto beans', 'can', 1.09, 'pantry', 1],
+  ['Balsamic vinegar', 'tbsp', 0.2, 'pantry', 34],
+  ['Hot sauce', 'tbsp', 0.15, 'pantry', 24],
+  ['Cream cheese', 'oz', 0.35, 'dairy', 8],
+  ['Queso fresco', 'oz', 0.5, 'dairy', 10],
+  ['Paneer', 'oz', 0.6, 'dairy', 12],
+  ['Blue cheese', 'oz', 0.9, 'dairy', 4],
+  ['Phyllo dough', '', 0.25, 'frozen', 20],
 ];
 
 export const CATEGORIES = [
