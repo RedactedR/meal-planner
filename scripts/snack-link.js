@@ -1,6 +1,8 @@
 // Prints a Snack link that loads every app file straight from GitHub.
 // Run: node scripts/snack-link.js
 const { execSync } = require('child_process');
+// Must match the SDK the Expo Go app on your phone supports.
+const SDK = '57.0.0';
 const files = ['App.js', ...execSync('git ls-files src').toString().trim().split('\n')];
 const base = 'https://raw.githubusercontent.com/RedactedR/meal-planner/main/';
 const map = {};
@@ -8,6 +10,7 @@ for (const f of files) map[f] = { type: 'CODE', url: base + f };
 const deps = '@react-native-async-storage/async-storage,react-native-safe-area-context,expo-status-bar,react-native-webview,expo-web-browser,expo-linking';
 console.log(
   'https://snack.expo.dev/?name=' + encodeURIComponent('Meal Planner') +
+  '&sdkVersion=' + SDK +
   '&dependencies=' + encodeURIComponent(deps) +
   '&files=' + encodeURIComponent(JSON.stringify(map))
 );
