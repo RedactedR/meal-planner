@@ -90,7 +90,7 @@ export default function SettingsScreen() {
             </Text>
           </View>
           <Switch
-            value={settings.balancedOnly}
+            value={!!settings.balancedOnly}
             onValueChange={(balancedOnly) => updateSettings({ balancedOnly })}
             trackColor={{ true: colors.primary, false: colors.border }}
             thumbColor="#fff"

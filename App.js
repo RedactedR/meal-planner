@@ -9,6 +9,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import KitchenScreen from './src/screens/KitchenScreen';
 import RecipeDetail from './src/components/RecipeDetail';
 import { ToastProvider } from './src/components/Toast';
+import ErrorBoundary from './src/components/ErrorBoundary';
 import { AppStateProvider, useAppState } from './src/AppState';
 import { ThemeContext, palettes, useStyles } from './src/theme';
 
@@ -23,9 +24,11 @@ const TABS = [
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AppStateProvider>
-        <ThemedApp />
-      </AppStateProvider>
+      <ErrorBoundary>
+        <AppStateProvider>
+          <ThemedApp />
+        </AppStateProvider>
+      </ErrorBoundary>
     </SafeAreaProvider>
   );
 }

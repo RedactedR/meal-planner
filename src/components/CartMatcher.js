@@ -217,7 +217,7 @@ function Matcher({ items, onClose, onMarkBought }) {
         </Text>
         <Pressable
           onPress={add}
-          disabled={adding || loading || picked.length === 0}
+          disabled={!!(adding || loading || picked.length === 0)}
           style={[styles.primaryBtn, { alignSelf: 'stretch' }, (adding || loading || picked.length === 0) && { opacity: 0.45 }]}
         >
           {adding ? <ActivityIndicator color={colors.onPrimary} /> : <Text style={styles.primaryText}>Add {picked.length} items to cart</Text>}

@@ -97,7 +97,7 @@ export default function KrogerSettings() {
           keyboardType="url"
           keyboardAppearance={colors.mode}
         />
-        <Pressable onPress={saveServer} disabled={!server.trim() || busy} style={[styles.btn, (!server.trim() || busy) && styles.dim]}>
+        <Pressable onPress={saveServer} disabled={!server.trim() || !!busy} style={[styles.btn, (!server.trim() || !!busy) && styles.dim]}>
           {busy === 'check' ? <ActivityIndicator color={colors.onPrimary} /> : <Text style={styles.btnText}>Save</Text>}
         </Pressable>
       </View>
@@ -115,7 +115,7 @@ export default function KrogerSettings() {
         <Pressable
           onPress={doSignIn}
           disabled={!kroger.serverUrl || !!busy}
-          style={[styles.wideBtn, (!kroger.serverUrl || busy) && styles.dim]}
+          style={[styles.wideBtn, (!kroger.serverUrl || !!busy) && styles.dim]}
         >
           {busy === 'signin' ? (
             <ActivityIndicator color={colors.onPrimary} />
@@ -147,7 +147,7 @@ export default function KrogerSettings() {
         <Pressable
           onPress={lookUpStores}
           disabled={!kroger.serverUrl || zip.trim().length !== 5 || !!busy}
-          style={[styles.btn, (!kroger.serverUrl || zip.trim().length !== 5 || busy) && styles.dim]}
+          style={[styles.btn, (!kroger.serverUrl || zip.trim().length !== 5 || !!busy) && styles.dim]}
         >
           {busy === 'stores' ? (
             <ActivityIndicator color={colors.onPrimary} />
