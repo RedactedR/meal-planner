@@ -65,7 +65,7 @@ function Main() {
         ) : tab === 'planner' ? (
           <PlannerScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'kitchen' ? (
-          <KitchenScreen />
+          <KitchenScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'grocery' ? (
           <GroceryScreen />
         ) : (

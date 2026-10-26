@@ -5,6 +5,8 @@ import { CATALOG, CATEGORIES, catalogItem, keyOf } from '../data/ingredients';
 import { formatQty } from '../grocery';
 import { approxAmount, packOf } from '../packages';
 import { money } from '../pricing';
+import { cookFromKitchen, missingText } from '../cookable';
+import RecipeCard from '../components/RecipeCard';
 import { useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
 import { radius, useStyles, useTheme } from '../theme';
@@ -22,11 +24,11 @@ function stepFor(item) {
 }
 
 // Your kitchen inventory: what you have, how much, grouped by store section.
-export default function KitchenScreen() {
+export default function KitchenScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { inventory, kitchenSetup, setInventoryQty, addToInventory, finishKitchenSetup } = useAppState();
+  const { inventory, settings, kitchenSetup, setInventoryQty, addToInventory, finishKitchenSetup } = useAppState();
   const [setupOpen, setSetupOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -124,6 +126,10 @@ export default function KitchenScreen() {
 
         {groups.length === 0 && <Text style={styles.empty}>Your kitchen is empty. Add items above.</Text>}
 
+        {groups.length > 0 && <CookFromKitchen onOpenRecipe={onOpenRecipe} inventory={inventory} settings={settings} />}
+
+        {groups.length > 0 && <Text style={[styles.section, { marginTop: 30 }]}>What you have</Text>}
+
         {groups.map((g) => (
           <View key={g.key}>
             <Text style={styles.section}>
@@ -156,6 +162,57 @@ export default function KitchenScreen() {
         </Pressable>
       </ScrollView>
       <KitchenSetup visible={setupOpen} onClose={() => setSetupOpen(false)} />
+    </View>
+  );
+}
+
+// Recipes you can make right now, and the cheapest ones to finish.
+function CookFromKitchen({ onOpenRecipe, inventory, settings }) {
+  const styles = useStyles(makeStyles);
+  const [showAll, setShowAll] = useState(false);
+  const { ready, cheapest } = useMemo(() => cookFromKitchen(inventory, settings), [inventory, settings]);
+  const readyShown = showAll ? ready : ready.slice(0, 4);
+
+  return (
+    <View>
+      <Text style={styles.heading}>🍳 Cook from your Kitchen</Text>
+
+      <Text style={styles.section}>Ready to cook · {ready.length}</Text>
+      <View style={{ paddingHorizontal: 20 }}>
+        {ready.length === 0 ? (
+          <Text style={styles.hintText}>
+            Nothing you can make with only what's here yet. The meals below need just a few things.
+          </Text>
+        ) : (
+          readyShown.map(({ recipe }) => (
+            <RecipeCard key={recipe.id} recipe={recipe} onPress={() => onOpenRecipe(recipe)} note="✓ You have everything" />
+          ))
+        )}
+        {ready.length > 4 && (
+          <Pressable onPress={() => setShowAll(!showAll)} style={{ alignSelf: 'center', paddingVertical: 4 }}>
+            <Text style={styles.link}>{showAll ? 'Show fewer' : `Show all ${ready.length}`}</Text>
+          </Pressable>
+        )}
+      </View>
+
+      {cheapest.length > 0 && (
+        <>
+          <Text style={styles.section}>Cheapest to finish</Text>
+          <Text style={[styles.hintText, { paddingHorizontal: 20, marginBottom: 10, marginTop: -4 }]}>
+            Uses what you have — just pick up the rest.
+          </Text>
+          <View style={{ paddingHorizontal: 20 }}>
+            {cheapest.map(({ recipe, missing, toBuy }) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onPress={() => onOpenRecipe(recipe)}
+                note={`🛒 ${money(toBuy)} for ${missingText(missing)}`}
+              />
+            ))}
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -279,6 +336,8 @@ const makeStyles = (c) => ({
   },
   suggestText: { color: c.text, fontSize: 15 },
   suggestSub: { color: c.primary, fontSize: 13, fontWeight: '600' },
+  heading: { fontSize: 20, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 24 },
+  hintText: { fontSize: 14, color: c.muted, lineHeight: 20 },
   empty: { textAlign: 'center', color: c.muted, marginTop: 40 },
   section: {
     fontSize: 13,
