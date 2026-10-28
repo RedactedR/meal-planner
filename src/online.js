@@ -101,6 +101,7 @@ const AREA_FOR_CUISINE = {
 
 export async function mealDbByCuisine(cuisine) {
   if (cuisine === 'Vegetarian') return mealDbByCategory('Vegetarian');
+  if (cuisine.startsWith('💪')) return []; // online recipes have no nutrition info
   const area = AREA_FOR_CUISINE[cuisine] ?? cuisine;
   if (!area) return [];
   const data = await getJson(`${MEALDB}/filter.php?a=${encodeURIComponent(area)}`);

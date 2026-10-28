@@ -32,6 +32,10 @@ const DEFAULT_STATE = {
   inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }
   kitchenSetup: false, // true once the first-time kitchen inventory is done
   savedRecipes: {}, // online or imported recipes the user saved: { id: recipe }
+  // Daily calorie & protein goals; null until set up on the Today tab.
+  goals: null, // { calories, protein, weight, aim: 'lose' | 'maintain' | 'build' }
+  // What you ate: { '2026-10-28': [{ id, name, emoji, calories, protein, servings, recipeId? }] }
+  foodLog: {},
   kroger: {
     serverUrl: '', // your King Soopers connection server (see server/README.md)
     tokens: null, // { accessToken, refreshToken, expiresAt } after sign-in
@@ -60,6 +64,8 @@ export function AppStateProvider({ children }) {
             inventory: { ...parsed.inventory },
             kitchenSetup: !!parsed.kitchenSetup,
             savedRecipes: { ...parsed.savedRecipes },
+            goals: parsed.goals || null,
+            foodLog: { ...parsed.foodLog },
             kroger: { ...DEFAULT_STATE.kroger, ...parsed.kroger },
           });
         } else {
@@ -79,7 +85,7 @@ export function AppStateProvider({ children }) {
     if (loaded) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [state, loaded]);
 
-  const { plan, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger } = state;
+  const { plan, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger, goals, foodLog } = state;
   // Make saved online recipes findable everywhere before anything renders.
   registerRecipes(Object.values(savedRecipes));
   const days = ALL_DAYS.slice(0, plan.dayCount);
@@ -131,6 +137,20 @@ export function AppStateProvider({ children }) {
         return { ...s, inventory: inv };
       });
     },
+    setGoals(goals) {
+      setState((s) => ({ ...s, goals }));
+    },
+    // Add a food to a day's log. entry: { name, emoji?, calories, protein, servings?, recipeId? }
+    logFood(date, entry) {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      setState((s) => ({
+        ...s,
+        foodLog: { ...s.foodLog, [date]: [...(s.foodLog[date] || []), { servings: 1, ...entry, id }] },
+      }));
+    },
+    removeFood(date, id) {
+      setState((s) => ({ ...s, foodLog: { ...s.foodLog, [date]: (s.foodLog[date] || []).filter((e) => e.id !== id) } }));
+    },
     updateKroger(changes) {
       setState((s) => ({ ...s, kroger: { ...s.kroger, ...changes } }));
     },
@@ -158,7 +178,7 @@ export function AppStateProvider({ children }) {
     },
   };
 
-  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger, ...actions };
+  const value = { loaded, plan, days, settings, ratings, inventory, kitchenSetup, savedRecipes, kroger, goals, foodLog, ...actions };
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
 

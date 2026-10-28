@@ -1,3 +1,4 @@
+import { isHighProtein } from '../nutrition';
 // The built-in recipe library.
 //
 // Every recipe must have instructions. Any recipe without steps is
@@ -1216,9 +1217,12 @@ export function getRecipe(id) {
   return RECIPES.find((r) => r.id === id) || extraRecipes.get(id);
 }
 
+// Filter chip for recipes with 35 g+ protein per serving.
+export const HIGH_PROTEIN = '💪 High protein';
+
 export function cuisinesOf(list) {
   const named = Array.from(new Set(list.map((r) => r.cuisine).filter((c) => c && c !== 'Vegetarian'))).sort();
-  return ['All', 'Vegetarian', ...named];
+  return ['All', HIGH_PROTEIN, 'Vegetarian', ...named];
 }
 
 // No meat, poultry or seafood, including hidden ones like chicken broth,
@@ -1231,6 +1235,7 @@ export function isVegetarian(recipe) {
 export function matchesCuisine(recipe, cuisine) {
   if (cuisine === 'All') return true;
   if (cuisine === 'Vegetarian') return isVegetarian(recipe);
+  if (cuisine === HIGH_PROTEIN) return isHighProtein(recipe);
   return recipe.cuisine === cuisine;
 }
 

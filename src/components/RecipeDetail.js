@@ -13,6 +13,7 @@ import Stars from './Stars';
 import CostBreakdown from './CostBreakdown';
 import VideoPlayer, { openVideo } from './VideoPlayer';
 import { Pill, StockIcon } from './Badges';
+import { dateKey } from '../nutrition';
 
 // Full-screen view of one recipe: your week, rating, cost breakdown,
 // nutrition, ingredients (with stock icons), in-depth steps with pro
@@ -31,7 +32,7 @@ function DetailContent({ baseRecipe, onClose }) {
   const toast = useToast();
   const {
     days, plan, settings, ratings, inventory, savedRecipes,
-    setMeal, rate, consumeInventory, updateSettings, saveRecipe, removeSavedRecipe,
+    setMeal, rate, consumeInventory, updateSettings, saveRecipe, removeSavedRecipe, logFood,
   } = useAppState();
   const [video, setVideo] = useState(null); // { url, title }
 
@@ -61,6 +62,17 @@ function DetailContent({ baseRecipe, onClose }) {
 
   function ensureSaved() {
     if (isOnline && !isSaved) saveRecipe(baseRecipe);
+  }
+
+  function logServing() {
+    logFood(dateKey(), {
+      name: recipe.name,
+      emoji: recipe.emoji,
+      calories: n.calories,
+      protein: n.protein,
+      recipeId: recipe.id,
+    });
+    toast('Logged to Today ✓');
   }
 
   function markCooked() {
@@ -250,6 +262,9 @@ function DetailContent({ baseRecipe, onClose }) {
               <Text style={styles.section}>Nutrition per serving</Text>
               {isBalanced(recipe) && <Text style={styles.balanced}>Balanced meal</Text>}
             </View>
+            <Pressable onPress={logServing} style={({ pressed }) => [styles.logBtn, pressed && { opacity: 0.7 }]}>
+              <Text style={styles.logText}>+ Log a serving to Today ({n.calories} cal · {n.protein}g protein)</Text>
+            </Pressable>
             <View style={styles.nutriGrid}>
               {[
                 ['Calories', n.calories, ''],
@@ -428,6 +443,8 @@ const makeStyles = (c) => ({
     paddingVertical: 10,
     alignItems: 'center',
   },
+  logBtn: { marginTop: 10, paddingVertical: 10, borderRadius: radius.sm, backgroundColor: c.accentSoft, alignItems: 'center' },
+  logText: { color: c.accent, fontWeight: '700', fontSize: 14 },
   nutriValue: { fontSize: 17, fontWeight: '700', color: c.text },
   nutriLabel: { fontSize: 12, color: c.muted, marginTop: 2 },
   footnote: { fontSize: 12, color: c.muted, marginTop: 8 },

@@ -27,7 +27,12 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
       <View style={{ flex: 1 }}>
         <Text style={styles.name}>{recipe.name}</Text>
         <Text style={styles.meta}>
-          {[recipe.cuisine, recipe.minutes ? `${recipe.minutes} min` : null, `${cost.inStockCount}/${cost.items.length} in stock`]
+          {[
+            recipe.cuisine,
+            recipe.minutes ? `${recipe.minutes} min` : null,
+            recipe.nutrition ? `${recipe.nutrition.protein}g protein` : null,
+            `${cost.inStockCount}/${cost.items.length} in stock`,
+          ]
             .filter(Boolean)
             .join(' · ')}
         </Text>

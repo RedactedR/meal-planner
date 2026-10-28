@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { allRecipes, cuisinesOf, effectiveRecipe, matchesCuisine } from '../data/recipes';
+import { HIGH_PROTEIN, allRecipes, cuisinesOf, effectiveRecipe, matchesCuisine } from '../data/recipes';
 import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
 import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
 import { useAppState } from '../AppState';
@@ -49,6 +49,9 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
         r.ingredients.some((i) => i.name.toLowerCase().includes(q))
       );
     });
+    if (cuisine === HIGH_PROTEIN && sort === 'rating' && !Object.keys(ratings).length) {
+      return [...filtered].sort((a, b) => b.nutrition.protein - a.nutrition.protein);
+    }
     if (sort === 'deal') {
       const pay = (r) => (costs[r.id].priced ? costs[r.id].youPay : Infinity);
       return [...filtered].sort((a, b) => pay(a) - pay(b));

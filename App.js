@@ -7,6 +7,7 @@ import PlannerScreen from './src/screens/PlannerScreen';
 import GroceryScreen from './src/screens/GroceryScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import KitchenScreen from './src/screens/KitchenScreen';
+import TodayScreen from './src/screens/TodayScreen';
 import RecipeDetail from './src/components/RecipeDetail';
 import { ToastProvider } from './src/components/Toast';
 import ErrorBoundary from './src/components/ErrorBoundary';
@@ -16,6 +17,7 @@ import { ThemeContext, palettes, useStyles } from './src/theme';
 const TABS = [
   { key: 'recipes', label: 'Recipes', icon: '📖' },
   { key: 'planner', label: 'Week', icon: '📅' },
+  { key: 'today', label: 'Today', icon: '💪' },
   { key: 'kitchen', label: 'Kitchen', icon: '🏠' },
   { key: 'grocery', label: 'Groceries', icon: '🛒' },
   { key: 'settings', label: 'Settings', icon: '⚙️' },
@@ -64,6 +66,8 @@ function Main() {
           <RecipesScreen onOpenRecipe={setOpenRecipe} onGoToKitchen={() => setTab('kitchen')} />
         ) : tab === 'planner' ? (
           <PlannerScreen onOpenRecipe={setOpenRecipe} />
+        ) : tab === 'today' ? (
+          <TodayScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'kitchen' ? (
           <KitchenScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'grocery' ? (
