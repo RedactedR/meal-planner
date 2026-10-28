@@ -14,6 +14,9 @@ import CostBreakdown from './CostBreakdown';
 import VideoPlayer, { openVideo } from './VideoPlayer';
 import { Pill, StockIcon } from './Badges';
 import { dateKey } from '../nutrition';
+import { stepTimers, stepsWithIngredients } from '../cooking';
+import CookMode from './CookMode';
+import { TimerBar, TimerButtons, TimerProvider } from './Timers';
 
 // Full-screen view of one recipe: your week, rating, cost breakdown,
 // nutrition, ingredients (with stock icons), in-depth steps with pro
@@ -21,7 +24,9 @@ import { dateKey } from '../nutrition';
 export default function RecipeDetail({ recipe, onClose }) {
   return (
     <Modal visible={!!recipe} animationType="slide" onRequestClose={onClose}>
-      <ToastProvider>{recipe && <DetailContent baseRecipe={recipe} onClose={onClose} />}</ToastProvider>
+      <ToastProvider>
+        <TimerProvider>{recipe && <DetailContent baseRecipe={recipe} onClose={onClose} />}</TimerProvider>
+      </ToastProvider>
     </Modal>
   );
 }
@@ -35,6 +40,7 @@ function DetailContent({ baseRecipe, onClose }) {
     setMeal, rate, consumeInventory, updateSettings, saveRecipe, removeSavedRecipe, logFood, snackList, setSnackCount,
   } = useAppState();
   const [video, setVideo] = useState(null); // { url, title }
+  const [cooking, setCooking] = useState(false);
 
   const recipe = effectiveRecipe(baseRecipe, settings);
   // Snacks are made as a whole batch; meals scale to your people.
@@ -121,6 +127,7 @@ function DetailContent({ baseRecipe, onClose }) {
   }
 
   const n = recipe.nutrition;
+  const stepUses = stepsWithIngredients(recipe);
   let lastPart = null;
 
   return (
@@ -280,7 +287,7 @@ function DetailContent({ baseRecipe, onClose }) {
         {cost.priced ? (
           <>
             <Text style={styles.section}>Cost breakdown</Text>
-            <CostBreakdown cost={cost} portions={portions} />
+            <CostBreakdown cost={cost} portions={portions} servingWord={snack ? "snack" : "serving"} />
           </>
         ) : (
           <Text style={[styles.footnote, { marginTop: 18 }]}>
@@ -336,6 +343,11 @@ function DetailContent({ baseRecipe, onClose }) {
           </View>
         ))}
 
+        <Pressable onPress={() => setCooking(true)} style={({ pressed }) => [styles.cookBtn, pressed && { opacity: 0.8 }]}>
+          <Text style={styles.cookBtnText}>👨‍🍳 Start cooking — step by step</Text>
+          <Text style={styles.cookBtnSub}>Prep checklist, one step at a time, timers, screen stays on</Text>
+        </Pressable>
+
         <View style={styles.sectionRow}>
           <Text style={styles.section}>Instructions</Text>
           <Pressable onPress={() => updateSettings({ showTips: !settings.showTips })} hitSlop={8}>
@@ -354,6 +366,12 @@ function DetailContent({ baseRecipe, onClose }) {
                 <Text style={styles.stepNum}>{i + 1}</Text>
                 <View style={{ flex: 1, gap: 8 }}>
                   <Text style={styles.stepText}>{stepText(s)}</Text>
+                  {stepUses[i]?.length > 0 && (
+                    <Text style={styles.stepUses}>
+                      {stepUses[i].map(({ ing }) => `${ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions)} ${ing.name.toLowerCase()}`.trim()).join(' · ')}
+                    </Text>
+                  )}
+                  <TimerButtons timers={stepTimers(s)} stepNumber={i + 1} recipeName={recipe.name} />
                   {settings.showTips && s.tip && (
                     <View style={styles.tip}>
                       <Text style={styles.tipLabel}>💡 PRO TIP</Text>
@@ -375,7 +393,16 @@ function DetailContent({ baseRecipe, onClose }) {
           <Text style={styles.cookedText}>I cooked this — update my Kitchen</Text>
         </Pressable>
       </ScrollView>
+      <TimerBar />
       <VideoPlayer url={video?.url} title={video?.title} onClose={() => setVideo(null)} />
+      <CookMode
+        visible={cooking}
+        recipe={recipe}
+        amountOf={(ing) => (ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions))}
+        showTips={settings.showTips}
+        onClose={() => setCooking(false)}
+        onFinish={markCooked}
+      />
     </SafeAreaView>
   );
 }
@@ -479,6 +506,10 @@ const makeStyles = (c) => ({
   snackRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12 },
   qtyBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: c.border, alignItems: 'center', justifyContent: 'center' },
   qtyText: { fontSize: 18, color: c.text, fontWeight: '700' },
+  cookBtn: { marginTop: 22, backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center' },
+  cookBtnText: { color: c.onPrimary, fontWeight: '800', fontSize: 17 },
+  cookBtnSub: { color: c.onPrimary, opacity: 0.85, fontSize: 12, marginTop: 3 },
+  stepUses: { fontSize: 13, color: c.muted, lineHeight: 19 },
   logBtn: { marginTop: 10, paddingVertical: 10, borderRadius: radius.sm, backgroundColor: c.accentSoft, alignItems: 'center' },
   logText: { color: c.accent, fontWeight: '700', fontSize: 14 },
   nutriValue: { fontSize: 17, fontWeight: '700', color: c.text },

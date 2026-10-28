@@ -56,6 +56,12 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
             <Text style={styles.price}>{money(cost.total)}</Text>
           )}
         </View>
+        {cost.priced && (
+          <Text style={styles.recipePrice}>
+            {discounted ? 'to buy' : 'all ingredients'} · recipe uses {money(cost.usedValue)} ·{' '}
+            {money(cost.perServing)}/{recipe.course === 'snack' ? 'snack' : 'serving'}
+          </Text>
+        )}
         <View style={styles.badges}>
           {rating > 0 ? <Stars value={rating} size={12} /> : <Text style={styles.unrated}>Not rated</Text>}
           {recipe.difficulty && DIFFICULTY[recipe.difficulty] && (
@@ -103,5 +109,6 @@ const makeStyles = (c) => ({
   save: { fontSize: 12, fontWeight: '700', color: c.primary },
   badges: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginTop: 6 },
   unrated: { fontSize: 12, color: c.muted },
+  recipePrice: { fontSize: 12, color: c.muted, marginTop: 2 },
   note: { fontSize: 12, color: c.primary, marginTop: 6, fontWeight: '600' },
 });

@@ -77,7 +77,9 @@ export function recipeCosts(recipe, portions, inventory = {}, settings) {
       cost,
       buyCost,
       savings: cost - buyCost,
+      // Cost of just the amount this recipe uses (a tablespoon's worth of a bottle).
       usedValue: need * (info?.price ?? 0),
+      packPrice: price,
       // Stand-in you're cooking with instead (e.g. olive oil for vegetable oil).
       using,
       // Left in your Kitchen afterward. With a stand-in that fully covers
@@ -92,7 +94,11 @@ export function recipeCosts(recipe, portions, inventory = {}, settings) {
   const savings = items.reduce((s, i) => s + i.savings, 0);
   const usedValue = items.reduce((s, i) => s + (i.usedValue || 0), 0);
   const byCategory = {};
-  for (const i of items) byCategory[i.category] = (byCategory[i.category] || 0) + i.cost;
+  const usedByCategory = {};
+  for (const i of items) {
+    byCategory[i.category] = (byCategory[i.category] || 0) + i.cost;
+    usedByCategory[i.category] = (usedByCategory[i.category] || 0) + (i.usedValue || 0);
+  }
 
   return {
     items,
@@ -105,6 +111,8 @@ export function recipeCosts(recipe, portions, inventory = {}, settings) {
     usedValue,
     perServing: usedValue / portions,
     byCategory,
+    // Cost of just the amounts this recipe uses, by store section.
+    usedByCategory,
     inStockCount: items.filter((i) => i.status === 'full').length,
     priced: items.length > 0 && items.every((i) => !i.unpriced),
   };
