@@ -16,16 +16,19 @@ import handhelds2 from './handhelds2';
 import keto1 from './keto1';
 import keto2 from './keto2';
 import keto3 from './keto3';
+import keto4 from './keto4';
+import keto5 from './keto5';
 import pasta from './pasta';
 import pasta2 from './pasta2';
 import pork from './pork';
 import seafood from './seafood';
 import seafood2 from './seafood2';
+import snacks from './snacks';
 import soups from './soups';
 import soups2 from './soups2';
 import vegetarian from './vegetarian';
 import vegetarian2 from './vegetarian2';
 
-const parts = [beef, beef2, bowls, bowls2, chicken, chicken2, handhelds, handhelds2, keto1, keto2, keto3, pasta, pasta2, pork, seafood, seafood2, soups, soups2, vegetarian, vegetarian2];
+const parts = [beef, beef2, bowls, bowls2, chicken, chicken2, handhelds, handhelds2, keto1, keto2, keto3, keto4, keto5, pasta, pasta2, pork, seafood, seafood2, snacks, soups, soups2, vegetarian, vegetarian2];
 
 export default Object.assign({}, ...parts);

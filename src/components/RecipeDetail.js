@@ -368,7 +368,11 @@ function DetailContent({ baseRecipe, onClose }) {
                   <Text style={styles.stepText}>{stepText(s)}</Text>
                   {stepUses[i]?.length > 0 && (
                     <Text style={styles.stepUses}>
-                      {stepUses[i].map(({ ing }) => `${ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions)} ${ing.name.toLowerCase()}`.trim()).join(' · ')}
+                      {stepUses[i]
+                        .map(({ ing, shared }) =>
+                          `${ing.qty == null ? ing.measure || '' : displayAmount(ing, recipe, portions)} ${ing.name.toLowerCase()}${shared ? ' (total)' : ''}`.trim()
+                        )
+                        .join(' · ')}
                     </Text>
                   )}
                   <TimerButtons timers={stepTimers(s)} stepNumber={i + 1} recipeName={recipe.name} />

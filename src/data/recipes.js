@@ -55,7 +55,7 @@ const RAW_RECIPES = [
         tip: "Thighs beat breasts here: they stay juicy through the simmer, and the yogurt's gentle acidity tenderizes the meat. An overnight marinade makes a noticeable difference.",
       },
       {
-        text: 'Rinse the rice in a sieve until the water runs mostly clear. Add it to a pot with 2¼ cups water and a pinch of salt, bring to a boil, cover, and cook on the lowest heat for 15 minutes. Turn off the heat and leave it covered for 10 more.',
+        text: 'Rinse the rice in a sieve until the water runs mostly clear. Add it to a pot with 1½ cups water for every cup of rice and a pinch of salt, bring to a boil, cover, and cook on the lowest heat for 15 minutes. Turn off the heat and leave it covered for 10 more.',
         tip: "Rinsing washes away loose surface starch, which is what makes rice gummy. Don't lift the lid while it steams — the trapped steam finishes the cooking.",
       },
       {
@@ -173,7 +173,7 @@ const RAW_RECIPES = [
       ],
       steps: [
         {
-          text: 'Whisk the tamarind, fish sauce and brown sugar with 2 tbsp warm water until the sugar dissolves. Taste: it should be sour, salty and sweet all at once.',
+          text: 'Whisk the tamarind concentrate, fish sauce and brown sugar with 2 tbsp warm water until the sugar dissolves. Taste: it should be sour, salty and sweet all at once.',
           tip: 'Tamarind is the real backbone of pad thai — it gives that fruity sourness that ketchup-based jarred sauces fake. Adjust to taste: more sugar if too sour, more fish sauce if flat.',
         },
       ],
@@ -288,7 +288,7 @@ const RAW_RECIPES = [
     },
     steps: [
       {
-        text: 'Rinse the rice until the water runs mostly clear, then cook it with 2¼ cups water (boil, cover, lowest heat 15 minutes, rest 10). Cook the edamame according to the bag.',
+        text: 'Rinse the jasmine rice in a sieve until the water runs mostly clear, then put it in a pot with 1½ cups water for every cup of rice and a pinch of salt. Boil, cover, cook on the lowest heat 15 minutes, then rest covered 10 minutes. Cook the edamame according to the bag.',
       },
       {
         text: 'Thinly slice the cucumber, toss it with the rice vinegar and a pinch of salt, and set aside.',
@@ -299,7 +299,7 @@ const RAW_RECIPES = [
         tip: 'Patting fish dry helps it roast instead of steam, and gives the glaze something to cling to.',
       },
       {
-        text: 'Roast 8 minutes, brush on a thick layer of teriyaki, then roast 3–5 minutes more until the salmon flakes easily and reads 125°F in the thickest part.',
+        text: 'Roast 8 minutes, brush on a thick layer of the teriyaki sauce, then roast 3–5 minutes more until the salmon flakes easily and reads 125°F in the thickest part.',
         tip: "Glaze at the end — the sugar burns if it's on the whole time. Pull salmon at 125°F; it keeps cooking for a few minutes after it leaves the oven and stays silky.",
       },
       {
@@ -307,7 +307,7 @@ const RAW_RECIPES = [
         tip: 'Untoasted sesame seeds taste like almost nothing. Two minutes in a dry pan makes them nutty and fragrant.',
       },
       {
-        text: 'Build bowls with rice, salmon, pickled cucumber, sliced avocado and edamame. Drizzle with extra teriyaki and sprinkle with sesame seeds.',
+        text: 'Build bowls with rice, salmon, pickled cucumber, sliced avocado and edamame. Drizzle with extra teriyaki sauce and sprinkle with sesame seeds.',
       },
     ],
   },
@@ -358,7 +358,7 @@ const RAW_RECIPES = [
         tip: "Potatoes take longer than chicken. A 15-minute head start means everything finishes together. Cut-side down against the hot pan is how they get golden and crisp.",
       },
       {
-        text: 'Meanwhile, cut the chicken into 1½-inch chunks. Toss with the remaining oil, the zest and juice of one lemon, the oregano, 1 tsp salt and the pepper. Cut the peppers and onion into wedges.',
+        text: 'Meanwhile, cut the chicken into 1½-inch chunks. Toss with the rest of the olive oil, the zest and juice of one lemon, the dried oregano, half the remaining salt and the black pepper. Cut the bell peppers into 1-inch strips and the red onion into wedges.',
         tip: 'Zest the lemon before you juice it — zesting a squeezed lemon is nearly impossible. The zest carries the most lemon flavor.',
       },
       {
@@ -366,7 +366,10 @@ const RAW_RECIPES = [
         tip: "If pieces are touching everywhere, split onto two pans. Crowded sheet pans steam instead of roast, and you lose the browned edges.",
       },
       {
-        text: 'Squeeze the second lemon over everything, crumble the feta on top, and serve with tzatziki.',
+        text: 'Check the chicken: cut the biggest piece open — it should be white all the way through (165°F) — and a knife should slide easily into the potatoes. If not, roast 5 minutes more.',
+      },
+      {
+        text: 'Squeeze the second lemon over everything, crumble the feta cheese on top, and serve with the tzatziki on the side.',
       },
     ],
   },
@@ -419,10 +422,10 @@ const RAW_RECIPES = [
         text: 'Toss the beef with the marinade and refrigerate at least 30 minutes, or up to overnight.',
       },
       {
-        text: 'Rinse and cook the rice (2¼ cups water; boil, cover, lowest heat 15 minutes, rest 10).',
+        text: 'Rinse the jasmine rice in a sieve until the water runs mostly clear. Put it in a pot with 1½ cups water for every cup of rice and a pinch of salt. Boil, cover, cook on the lowest heat 15 minutes, then turn off the heat and leave covered 10 minutes.',
       },
       {
-        text: 'Heat a large skillet or cast iron pan over high heat with a little oil until smoking. Lift the beef out of the marinade, letting excess drip off, and cook in small batches for 1–2 minutes per side until the edges caramelize. Add oil between batches as needed.',
+        text: 'Heat a large skillet or cast iron pan over high heat with a little of the vegetable oil until smoking. Lift the beef out of the marinade, letting excess drip off, and cook in small batches for 1–2 minutes per side until the edges caramelize. Add more vegetable oil between batches as needed.',
         tip: "Drain the meat well before it hits the pan. Too much marinade and it boils in liquid instead of searing. Those caramelized edges are the whole point.",
       },
       {
@@ -686,6 +689,9 @@ const RAW_RECIPES = [
     ],
     steps: [
       {
+        text: 'Prep: dice the yellow onion, bell peppers and zucchini into ½-inch pieces. Drain and rinse the kidney beans and black beans. Cut the lime into wedges.',
+      },
+      {
         text: 'Heat the oil in a large pot over medium-high. Add the turkey, press it flat and let it brown undisturbed for 4 minutes, then break it up. Add the diced onion and cook 5 minutes more.',
         tip: 'Turkey is lean and goes gray easily. Letting it sit and brown first adds the savory depth that lean meat otherwise lacks.',
       },
@@ -693,7 +699,7 @@ const RAW_RECIPES = [
         text: 'Add the diced peppers and zucchini and cook 5 minutes. Stir in the chili powder and cumin and cook 1 minute.',
       },
       {
-        text: 'Add the tomatoes, drained beans and 1 cup water. Scrape the bottom of the pot, bring to a simmer, and cook 20 minutes, stirring now and then.',
+        text: 'Add the diced tomatoes with their juice, the drained and rinsed kidney beans and black beans, and about 1 cup water. Scrape the bottom of the pot, bring to a simmer, and cook 20 minutes, stirring now and then.',
       },
       {
         text: 'Taste and season with salt. Finish with a squeeze of lime right before serving.',
@@ -727,14 +733,17 @@ const RAW_RECIPES = [
     ],
     steps: [
       {
-        text: 'Start the rice: rinse it, then cook with 1½ cups water (boil, cover, lowest heat 15 minutes, rest 10).',
+        text: 'Prep: dice the yellow onion. Mince the garlic. Peel the ginger with the edge of a spoon and finely grate about a tablespoon. Open the coconut milk and diced tomatoes.',
+      },
+      {
+        text: 'Start the basmati rice: rinse it in a sieve until the water runs mostly clear, then put it in a pot with 1½ cups water for every cup of rice and a pinch of salt. Boil, cover, cook on the lowest heat 15 minutes, then rest covered 10 minutes.',
       },
       {
         text: 'Heat the oil in a large pot over medium. Cook the diced onion with a pinch of salt for 6–8 minutes until golden. Add the garlic, a tablespoon of grated ginger and the curry powder and stir for 1 minute.',
         tip: 'Grate ginger straight from frozen — keep a knob in the freezer. It grates into fluffy snow, no peeling needed, and never goes moldy.',
       },
       {
-        text: 'Rinse the lentils, then add them with the tomatoes, coconut milk and 2 cups water. Simmer 20 minutes, stirring often, until the lentils break down into a thick, creamy stew.',
+        text: 'Rinse the red lentils in a sieve, then add them with the diced tomatoes, coconut milk and about 1⅓ cups water for every cup of lentils. Simmer 20 minutes, stirring often, until the lentils break down into a thick, creamy stew.',
         tip: "Red lentils need no soaking and cook in 20 minutes. Stir often near the end — they thicken fast and can stick.",
       },
       {
@@ -802,7 +811,7 @@ const RAW_RECIPES = [
         tip: 'Charring corn in a dry, hot pan gives it a smoky, grilled-street-corn flavor in minutes.',
       },
       {
-        text: 'Build bowls with rice, chopped romaine, the corn and beans, sliced chicken, diced tomato, avocado and cheese. Finish with a squeeze of lime.',
+        text: 'Build bowls with rice, chopped romaine lettuce, the corn and beans, sliced chicken, diced tomatoes, sliced avocado and shredded cheddar. Finish with a squeeze of lime.',
       },
     ],
   },
@@ -1076,7 +1085,7 @@ const RAW_RECIPES = [
     ],
     steps: [
       {
-        text: 'Rinse and cook the rice (2¼ cups water; boil, cover, lowest heat 15 minutes, rest 10).',
+        text: 'Rinse the jasmine rice in a sieve until the water runs mostly clear. Put it in a pot with 1½ cups water for every cup of rice and a pinch of salt. Boil, cover, cook on the lowest heat 15 minutes, then turn off the heat and leave covered 10 minutes.',
       },
       {
         text: 'Slice the steak thin against the grain. Toss with 1 tbsp soy sauce, 2 tsp cornstarch and the baking soda, and let sit 15 minutes.',
@@ -1088,10 +1097,10 @@ const RAW_RECIPES = [
         tip: "This is takeout-style brown sauce from scratch — no bottle needed. The cornstarch makes it thicken and turn glossy the moment it hits the hot pan.",
       },
       {
-        text: 'Heat 1 tbsp oil in a wok or large skillet over high. Add the broccoli and 3 tbsp water, cover, and steam-fry for 2 minutes until bright green and just tender. Move to a plate.',
+        text: 'Heat a third of the vegetable oil in a wok or large skillet over high. Add the broccoli and 3 tbsp water, cover, and steam-fry for 2 minutes until bright green and just tender. Move to a plate.',
       },
       {
-        text: 'Add the remaining oil and heat until smoking. Add the beef in a single layer and sear 1 minute per side, in two batches if needed. Add the minced garlic and a tablespoon of grated ginger and stir 30 seconds.',
+        text: 'Add the rest of the vegetable oil and heat until smoking. Add the beef in a single layer and sear 1 minute per side, in two batches if needed. Add the minced garlic and a tablespoon of grated ginger and stir 30 seconds.',
       },
       {
         text: 'Return the broccoli, stir the sauce and pour it in. Toss for 1 minute until glossy and thickened. Serve over rice.',
@@ -1130,10 +1139,10 @@ const RAW_RECIPES = [
         text: 'Cut the chicken into small pieces and season with salt. Prep everything else before you turn on the heat: beat the eggs, mince the garlic, slice the green onions and separate the whites from the greens.',
       },
       {
-        text: 'Heat 1 tbsp oil in a wok or large skillet over high until smoking. Cook the chicken 4–5 minutes until browned and cooked through. Push it aside, add the eggs, scramble softly, and move everything to a plate.',
+        text: 'Heat a third of the vegetable oil in a wok or large skillet over high until smoking. Cook the chicken 4–5 minutes until browned and cooked through. Push it aside, add the eggs, scramble softly, and move everything to a plate.',
       },
       {
-        text: 'Add the remaining oil. Add the rice, breaking up clumps, and spread it across the pan. Let it sit 1 minute, then toss; repeat for 4–5 minutes until the rice is hot and some grains are toasty.',
+        text: 'Add the rest of the vegetable oil. Add the rice, breaking up clumps, and spread it across the pan. Let it sit 1 minute, then toss; repeat for 4–5 minutes until the rice is hot and some grains are toasty.',
         tip: "Don't stir constantly. Letting the rice sit against the hot pan between tosses is how you get that slightly smoky, toasty flavor fried rice is known for.",
         watch: 'fried rice technique high heat',
       },
@@ -1173,7 +1182,10 @@ const RAW_RECIPES = [
     ],
     steps: [
       {
-        text: 'Rinse and cook the rice (1½ cups water; boil, cover, lowest heat 15 minutes, rest 10).',
+        text: 'Prep: dice the yellow onion. Mince the garlic. Peel the ginger and finely grate about a tablespoon. Drain and rinse the chickpeas. Cut the lime in half.',
+      },
+      {
+        text: 'Rinse the basmati rice in a sieve until the water runs mostly clear. Put it in a pot with 1½ cups water for every cup of rice and a pinch of salt. Boil, cover, cook on the lowest heat 15 minutes, then rest covered 10 minutes.',
       },
       {
         text: 'Heat the oil in a large pot over medium. Cook the diced onion with a pinch of salt for 8 minutes until golden. Add the garlic, a tablespoon of grated ginger and the curry powder and stir 1 minute.',

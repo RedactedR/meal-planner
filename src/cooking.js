@@ -25,7 +25,8 @@ function escape(s) {
 function wordPattern(word) {
   const w = word.toLowerCase();
   if (w.endsWith('ies')) return escape(w.slice(0, -3)) + '(?:y|ies)';
-  if (w.endsWith('ves')) return escape(w.slice(0, -3)) + '(?:f|ves)';
+  // leaves ↔ leaf, halves ↔ half (but not olives).
+  if (/(ea|al)ves$/.test(w)) return escape(w.slice(0, -3)) + '(?:f|ves)';
   if (w.endsWith('oes')) return escape(w.slice(0, -2)) + '(?:es)?';
   if (w.endsWith('s') && !w.endsWith('ss')) return escape(w.slice(0, -1)) + '(?:e?s)?';
   return escape(w) + '(?:e?s)?';
