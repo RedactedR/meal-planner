@@ -44,7 +44,9 @@ export default {
   'chopped-italian-salad': [
     ['Chop the romaine lettuce into bite-size pieces. Cut the salami and provolone into thin strips. Drain and rinse the chickpeas. Quarter the cherry tomatoes. Finely dice the red onion. Slice the pepperoncini and halve the kalamata olives.', 'Chopping everything small means every forkful gets a bit of everything.'],
     'Make the dressing: grate the garlic. Whisk the red wine vinegar, olive oil, dried oregano, garlic and salt.',
-    'Put everything in a big bowl, pour over the dressing and toss well just before serving.',
+    'Put the romaine in a big salad bowl and scatter the salami, provolone, chickpeas, tomatoes, onion, pepperoncini and olives over it.',
+    'Whisk the dressing again right before serving (it separates as it sits), pour it over and toss well with two big spoons until every piece is coated.',
+    'Taste a leaf and add a pinch more salt or a splash of vinegar if it needs it. Serve right away — the lettuce wilts if it sits dressed.',
   ],
   'sweet-potato-hash': [
     'Peel the sweet potatoes and dice into ½-inch cubes. Dice the yellow onion and bell pepper. Slice the green onions.',
@@ -65,6 +67,7 @@ export default {
     'Rinse the brown lentils. Put them in a pot, cover with water by 2 inches, add a pinch of the salt, and bring to a boil. Simmer 18–20 minutes, until tender but still holding their shape. Drain well.',
     ['While they cook, make the dressing: finely mince the shallot. In a large bowl, whisk the Dijon mustard, red wine vinegar, shallot, the rest of the salt and the olive oil. Add the warm lentils and toss.', 'Dress the lentils while they\'re still warm. They soak up the dressing much better.'],
     'Peel and finely dice the carrots and celery. Chop the parsley. Add them to the lentils and toss.',
+    'Taste the lentils and add a splash more vinegar or a pinch of salt if they taste flat. They can be served warm or at room temperature.',
     'Spread the arugula on plates, spoon the lentil salad over, and crumble the goat cheese on top.',
   ],
   'croque-monsieur': [
