@@ -9,10 +9,16 @@ import beef from './beef';
 import beef2 from './beef2';
 import chicken from './chicken';
 import chicken2 from './chicken2';
+import pasta from './pasta';
+import pasta2 from './pasta2';
 import pork from './pork';
 import seafood from './seafood';
 import seafood2 from './seafood2';
+import soups from './soups';
+import soups2 from './soups2';
+import vegetarian from './vegetarian';
+import vegetarian2 from './vegetarian2';
 
-const parts = [beef, beef2, chicken, chicken2, pork, seafood, seafood2];
+const parts = [beef, beef2, chicken, chicken2, pasta, pasta2, pork, seafood, seafood2, soups, soups2, vegetarian, vegetarian2];
 
 export default Object.assign({}, ...parts);

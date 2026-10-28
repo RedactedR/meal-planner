@@ -47,6 +47,10 @@ function aliasesFor(name) {
     if (stripped.length && stripped.length < words.length) add(stripped.join(' '), false);
     // "Old Bay seasoning" is just "Old Bay" in a step.
     if (words.length > 2 && /^(seasoning|sauce|paste|powder)$/.test(words[words.length - 1])) add(words.slice(0, -1).join(' '), false);
+    // "Feta cheese" is "the feta"; "Swiss cheese" is "the Swiss".
+    if (words.length > 1 && /^(cheese|fillets?|noodles|pasta)$/.test(words[words.length - 1])) add(words.slice(0, -1).join(' '), false);
+    // "Chipotles in adobo" is "the chipotle".
+    if (/ in /.test(clean)) add(clean.split(' in ')[0], false);
     if (words.length > 1) add(words[words.length - 1], false);
     if (words.length > 1 && PROTEIN_WORDS.has(words[0]) && catalogItem(name)?.category === 'protein') add(words[0], false);
   }
