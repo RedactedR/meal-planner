@@ -7,6 +7,7 @@ import { useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
 import { StockIcon } from '../components/Badges';
 import CartMatcher from '../components/CartMatcher';
+import { snackExtras } from '../snackPlan';
 import { radius, useStyles } from '../theme';
 
 function Check({ on, styles }) {
@@ -16,7 +17,7 @@ function Check({ on, styles }) {
 export default function GroceryScreen() {
   const styles = useStyles(makeStyles);
   const toast = useToast();
-  const { plan, days, settings, inventory, addToInventory, kroger } = useAppState();
+  const { plan, days, settings, inventory, addToInventory, kroger, snackList, setSnackCount } = useAppState();
   const [cartOpen, setCartOpen] = useState(false);
   const connected = !!(kroger.serverUrl && kroger.tokens?.accessToken && kroger.store);
 
@@ -27,10 +28,16 @@ export default function GroceryScreen() {
   const planned = days.map((day) => ({ day, recipe: getRecipe(plan.meals[day]) })).filter((p) => p.recipe);
   const selected = planned.filter((p) => !skippedDays.has(p.day));
   const selectedIds = selected.map((p) => p.recipe.id).join(',');
-  const items = useMemo(
-    () => buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions, inventory, settings),
-    [selectedIds, settings, inventory]
-  );
+  const snacks = useMemo(() => snackExtras(snackList), [snackList]);
+  const snackKey = snacks.rows.filter((r) => !skippedDays.has(r.id)).map((r) => r.id).join(',');
+  const items = useMemo(() => {
+    const on = new Set(snackKey ? snackKey.split(',') : []);
+    const extras = {
+      recipes: snacks.recipes.filter((r) => on.has(r.id)),
+      items: snacks.items.filter((it) => on.has(it.id)),
+    };
+    return buildGroceryList(selectedIds ? selectedIds.split(',') : [], settings.portions, inventory, settings, extras);
+  }, [selectedIds, settings, inventory, snacks, snackKey]);
   const needed = items.filter((i) => i.qty > 0);
   const onHand = items.filter((i) => i.qty === 0);
   const itemsToBuy = needed.filter((i) => !skippedItems.has(i.key));
@@ -76,7 +83,7 @@ export default function GroceryScreen() {
     setCartOpen(true);
   }
 
-  if (planned.length === 0) {
+  if (planned.length === 0 && snacks.rows.length === 0) {
     return (
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>Groceries</Text>
@@ -97,6 +104,7 @@ export default function GroceryScreen() {
       </Text>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 170 }}>
+        {planned.length > 0 && (<>
         <View style={styles.sectionRow}>
           <Text style={styles.section}>Meals</Text>
           <Pressable onPress={toggleAll} hitSlop={8}>
@@ -122,6 +130,31 @@ export default function GroceryScreen() {
             );
           })}
         </View>
+        </>)}
+
+        {snacks.rows.length > 0 && (
+          <>
+            <Text style={[styles.section, { marginTop: 20 }]}>Snacks</Text>
+            <View style={styles.card}>
+              {snacks.rows.map((r, i) => {
+                const on = !skippedDays.has(r.id);
+                return (
+                  <Pressable key={r.id} onPress={() => toggle(setSkippedDays, r.id)} style={[styles.row, i > 0 && styles.rowBorder]}>
+                    <Check on={on} styles={styles} />
+                    <Text style={styles.rowEmoji}>{r.emoji}</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.rowText, !on && styles.off]}>{r.name}</Text>
+                      <Text style={styles.rowSub}>{r.sub}</Text>
+                    </View>
+                    <Pressable onPress={() => setSnackCount(r.id, 0)} hitSlop={10}>
+                      <Text style={styles.rowSub}>✕</Text>
+                    </Pressable>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </>
+        )}
 
         <Text style={[styles.section, { marginTop: 24 }]}>
           To buy · {itemsToBuy.length} items · est. {money(estTotal)}

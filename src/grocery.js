@@ -37,13 +37,21 @@ export function boughtQty(item) {
 // Each item is bought in whole packages and priced that way.
 // Online recipes have no exact amounts, so their items list the
 // recipe's measures (e.g. "2 cups") and have no price.
-export function buildGroceryList(recipeIds, portions, inventory = {}, settings) {
+//
+// extras adds snacks: { recipes: [{ id, count }] — snack recipes, made
+// `count` times at their own batch size; items: [{ name, qty, label }] —
+// store-bought snacks, qty in the catalog unit }.
+export function buildGroceryList(recipeIds, portions, inventory = {}, settings, extras = {}) {
   const byKey = new Map();
+  const jobs = [
+    ...recipeIds.map((id) => ({ id, count: null })),
+    ...(extras.recipes || []),
+  ];
 
-  for (const id of recipeIds) {
+  for (const { id, count } of jobs) {
     const recipe = effectiveRecipe(getRecipe(id), settings);
     if (!recipe) continue;
-    const factor = scaleFactor(recipe, portions);
+    const factor = count != null ? count : scaleFactor(recipe, portions);
     for (const ing of recipe.ingredients) {
       const unpriced = ing.qty == null;
       const key = unpriced ? `${ing.name.toLowerCase()}|?` : `${ing.name.toLowerCase()}|${ing.unit}`;
@@ -63,6 +71,19 @@ export function buildGroceryList(recipeIds, portions, inventory = {}, settings) 
           recipes: [recipe.name],
         });
       }
+    }
+  }
+
+  for (const it of extras.items || []) {
+    const info = catalogItem(it.name);
+    const unit = info?.unit ?? '';
+    const key = `${it.name.toLowerCase()}|${unit}`;
+    const existing = byKey.get(key);
+    if (existing && !existing.unpriced) {
+      existing.need += it.qty;
+      if (!existing.recipes.includes(it.label)) existing.recipes.push(it.label);
+    } else {
+      byKey.set(key, { key, name: info?.name ?? it.name, unit, need: it.qty, measures: [], unpriced: false, recipes: [it.label] });
     }
   }
 

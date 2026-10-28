@@ -5,9 +5,11 @@ import { useAppState } from '../AppState';
 import { allRecipes, getRecipe } from '../data/recipes';
 import { allowedRecipes } from '../recipeFilters';
 import {
-  AIMS, QUICK_FOODS, addDays, dateKey, dayLabel, proteinPicks, suggestGoals, totals, weekdayOf,
+  AIMS, QUICK_FOODS, addDays, dateKey, dayLabel, suggestGoals, totals, weekdayOf,
 } from '../nutrition';
-import RecipeCard from '../components/RecipeCard';
+import { gapPlans } from '../gapPlanner';
+import { STORE_SNACKS } from '../data/snacks';
+import { StoreSnackCard, useSnackActions } from '../components/StoreSnacks';
 import { useToast } from '../components/Toast';
 import { radius, useStyles, useTheme } from '../theme';
 
@@ -15,7 +17,8 @@ import { radius, useStyles, useTheme } from '../theme';
 export default function TodayScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const toast = useToast();
-  const { goals, foodLog, plan, settings, logFood, removeFood } = useAppState();
+  const { goals, foodLog, plan, settings, logFood, removeFood, updateSettings } = useAppState();
+  const { eat } = useSnackActions();
   const [date, setDate] = useState(dateKey());
   const [addOpen, setAddOpen] = useState(false);
   const [goalsOpen, setGoalsOpen] = useState(false);
@@ -29,10 +32,35 @@ export default function TodayScreen({ onOpenRecipe }) {
   const planned = getRecipe(plan.meals[weekdayOf(date)]);
   const plannedLogged = planned && entries.some((e) => e.recipeId === planned.id);
 
-  const picks = useMemo(
-    () => (goals && date === today ? proteinPicks(allowedRecipes(settings), calLeft) : []),
-    [goals, date, today, settings, calLeft]
+  const keto = !!settings.ketoToday;
+  const gap = useMemo(
+    () =>
+      goals
+        ? gapPlans({
+            proteinLeft,
+            caloriesLeft: calLeft,
+            recipes: allowedRecipes(settings, { includeSnacks: true }),
+            keto,
+          })
+        : { plans: [], fallback: [] },
+    [goals, proteinLeft, calLeft, settings, keto]
   );
+
+  // Log every item in a plan (store snacks also come out of your Kitchen).
+  function logPlan(p) {
+    for (const f of p.items) {
+      if (f.kind === 'store') eat(f.ref, date);
+      else
+        logFood(date, {
+          name: f.name,
+          emoji: f.emoji,
+          calories: f.calories,
+          protein: f.protein,
+          recipeId: f.id,
+        });
+    }
+    if (p.items.some((f) => f.kind !== 'store')) toast('Logged ✓');
+  }
 
   function log(entry) {
     logFood(date, entry);
@@ -148,20 +176,54 @@ export default function TodayScreen({ onOpenRecipe }) {
           <Text style={styles.primaryText}>+ Add food</Text>
         </Pressable>
 
-        {picks.length > 0 && (
+        {proteinLeft > 0 && (
           <>
-            <Text style={styles.section}>High protein that fits today</Text>
-            <Text style={[styles.sub, { paddingHorizontal: 20, marginBottom: 10, marginTop: -4 }]}>
-              Most protein per calorie, all under your {Math.round(calLeft)} calories left.
+            <View style={styles.gapHeader}>
+              <Text style={[styles.section, { paddingHorizontal: 0, marginBottom: 0, flex: 1 }]}>
+                Close the gap · {Math.round(proteinLeft)}g to go
+              </Text>
+              <Pressable
+                onPress={() => updateSettings({ ketoToday: !keto })}
+                style={[styles.chip, keto && styles.chipOn, { marginTop: 18 }]}
+              >
+                <Text style={[styles.chipText, keto && styles.chipTextOn]}>{keto ? '✓ ' : ''}🥑 Keto</Text>
+              </Pressable>
+            </View>
+            <Text style={[styles.sub, { paddingHorizontal: 20, marginBottom: 10 }]}>
+              {gap.plans.length
+                ? `Ways to get ${Math.round(proteinLeft)}g more protein within your ${Math.max(0, Math.round(calLeft))} calories left.`
+                : calLeft <= 0
+                ? "You're out of calories for today — these get you the most protein for the fewest calories."
+                : "Nothing covers it all within your calories — these get you closest."}
             </Text>
             <View style={{ paddingHorizontal: 20 }}>
-              {picks.map((r) => (
-                <RecipeCard
-                  key={r.id}
-                  recipe={r}
-                  onPress={() => onOpenRecipe(r)}
-                  note={`💪 ${r.nutrition.protein}g protein · ${r.nutrition.calories} cal per serving`}
-                />
+              {(gap.plans.length ? gap.plans : gap.fallback).map((p, i) => (
+                <View key={i} style={styles.planCard}>
+                  <View style={{ flex: 1, gap: 4 }}>
+                    {p.items.map((f, j) => (
+                      <Pressable
+                        key={`${f.id}-${j}`}
+                        onPress={() => (f.kind === 'recipe' ? onOpenRecipe(f.ref) : null)}
+                        hitSlop={4}
+                      >
+                        <Text style={styles.planItem} numberOfLines={1}>
+                          {j > 0 ? '+ ' : ''}
+                          {f.emoji} {f.name}
+                          <Text style={styles.planItemSub}>
+                            {'  '}
+                            {f.protein}g · {f.calories} cal{f.kind === 'store' ? ' · 🛒 store' : ''}
+                          </Text>
+                        </Text>
+                      </Pressable>
+                    ))}
+                    <Text style={styles.planTotal}>
+                      = {Math.round(p.protein)}g protein · {Math.round(p.calories)} cal
+                    </Text>
+                  </View>
+                  <Pressable onPress={() => logPlan(p)} style={styles.planLog} hitSlop={6}>
+                    <Text style={styles.planLogText}>+ Log</Text>
+                  </Pressable>
+                </View>
               ))}
             </View>
           </>
@@ -179,7 +241,7 @@ export default function TodayScreen({ onOpenRecipe }) {
         </Text>
       </ScrollView>
 
-      <AddFood visible={addOpen} onClose={() => setAddOpen(false)} onLog={log} />
+      <AddFood visible={addOpen} onClose={() => setAddOpen(false)} onLog={log} onLogSnack={(s) => eat(s, date)} />
       <GoalsSetup visible={goalsOpen} onClose={() => setGoalsOpen(false)} />
     </View>
   );
@@ -263,7 +325,7 @@ function WeekChart({ foodLog, goals, endDate }) {
 
 const SERVINGS = [0.5, 1, 1.5, 2];
 
-function AddFood({ visible, onClose, onLog }) {
+function AddFood({ visible, onClose, onLog, onLogSnack }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const [tab, setTab] = useState('quick');
@@ -339,6 +401,19 @@ function AddFood({ visible, onClose, onLog }) {
 
         {tab === 'quick' && (
           <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 8 }}>
+            <Text style={styles.label}>Snacks from the store</Text>
+            {STORE_SNACKS.map((s) => (
+              <StoreSnackCard
+                key={s.id}
+                snack={s}
+                compact
+                onLog={(snack) => {
+                  onLogSnack(snack);
+                  close();
+                }}
+              />
+            ))}
+            <Text style={[styles.label, { marginBottom: 8 }]}>Other quick foods</Text>
             <View style={styles.card0}>
               {QUICK_FOODS.map((f, i) => (
                 <Pressable
@@ -595,6 +670,16 @@ const makeStyles = (c) => ({
   },
   label: { fontSize: 13, fontWeight: '700', color: c.muted, marginTop: 8 },
   aim: { padding: 12, borderRadius: radius.md, borderWidth: 1, borderColor: c.border, backgroundColor: c.surface },
+  gapHeader: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, gap: 8 },
+  planCard: {
+    flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: c.surface, borderRadius: radius.md,
+    borderWidth: 1, borderColor: c.border, padding: 12, marginBottom: 10,
+  },
+  planItem: { fontSize: 15, color: c.text, fontWeight: '600' },
+  planItemSub: { fontSize: 12, color: c.muted, fontWeight: '400' },
+  planTotal: { fontSize: 13, color: c.accent, fontWeight: '700', marginTop: 2 },
+  planLog: { backgroundColor: c.accentSoft, borderRadius: radius.sm, paddingVertical: 8, paddingHorizontal: 12 },
+  planLogText: { color: c.accent, fontWeight: '700' },
   aimOn: { borderColor: c.primary, backgroundColor: c.primarySoft },
   bottomBar: { padding: 16, borderTopWidth: 1, borderTopColor: c.border, backgroundColor: c.surface },
   servingRow: { flexDirection: 'row', gap: 8, marginTop: 10, flexWrap: 'wrap' },

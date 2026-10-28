@@ -64,27 +64,12 @@ export function suggestGoals(weight, aim) {
 }
 
 // One-tap foods for things that aren't a recipe.
+// Everyday foods that aren't a recipe or a packaged snack.
 export const QUICK_FOODS = [
-  { name: 'Protein shake', emoji: '🥤', calories: 130, protein: 25 },
-  { name: 'Greek yogurt (1 cup)', emoji: '🥣', calories: 150, protein: 20 },
-  { name: '2 eggs', emoji: '🥚', calories: 140, protein: 12 },
-  { name: 'Protein bar', emoji: '🍫', calories: 210, protein: 20 },
   { name: 'Chicken breast (6 oz)', emoji: '🍗', calories: 280, protein: 52 },
-  { name: 'Cottage cheese (1 cup)', emoji: '🥛', calories: 180, protein: 24 },
-  { name: 'Tuna can', emoji: '🐟', calories: 120, protein: 26 },
+  { name: '2 eggs', emoji: '🍳', calories: 140, protein: 12 },
   { name: 'Glass of milk', emoji: '🥛', calories: 120, protein: 8 },
-  { name: 'Banana', emoji: '🍌', calories: 105, protein: 1 },
   { name: 'Peanut butter (2 tbsp)', emoji: '🥜', calories: 190, protein: 7 },
-];
-
-// Recipes that fit what's left of today's calories, most protein first.
-export function proteinPicks(recipes, caloriesLeft, limit = 5) {
-  return recipes
-    .filter((r) => r.nutrition && r.nutrition.protein >= 25 && caloriesLeft > 0 && r.nutrition.calories <= caloriesLeft)
-    .sort(
-      (a, b) =>
-        b.nutrition.protein / b.nutrition.calories - a.nutrition.protein / a.nutrition.calories ||
-        b.nutrition.protein - a.nutrition.protein
-    )
-    .slice(0, limit);
-}
+  { name: 'Slice of bread', emoji: '🍞', calories: 80, protein: 3 },
+  { name: 'Cup of cooked rice', emoji: '🍚', calories: 205, protein: 4 },
+]

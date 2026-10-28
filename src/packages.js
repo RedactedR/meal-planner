@@ -50,6 +50,7 @@ const WORDS_BY_CATEGORY = {
   produce: 'bag',
   bakery: 'pack',
   frozen: 'bag',
+  snacks: 'pack',
   other: 'package',
 };
 
@@ -65,7 +66,12 @@ export function packPrice(name) {
 
 export function packageWord(name) {
   const info = catalogItem(name);
-  return WORDS_BY_NAME[keyOf(name)] || WORDS_BY_CATEGORY[info?.category] || 'package';
+  const key = keyOf(name);
+  if (WORDS_BY_NAME[key]) return WORDS_BY_NAME[key];
+  if (['can', 'jar', 'bottle', 'bag', 'tub', 'packet', 'bunch', 'head', 'loaf', 'pint', 'block'].includes(info?.unit)) return info.unit;
+  if (key === 'pesto') return 'jar';
+  if (/vinegar|sauce|oil|dressing|syrup|wine/.test(key) && info?.unit !== 'can') return 'bottle';
+  return WORDS_BY_CATEGORY[info?.category] || 'package';
 }
 
 // How many packages cover an amount.

@@ -32,12 +32,15 @@ function DetailContent({ baseRecipe, onClose }) {
   const toast = useToast();
   const {
     days, plan, settings, ratings, inventory, savedRecipes,
-    setMeal, rate, consumeInventory, updateSettings, saveRecipe, removeSavedRecipe, logFood,
+    setMeal, rate, consumeInventory, updateSettings, saveRecipe, removeSavedRecipe, logFood, snackList, setSnackCount,
   } = useAppState();
   const [video, setVideo] = useState(null); // { url, title }
 
   const recipe = effectiveRecipe(baseRecipe, settings);
-  const portions = settings.portions;
+  // Snacks are made as a whole batch; meals scale to your people.
+  const snack = baseRecipe.course === 'snack';
+  const portions = snack ? baseRecipe.servings : settings.portions;
+  const batches = snackList[baseRecipe.id] || 0;
   const isOnline = !!baseRecipe.source;
   const isSaved = isOnline && !!savedRecipes[baseRecipe.id];
   const freeDays = days.filter((d) => !plan.meals[d]).length;
@@ -145,7 +148,7 @@ function DetailContent({ baseRecipe, onClose }) {
           {[recipe.cuisine, recipe.minutes ? `${recipe.minutes} min` : null]
             .filter(Boolean)
             .join(' · ')}
-          {cost.priced ? ` · amounts for ${portions} ${portions === 1 ? 'person' : 'people'}` : ''}
+          {snack ? ` · makes ${portions} snacks` : cost.priced ? ` · amounts for ${portions} ${portions === 1 ? 'person' : 'people'}` : ''}
         </Text>
         <View style={styles.pills}>
           {diff && <Pill label={diff.label} tone={diff.tone} />}
@@ -191,6 +194,34 @@ function DetailContent({ baseRecipe, onClose }) {
           />
         </View>
 
+        {snack ? (
+          <>
+            <View style={styles.sectionRow}>
+              <Text style={styles.section}>Snack list</Text>
+              <Text style={styles.sectionNote}>Makes {recipe.servings} snacks</Text>
+            </View>
+            <View style={[styles.card, styles.snackRow]}>
+              <Text style={[styles.weekMeal, { flex: 1 }]}>
+                {batches ? `${batches} ${batches === 1 ? 'batch' : 'batches'} on your grocery list` : 'Add the ingredients to your grocery list'}
+              </Text>
+              {batches > 0 && (
+                <Pressable onPress={() => setSnackCount(recipe.id, batches - 1)} style={styles.qtyBtn} hitSlop={6}>
+                  <Text style={styles.qtyText}>−</Text>
+                </Pressable>
+              )}
+              <Pressable
+                onPress={() => {
+                  setSnackCount(recipe.id, batches + 1);
+                  if (!batches) toast('Added to your grocery list ✓');
+                }}
+                style={[styles.weekBtn, styles.weekBtnOn]}
+              >
+                <Text style={[styles.weekBtnText, { color: colors.onPrimary }]}>{batches ? '+1' : 'Add'}</Text>
+              </Pressable>
+            </View>
+          </>
+        ) : (
+          <>
         <View style={styles.sectionRow}>
           <Text style={styles.section}>Your week</Text>
           <Text style={styles.sectionNote}>
@@ -223,6 +254,8 @@ function DetailContent({ baseRecipe, onClose }) {
             );
           })}
         </View>
+          </>
+        )}
 
         {baseRecipe.scratch && (
           <View style={styles.scratchCard}>
@@ -443,6 +476,9 @@ const makeStyles = (c) => ({
     paddingVertical: 10,
     alignItems: 'center',
   },
+  snackRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12 },
+  qtyBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: c.border, alignItems: 'center', justifyContent: 'center' },
+  qtyText: { fontSize: 18, color: c.text, fontWeight: '700' },
   logBtn: { marginTop: 10, paddingVertical: 10, borderRadius: radius.sm, backgroundColor: c.accentSoft, alignItems: 'center' },
   logText: { color: c.accent, fontWeight: '700', fontSize: 14 },
   nutriValue: { fontSize: 17, fontWeight: '700', color: c.text },

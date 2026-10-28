@@ -4,7 +4,7 @@
 //   nutrition [calories, protein g, carbs g, fat g, fiber g, veg cups] per serving,
 //   ingredients 'Name qty unit; Name qty unit; ...'  (unit optional),
 //   steps [ 'text' | ['text', 'pro tip', 'video search'] ],
-//   extra { allergens: [...], scratch: {...} } )
+//   extra { allergens: [...], scratch: {...}, course: 'snack' } )
 //
 // Ingredient names and units must match src/data/ingredients.js; the
 // test script checks this. Allergens are detected from ingredient names
@@ -69,5 +69,6 @@ export function R(id, name, cuisine, emoji, minutes, servings, difficulty, onePa
     ingredients: parseIngredients(ingredients),
     steps: parseSteps(steps),
     ...(extra.scratch ? { scratch: extra.scratch } : {}),
+    ...(extra.course ? { course: extra.course } : {}),
   };
 }

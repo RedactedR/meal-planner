@@ -20,7 +20,7 @@ export const palettes = {
     warnSoft: '#FCEFD2',
     categories: {
       protein: '#C8622A', produce: '#2F6B4F', dairy: '#C9A227', bakery: '#9C6B3F',
-      frozen: '#3D7DB8', pantry: '#7A5BA6', spices: '#B5476B', other: '#8A8077',
+      frozen: '#3D7DB8', pantry: '#7A5BA6', spices: '#B5476B', snacks: '#4F8A8B', other: '#8A8077',
     },
     toast: '#2B2622',
     onToast: '#FFFFFF',
@@ -43,7 +43,7 @@ export const palettes = {
     warnSoft: '#3A2E14',
     categories: {
       protein: '#F0965F', produce: '#6FC29A', dairy: '#E6C65C', bakery: '#D2A27A',
-      frozen: '#7DB3E8', pantry: '#B39DDB', spices: '#E886A8', other: '#9C948A',
+      frozen: '#7DB3E8', pantry: '#B39DDB', spices: '#E886A8', snacks: '#7CC4C5', other: '#9C948A',
     },
     toast: '#F2EDE6',
     onToast: '#141311',

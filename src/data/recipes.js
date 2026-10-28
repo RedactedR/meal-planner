@@ -1217,12 +1217,30 @@ export function getRecipe(id) {
   return RECIPES.find((r) => r.id === id) || extraRecipes.get(id);
 }
 
-// Filter chip for recipes with 35 g+ protein per serving.
+// Filter chips that aren't cuisines.
 export const HIGH_PROTEIN = '💪 High protein';
+export const KETO = '🥑 Keto';
+export const SNACKS = '🥨 Snacks';
+
+export function isSnack(recipe) {
+  return recipe.course === 'snack';
+}
+
+// Keto-friendly: low net carbs (carbs minus fiber) per serving —
+// 10 g or less for a meal, 6 g or less for a snack.
+export function netCarbs(recipe) {
+  const n = recipe.nutrition;
+  return n ? Math.max(0, n.carbs - (n.fiber || 0)) : null;
+}
+export function isKeto(recipe) {
+  const net = netCarbs(recipe);
+  return net != null && net <= (isSnack(recipe) ? 6 : 10);
+}
 
 export function cuisinesOf(list) {
-  const named = Array.from(new Set(list.map((r) => r.cuisine).filter((c) => c && c !== 'Vegetarian'))).sort();
-  return ['All', HIGH_PROTEIN, 'Vegetarian', ...named];
+  const skip = new Set(['Vegetarian', 'Snack']);
+  const named = Array.from(new Set(list.map((r) => r.cuisine).filter((c) => c && !skip.has(c)))).sort();
+  return ['All', HIGH_PROTEIN, KETO, SNACKS, 'Vegetarian', ...named];
 }
 
 // No meat, poultry or seafood, including hidden ones like chicken broth,
@@ -1233,6 +1251,10 @@ export function isVegetarian(recipe) {
 }
 
 export function matchesCuisine(recipe, cuisine) {
+  if (cuisine === SNACKS) return isSnack(recipe);
+  if (cuisine === KETO) return isKeto(recipe);
+  // Everything else is about meals; snacks live under their own chip.
+  if (isSnack(recipe)) return false;
   if (cuisine === 'All') return true;
   if (cuisine === 'Vegetarian') return isVegetarian(recipe);
   if (cuisine === HIGH_PROTEIN) return isHighProtein(recipe);
@@ -1293,11 +1315,11 @@ export const ALLERGENS = [
 // and imported recipes, which don't come with allergen tags, and as a
 // second check on built-in ones.
 const ALLERGEN_WORDS = {
-  dairy: ['gouda', 'swiss', 'croissants', 'buttermilk', 'queso', 'paneer', 'milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
+  dairy: ['halloumi', 'babybel', 'pesto', 'ranch', 'protein shakes', 'protein powder', 'protein bars', 'protein chips', 'gouda', 'swiss', 'croissants', 'buttermilk', 'queso', 'paneer', 'milk', 'cream', 'butter', 'cheese', 'yogurt', 'yoghurt', 'parmesan', 'mozzarella', 'feta', 'cheddar', 'ghee', 'tzatziki', 'ricotta', 'buttermilk', 'mascarpone'],
   eggs: ['egg', 'eggs', 'mayonnaise', 'mayo', 'aioli'],
-  gluten: ['croissants', 'ciabatta', 'pizza dough', 'pancake', 'barbecue sauce', 'barley', 'tortellini', 'dumplings', 'phyllo', 'gnocchi', 'ditalini', 'rigatoni', 'rotini', 'fettuccine', 'lasagna', 'orzo', 'udon', 'ramen', 'shells', 'puff pastry', 'stout', 'hoagie', 'rolls', 'flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
-  peanuts: ['peanut', 'peanuts'],
-  treenuts: ['pecans', 'almond', 'almonds', 'walnut', 'walnuts', 'pecan', 'pecans', 'cashew', 'cashews', 'pistachio', 'pistachios', 'hazelnut', 'hazelnuts', 'macadamia', 'pine nut', 'pine nuts'],
+  gluten: ['pretzels', 'granola', 'rolled oats', 'croissants', 'ciabatta', 'pizza dough', 'pancake', 'barbecue sauce', 'barley', 'tortellini', 'dumplings', 'phyllo', 'gnocchi', 'ditalini', 'rigatoni', 'rotini', 'fettuccine', 'lasagna', 'orzo', 'udon', 'ramen', 'shells', 'puff pastry', 'stout', 'hoagie', 'rolls', 'flour', 'bread', 'breadcrumbs', 'panko', 'pasta', 'spaghetti', 'linguine', 'penne', 'macaroni', 'noodles', 'naan', 'bun', 'buns', 'wheat', 'barley', 'couscous', 'soy sauce', 'teriyaki', 'tortilla', 'tortillas', 'pita', 'croutons', 'beer'],
+  peanuts: ['peanut', 'peanuts', 'trail mix'],
+  treenuts: ['pesto', 'trail mix', 'pecans', 'almond', 'almonds', 'walnut', 'walnuts', 'pecan', 'pecans', 'cashew', 'cashews', 'pistachio', 'pistachios', 'hazelnut', 'hazelnuts', 'macadamia', 'pine nut', 'pine nuts'],
   shellfish: ['seafood', 'crab meat', 'old bay', 'shrimp', 'prawn', 'prawns', 'crab', 'lobster', 'scallop', 'scallops', 'clam', 'clams', 'mussel', 'mussels', 'oyster', 'oysters', 'oyster sauce', 'crawfish'],
   fish: ['seafood', 'anchovy fillets', 'worcestershire', 'salmon', 'tuna', 'cod', 'anchovy', 'anchovies', 'fish', 'fish sauce', 'tilapia', 'halibut', 'trout', 'sardine', 'sardines', 'haddock', 'mackerel'],
   soy: ['soy', 'soy sauce', 'tofu', 'edamame', 'miso', 'tempeh', 'teriyaki'],
@@ -1309,7 +1331,7 @@ const ALLERGEN_WORDS = {
 const ALLERGEN_EXCEPTIONS = {
   dairy: ['peanut butter', 'coconut milk', 'coconut cream', 'almond milk', 'oat milk', 'cream of tartar'],
   eggs: ['eggplant'],
-  gluten: ['rice noodles', 'corn tortillas', 'gluten-free'],
+  gluten: ['rice noodles', 'corn tortillas', 'gluten-free', 'almond flour', 'coconut flour', 'shirataki'],
 };
 
 // One compiled pattern per allergen, built once.

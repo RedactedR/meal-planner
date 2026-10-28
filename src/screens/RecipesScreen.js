@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HIGH_PROTEIN, allRecipes, cuisinesOf, effectiveRecipe, matchesCuisine } from '../data/recipes';
+import { HIGH_PROTEIN, SNACKS, allRecipes, cuisinesOf, effectiveRecipe, isSnack, matchesCuisine } from '../data/recipes';
+import { StoreSnackShelf } from '../components/StoreSnacks';
 import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
 import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
 import { useAppState } from '../AppState';
@@ -20,17 +21,17 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const [importOpen, setImportOpen] = useState(false);
   const web = useWebRecipes(query, cuisine, settings);
 
-  const allowed = useMemo(() => allowedRecipes(settings), [settings]);
+  const allowed = useMemo(() => allowedRecipes(settings, { includeSnacks: true }), [settings]);
 
   // Price of each allowed recipe after what's already in your Kitchen.
   const costs = useMemo(
-    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(effectiveRecipe(r, settings), settings.portions, inventory, settings)])),
+    () => Object.fromEntries(allowed.map((r) => [r.id, recipeCosts(effectiveRecipe(r, settings), isSnack(r) ? r.servings : settings.portions, inventory, settings)])),
     [allowed, settings, inventory]
   );
   const deals = useMemo(
     () =>
       allowed
-        .filter((r) => costs[r.id].priced && costs[r.id].savings >= 0.5)
+        .filter((r) => !isSnack(r) && costs[r.id].priced && costs[r.id].savings >= 0.5)
         .sort((a, b) => costs[b.id].savings / costs[b.id].total - costs[a.id].savings / costs[a.id].total),
     [allowed, costs]
   );
@@ -146,6 +147,8 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
         </Pressable>
       </View>
 
+      {cuisine === SNACKS && <StoreSnackShelf query={query} />}
+
       {hiddenCount > 0 && (
         <Text style={styles.hidden}>
           {hiddenCount} {hiddenCount === 1 ? 'recipe is' : 'recipes are'} hidden by your Settings or the Balanced filter.
@@ -167,7 +170,8 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
     }
   }
 
-  const footer = (
+  // Protein, keto and snack filters need nutrition info, which web recipes don't have.
+  const footer = !/^[A-Za-z]/.test(cuisine) ? null : (
     <View style={{ paddingHorizontal: 20, marginTop: 8 }}>
       <Text style={styles.webTitle}>🌐 More from the web</Text>
       <Text style={styles.webSub}>

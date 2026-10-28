@@ -4,7 +4,9 @@ Plan a week of dinners from a recipe library, then turn them into a grocery list
 
 ## What it does so far
 
-- **Recipes**: 250 built-in recipes across 30 cuisines with in-depth, step-by-step instructions, 333 pro tips (toggle them off in Settings), "Watch how" technique videos, difficulty levels, and homemade versions of store-bought sauces and seasonings. Search, filter by cuisine, sort by top rated or best deal, and rate recipes yourself.
+- **Today**: daily calorie & protein tracking with goals, a 7-day protein chart, and "close the gap" ideas — meals and snacks that cover the protein you still need within your calories (with a keto-only option).
+- **Snacks**: 27 store-bought snacks you can add to your grocery list and log in one tap, plus homemade snack recipes.
+- **Recipes**: 359 built-in recipes — including 100 keto meals and snacks and 30 homemade snacks — across 30+ cuisines with in-depth, step-by-step instructions, 450+ pro tips (toggle them off in Settings), "Watch how" technique videos, difficulty levels, and homemade versions of store-bought sauces and seasonings. Search, filter by cuisine, sort by top rated or best deal, and rate recipes yourself.
 - **Find online**: browse and search thousands of recipes from TheMealDB (with full recipe videos), or import any recipe by pasting a link from sites like Serious Eats, Budget Bytes or Allrecipes. Saved recipes join your library and work with the planner, Kitchen and grocery list.
 - **Costs**: recipes are priced by the whole packages you'd buy (a jar of paprika, not 1 tsp of it), minus what's already in your Kitchen, with a chart by ingredient and store section. Leftovers stay in your Kitchen with an approximate amount ("≈ ¾ jar").
 - **Kitchen**: your food inventory. A first-time checklist fills it in; groceries you mark as bought get added, and meals you cook get taken out. Recipes show ✓ for ingredients you have.

@@ -8,5 +8,8 @@ import vegetarian from './vegetarian';
 import soups from './soups';
 import bowls from './bowls';
 import handhelds from './handhelds';
+import keto1 from './keto1';
+import keto2 from './keto2';
+import snacks from './snacks';
 
-export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls, ...handhelds];
+export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls, ...handhelds, ...keto1, ...keto2, ...snacks];

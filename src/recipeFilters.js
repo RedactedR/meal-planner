@@ -15,9 +15,13 @@ export function isExcluded(baseRecipe, settings) {
 }
 
 // Recipes the app is allowed to show or suggest, given the settings.
-export function allowedRecipes(settings) {
+// Meals only, unless includeSnacks is set (snacks aren't for the week plan).
+export function allowedRecipes(settings, { includeSnacks = false } = {}) {
   return allRecipes().filter(
-    (r) => !isExcluded(r, settings) && (!settings.balancedOnly || isBalanced(r))
+    (r) =>
+      (includeSnacks || r.course !== 'snack') &&
+      !isExcluded(r, settings) &&
+      (!settings.balancedOnly || r.course === 'snack' || isBalanced(r))
   );
 }
 
