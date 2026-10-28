@@ -25,24 +25,32 @@ function escape(s) {
 function wordPattern(word) {
   const w = word.toLowerCase();
   if (w.endsWith('ies')) return escape(w.slice(0, -3)) + '(?:y|ies)';
+  if (w.endsWith('ves')) return escape(w.slice(0, -3)) + '(?:f|ves)';
   if (w.endsWith('oes')) return escape(w.slice(0, -2)) + '(?:es)?';
   if (w.endsWith('s') && !w.endsWith('ss')) return escape(w.slice(0, -1)) + '(?:e?s)?';
   return escape(w) + '(?:e?s)?';
 }
 
+// Names a step might use for an ingredient. `full` marks the
+// ingredient's own name, which wins when two ingredients share a word.
 function aliasesFor(name) {
-  const out = new Set();
+  const out = new Map(); // alias -> full?
+  const add = (a, full) => {
+    if (a.length >= 3 && !out.get(a)) out.set(a, full);
+  };
   for (const part of name.toLowerCase().split(/\s+or\s+|\s*\(|\)/)) {
     const clean = part.trim();
     if (!clean) continue;
-    out.add(clean);
+    add(clean, true);
     const words = clean.split(/\s+/);
     const stripped = words.filter((w) => !DESCRIPTORS.has(w));
-    if (stripped.length && stripped.length < words.length) out.add(stripped.join(' '));
-    if (words.length > 1) out.add(words[words.length - 1]);
-    if (words.length > 1 && PROTEIN_WORDS.has(words[0]) && catalogItem(name)?.category === 'protein') out.add(words[0]);
+    if (stripped.length && stripped.length < words.length) add(stripped.join(' '), false);
+    // "Old Bay seasoning" is just "Old Bay" in a step.
+    if (words.length > 2 && /^(seasoning|sauce|paste|powder)$/.test(words[words.length - 1])) add(words.slice(0, -1).join(' '), false);
+    if (words.length > 1) add(words[words.length - 1], false);
+    if (words.length > 1 && PROTEIN_WORDS.has(words[0]) && catalogItem(name)?.category === 'protein') add(words[0], false);
   }
-  return [...out].filter((a) => a.length >= 3);
+  return [...out.entries()].map(([alias, full]) => ({ alias, full }));
 }
 
 const matcherCache = new WeakMap();
@@ -52,15 +60,20 @@ function matcherFor(recipe) {
   if (matcherCache.has(recipe)) return matcherCache.get(recipe);
   const owners = new Map(); // alias -> set of ingredient indexes
   const forms = new Map(); // singular key -> alias as written
+  const fullOwner = new Map(); // key -> ingredient whose own name it is
   recipe.ingredients.forEach((ing, idx) => {
-    for (const a of aliasesFor(ing.name)) {
+    for (const { alias: a, full } of aliasesFor(ing.name)) {
       // "pepper" and "peppers" are the same word for matching purposes.
       const key = a.replace(/ies\b/g, 'y').replace(/oes\b/g, 'o').replace(/([^s])s\b/g, '$1');
       if (!owners.has(key)) owners.set(key, new Set());
       owners.get(key).add(idx);
+      if (full) fullOwner.set(key, idx);
       if (!forms.has(key)) forms.set(key, a);
     }
   });
+  // A shared name that is one ingredient's full name belongs to that one
+  // ("soy sauce" is Soy sauce, not Dark soy sauce).
+  for (const [key, idx] of fullOwner) owners.set(key, new Set([idx]));
   // Keep only names that point to exactly one ingredient; longest first so
   // "red pepper flakes" wins over "pepper".
   const list = [...owners.entries()]

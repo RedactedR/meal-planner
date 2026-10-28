@@ -45,7 +45,7 @@ function parseIngredients(text) {
     });
 }
 
-function parseSteps(steps) {
+export function parseSteps(steps) {
   return steps.map((s) => {
     if (typeof s === 'string') return { text: s };
     const [text, tip, watch] = s;

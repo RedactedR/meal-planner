@@ -11,5 +11,10 @@ import handhelds from './handhelds';
 import keto1 from './keto1';
 import keto2 from './keto2';
 import snacks from './snacks';
+import DETAILED from './detailed';
+import { parseSteps } from './build';
 
-export default [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls, ...handhelds, ...keto1, ...keto2, ...snacks];
+const ALL = [...chicken, ...beef, ...pork, ...seafood, ...pasta, ...vegetarian, ...soups, ...bowls, ...handhelds, ...keto1, ...keto2, ...snacks];
+
+// Detailed, follow-along instructions replace the shorter originals.
+export default ALL.map((r) => (DETAILED[r.id] ? { ...r, steps: parseSteps(DETAILED[r.id]) } : r));
