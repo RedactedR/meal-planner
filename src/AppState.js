@@ -19,7 +19,8 @@ export const PORTION_OPTIONS = [1, 2, 4, 6];
 const DEFAULT_STATE = {
   plan: { dayCount: 5, meals: {} },
   settings: {
-    theme: 'system', // 'system' | 'light' | 'dark'
+    theme: 'dark', // 'system' | 'light' | 'dark'
+    designV2: true, // set once the new dark look has been switched on
     portions: 4, // people per meal
     balancedOnly: false,
     allergens: [], // keys from ALLERGENS
@@ -61,7 +62,8 @@ export function AppStateProvider({ children }) {
           const parsed = JSON.parse(saved);
           setState({
             plan: { ...DEFAULT_STATE.plan, ...parsed.plan },
-            settings: { ...DEFAULT_STATE.settings, ...parsed.settings },
+            // The redesign switches everyone to the dark look once; they can change it back in Settings.
+            settings: { ...DEFAULT_STATE.settings, ...parsed.settings, ...(parsed.settings?.designV2 ? null : { theme: 'dark', designV2: true }) },
             ratings: { ...parsed.ratings },
             inventory: { ...parsed.inventory },
             kitchenSetup: !!parsed.kitchenSetup,

@@ -8,14 +8,21 @@ import { useToast } from '../components/Toast';
 import { StockIcon } from '../components/Badges';
 import CartMatcher from '../components/CartMatcher';
 import { snackExtras } from '../snackPlan';
-import { radius, useStyles } from '../theme';
+import { CAT, glow, radius, useStyles, useTheme } from '../theme';
+import { recipeCategory } from '../recipeColor';
 
-function Check({ on, styles }) {
-  return <View style={[styles.check, on && styles.checkOn]}>{on && <Text style={styles.checkMark}>✓</Text>}</View>;
+function Check({ on, styles, color }) {
+  const c = useTheme();
+  return (
+    <View style={[styles.check, on && styles.checkOn, on && color && { backgroundColor: color, borderColor: color }, on && color && glow(color, c.mode, 10, '88')]}>
+      {on && <Text style={styles.checkMark}>✓</Text>}
+    </View>
+  );
 }
 
 export default function GroceryScreen() {
   const styles = useStyles(makeStyles);
+  const colors = useTheme();
   const toast = useToast();
   const { plan, days, settings, inventory, addToInventory, kroger, snackList, setSnackCount } = useAppState();
   const [cartOpen, setCartOpen] = useState(false);
@@ -104,6 +111,18 @@ export default function GroceryScreen() {
       </Text>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 170 }}>
+        {itemsToBuy.length > 0 && (
+          <View style={[styles.totalCard, glow(CAT.veg, colors.mode, 40, '55')]}>
+            <View>
+              <Text style={styles.totalLabel}>Estimated total</Text>
+              <Text style={styles.totalValue}>{money(estTotal)}</Text>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.totalSide}>{itemsToBuy.length} items</Text>
+              {unpricedCount ? <Text style={styles.totalSub}>+ {unpricedCount} unpriced</Text> : null}
+            </View>
+          </View>
+        )}
         {planned.length > 0 && (<>
         <View style={styles.sectionRow}>
           <Text style={styles.section}>Meals</Text>
@@ -120,7 +139,7 @@ export default function GroceryScreen() {
                 onPress={() => toggle(setSkippedDays, day)}
                 style={[styles.row, i > 0 && styles.rowBorder]}
               >
-                <Check on={on} styles={styles} />
+                <Check on={on} styles={styles} color={recipeCategory(recipe).color} />
                 <Text style={styles.rowEmoji}>{recipe.emoji}</Text>
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.rowText, !on && styles.off]}>{recipe.name}</Text>
@@ -140,7 +159,7 @@ export default function GroceryScreen() {
                 const on = !skippedDays.has(r.id);
                 return (
                   <Pressable key={r.id} onPress={() => toggle(setSkippedDays, r.id)} style={[styles.row, i > 0 && styles.rowBorder]}>
-                    <Check on={on} styles={styles} />
+                    <Check on={on} styles={styles} color={CAT.snack} />
                     <Text style={styles.rowEmoji}>{r.emoji}</Text>
                     <View style={{ flex: 1 }}>
                       <Text style={[styles.rowText, !on && styles.off]}>{r.name}</Text>
@@ -279,8 +298,13 @@ const makeStyles = (c) => ({
     borderTopWidth: 1,
     borderTopColor: c.border,
   },
-  cartBtn: { backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 15, alignItems: 'center' },
-  cartText: { color: c.onPrimary, fontSize: 16, fontWeight: '700' },
+  cartBtn: { backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 16, alignItems: 'center', ...glow(c.primary, c.mode, 22, '66') },
+  totalCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', backgroundColor: CAT.veg, borderRadius: 24, padding: 18, marginTop: 8 },
+  totalLabel: { fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', color: c.ink, opacity: 0.75 },
+  totalValue: { fontSize: 38, fontWeight: '800', color: c.ink, letterSpacing: -1 },
+  totalSide: { fontSize: 14, fontWeight: '800', color: c.ink },
+  totalSub: { fontSize: 12, fontWeight: '700', color: c.ink, opacity: 0.75 },
+  cartText: { color: c.onPrimary, fontSize: 16, fontWeight: '800' },
   boughtBtn: {
     borderWidth: 1.5,
     borderColor: c.primary,

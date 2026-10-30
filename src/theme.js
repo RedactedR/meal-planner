@@ -24,33 +24,57 @@ export const palettes = {
     },
     toast: '#2B2622',
     onToast: '#FFFFFF',
+    raised: '#F3EEE7',
+    faint: '#C9BFB3',
+    ink: '#0B0D14',
   },
   dark: {
     mode: 'dark',
-    background: '#141311',
-    surface: '#1F1D1A',
-    border: '#34302B',
-    text: '#F2EDE6',
-    muted: '#9C948A',
-    primary: '#6FC29A',
-    primarySoft: '#1E3329',
-    onPrimary: '#0E1A14',
-    accent: '#F0965F',
-    accentSoft: '#3A261A',
-    danger: '#F2B8B5',
-    dangerSoft: '#3D1F1D',
-    warn: '#F2C26B',
-    warnSoft: '#3A2E14',
+    background: '#0E0F14',
+    surface: '#181A22',
+    raised: '#222531',
+    border: '#262938',
+    text: '#F4F5F8',
+    muted: '#A3A8B8',
+    faint: '#4A4E60',
+    ink: '#0B0D14',
+    primary: '#34D27B',
+    primarySoft: '#173323',
+    onPrimary: '#0B0D14',
+    accent: '#FF8A3D',
+    accentSoft: '#35241A',
+    danger: '#FF5A5F',
+    dangerSoft: '#3A1C20',
+    warn: '#FFC24D',
+    warnSoft: '#382D17',
     categories: {
-      protein: '#F0965F', produce: '#6FC29A', dairy: '#E6C65C', bakery: '#D2A27A',
-      frozen: '#7DB3E8', pantry: '#B39DDB', spices: '#E886A8', snacks: '#7CC4C5', other: '#9C948A',
+      protein: '#FF8A3D', produce: '#34D27B', dairy: '#FFC24D', bakery: '#E0A06B',
+      frozen: '#4D8DFF', pantry: '#B07CFF', spices: '#FF6FAE', snacks: '#22D3EE', other: '#A3A8B8',
     },
-    toast: '#F2EDE6',
-    onToast: '#141311',
+    toast: '#F4F5F8',
+    onToast: '#0B0D14',
   },
 };
 
-export const radius = { sm: 8, md: 14, lg: 20 };
+export const radius = { sm: 10, md: 18, lg: 24 };
+
+// Bright recipe colors. Every recipe gets one (see recipeColor.js) so
+// lists, squares and the recipe page are color-coded the same way.
+export const CAT = {
+  veg: '#34D27B',
+  keto: '#4D8DFF',
+  protein: '#FF8A3D',
+  seafood: '#22D3EE',
+  snack: '#B07CFF',
+  classic: '#FF5A5F',
+};
+
+// Soft colored glow under a card or button (dark mode only; a plain
+// drop shadow would look muddy on the light background).
+export function glow(color, mode = 'dark', size = 22, alpha = '55') {
+  if (mode !== 'dark') return null;
+  return { boxShadow: `0px ${Math.round(size / 3)}px ${size}px ${color}${alpha}` };
+}
 
 export const ThemeContext = createContext(palettes.light);
 

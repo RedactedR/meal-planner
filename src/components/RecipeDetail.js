@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Alert, Image, Linking, Modal, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { radius, useStyles, useTheme } from '../theme';
+import { CAT, glow, radius, useStyles, useTheme } from '../theme';
+import { recipeCategory } from '../recipeColor';
 import { DAY_NAMES, useAppState } from '../AppState';
 import { DIFFICULTY, effectiveRecipe, getRecipe, isBalanced, stepText } from '../data/recipes';
 import { cookingQty, formatQty } from '../grocery';
@@ -55,6 +56,7 @@ function DetailContent({ baseRecipe, onClose }) {
   const stockByName = Object.fromEntries(cost.items.map((i) => [i.name, i.status]));
   const swapByName = Object.fromEntries(cost.items.filter((i) => i.using).map((i) => [i.name, i.using]));
   const diff = DIFFICULTY[recipe.difficulty];
+  const cat = recipeCategory(recipe);
 
   // Cost with and without the homemade sauce, to show what scratch saves.
   const scratchCompare =
@@ -132,36 +134,42 @@ function DetailContent({ baseRecipe, onClose }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <View style={styles.header}>
-        {isOnline ? (
-          <Pressable onPress={toggleSaved} hitSlop={12}>
-            <Text style={styles.close}>{isSaved ? '★ Saved' : '☆ Save recipe'}</Text>
-          </Pressable>
-        ) : (
-          <View />
-        )}
-        <Pressable onPress={onClose} hitSlop={12}>
-          <Text style={styles.close}>Close</Text>
-        </Pressable>
-      </View>
       <ScrollView contentContainerStyle={styles.body}>
-        {recipe.image ? (
-          <Image source={{ uri: recipe.image }} style={styles.hero} />
-        ) : (
-          <Text style={styles.emoji}>{recipe.emoji}</Text>
-        )}
-        <Text style={styles.title}>{recipe.name}</Text>
-        <Text style={styles.meta}>
-          {[recipe.cuisine, recipe.minutes ? `${recipe.minutes} min` : null]
-            .filter(Boolean)
-            .join(' · ')}
-          {snack ? ` · makes ${portions} snacks` : cost.priced ? ` · amounts for ${portions} ${portions === 1 ? 'person' : 'people'}` : ''}
-        </Text>
-        <View style={styles.pills}>
-          {diff && <Pill label={diff.label} tone={diff.tone} />}
-          {recipe.onePan && <Pill label="🍳 One pan — easy cleanup" tone="accent" />}
-          {isBalanced(recipe) && <Pill label="Balanced" />}
-          <Pill label={`${cost.inStockCount}/${cost.items.length} in stock`} tone={cost.inStockCount ? 'primary' : 'warn'} />
+        <View style={[styles.hero, { backgroundColor: cat.color }, glow(cat.color, colors.mode, 50, '55')]}>
+          <View style={styles.header}>
+            {isOnline ? (
+              <Pressable onPress={toggleSaved} hitSlop={12} style={styles.heroBtn}>
+                <Text style={styles.heroBtnText}>{isSaved ? '★ Saved' : '☆ Save'}</Text>
+              </Pressable>
+            ) : (
+              <View />
+            )}
+            <Pressable onPress={onClose} hitSlop={12} style={styles.heroBtn}>
+              <Text style={styles.heroBtnText}>✕ Close</Text>
+            </Pressable>
+          </View>
+          {recipe.image ? (
+            <Image source={{ uri: recipe.image }} style={styles.heroImage} />
+          ) : (
+            <View style={styles.emojiBox}>
+              <Text style={styles.emoji}>{recipe.emoji}</Text>
+            </View>
+          )}
+          <Text style={styles.title}>{recipe.name}</Text>
+          <Text style={styles.meta}>
+            {[recipe.cuisine, recipe.minutes ? `${recipe.minutes} min` : null]
+              .filter(Boolean)
+              .join(' · ')}
+            {snack ? ` · makes ${portions} snacks` : cost.priced ? ` · amounts for ${portions} ${portions === 1 ? 'person' : 'people'}` : ''}
+          </Text>
+          <View style={styles.pills}>
+            <Text style={[styles.heroPillDark, { color: cat.color }]}>{cat.label}</Text>
+            {n && n.protein >= 35 && cat.key !== 'protein' && <Text style={[styles.heroPillDark, { color: CAT.protein }]}>High protein</Text>}
+            {diff && <Text style={styles.heroPill}>{diff.label}</Text>}
+            {recipe.onePan && <Text style={styles.heroPill}>🍳 One pan</Text>}
+            {isBalanced(recipe) && <Text style={styles.heroPill}>Balanced</Text>}
+            <Text style={styles.heroPill}>{`${cost.inStockCount}/${cost.items.length} in stock`}</Text>
+          </View>
         </View>
 
         {isOnline && (
@@ -423,8 +431,14 @@ function displayAmount(ing, recipe, portions) {
 
 const makeStyles = (c) => ({
   safe: { flex: 1, backgroundColor: c.background },
-  header: { paddingHorizontal: 20, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between' },
-  hero: { width: '100%', height: 220, borderRadius: radius.md, backgroundColor: c.border },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
+  hero: { marginHorizontal: -20, paddingHorizontal: 20, paddingTop: 14, paddingBottom: 24, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, marginBottom: 6 },
+  heroBtn: { backgroundColor: 'rgba(11,13,20,0.14)', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 9 },
+  heroBtnText: { fontSize: 14, fontWeight: '800', color: c.ink },
+  heroImage: { width: '100%', height: 200, borderRadius: 22, backgroundColor: 'rgba(11,13,20,0.14)' },
+  emojiBox: { width: 84, height: 84, borderRadius: 24, backgroundColor: 'rgba(11,13,20,0.14)', alignItems: 'center', justifyContent: 'center' },
+  heroPill: { fontSize: 12.5, fontWeight: '700', color: c.ink, backgroundColor: 'rgba(11,13,20,0.14)', borderRadius: 999, paddingHorizontal: 11, paddingVertical: 5, overflow: 'hidden' },
+  heroPillDark: { fontSize: 12.5, fontWeight: '800', backgroundColor: c.ink, borderRadius: 999, paddingHorizontal: 11, paddingVertical: 5, overflow: 'hidden' },
   sourceRow: { marginTop: 12 },
   sourceText: { fontSize: 14, color: c.primary, fontWeight: '600' },
   videoBtn: { marginTop: 14, backgroundColor: c.danger, borderRadius: radius.md, paddingVertical: 14, alignItems: 'center' },
@@ -448,9 +462,9 @@ const makeStyles = (c) => ({
   watchText: { color: c.danger, fontWeight: '700', fontSize: 13 },
   close: { fontSize: 16, color: c.primary, fontWeight: '600' },
   body: { paddingHorizontal: 20, paddingBottom: 60 },
-  emoji: { fontSize: 56 },
-  title: { fontSize: 26, fontWeight: '700', color: c.text, marginTop: 8 },
-  meta: { fontSize: 14, color: c.muted, marginTop: 4 },
+  emoji: { fontSize: 46 },
+  title: { fontSize: 27, lineHeight: 32, fontWeight: '800', color: c.ink, marginTop: 14, letterSpacing: -0.5 },
+  meta: { fontSize: 14, color: c.ink, opacity: 0.75, fontWeight: '600', marginTop: 4 },
   warning: { backgroundColor: c.dangerSoft, borderRadius: radius.sm, padding: 12, marginTop: 14 },
   warningText: { color: c.danger, fontWeight: '600' },
   rateRow: {

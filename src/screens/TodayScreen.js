@@ -11,7 +11,7 @@ import { gapPlans } from '../gapPlanner';
 import { STORE_SNACKS } from '../data/snacks';
 import { StoreSnackCard, useSnackActions } from '../components/StoreSnacks';
 import { useToast } from '../components/Toast';
-import { radius, useStyles, useTheme } from '../theme';
+import { CAT, glow, radius, useStyles, useTheme } from '../theme';
 
 // Daily calorie & protein tracker.
 export default function TodayScreen({ onOpenRecipe }) {
@@ -252,9 +252,9 @@ function Meter({ label, value, goal, unit, strong }) {
   const c = useTheme();
   const pct = goal > 0 ? value / goal : 0;
   const over = label === 'Calories' && pct > 1.05;
-  const color = over ? c.warn : strong ? c.accent : c.primary;
+  const color = over ? c.warn : strong ? CAT.protein : c.mode === 'dark' ? c.text : c.primary;
   return (
-    <View style={styles.meter}>
+    <View style={[styles.meter, strong && { borderColor: CAT.protein + '66' }, strong && glow(CAT.protein, c.mode, 30, '22')]}>
       <Text style={styles.meterLabel}>{label}</Text>
       <Text style={styles.meterValue}>
         {Math.round(value)}
@@ -266,7 +266,7 @@ function Meter({ label, value, goal, unit, strong }) {
         </Text>
       </Text>
       <View style={styles.track}>
-        <View style={{ width: `${Math.min(100, pct * 100)}%`, height: '100%', backgroundColor: color, borderRadius: 5 }} />
+        <View style={[{ width: `${Math.min(100, pct * 100)}%`, height: '100%', backgroundColor: color, borderRadius: 6 }, strong && glow(color, c.mode, 10, 'AA')]} />
       </View>
     </View>
   );
@@ -620,12 +620,12 @@ const makeStyles = (c) => ({
   addBtn: { marginHorizontal: 20, marginTop: 12, alignItems: 'center' },
   meters: { flexDirection: 'row', gap: 10, paddingHorizontal: 20, marginTop: 14 },
   meter: {
-    flex: 1, backgroundColor: c.surface, borderWidth: 1, borderColor: c.border, borderRadius: radius.md, padding: 14,
+    flex: 1, backgroundColor: c.surface, borderWidth: 1, borderColor: c.border, borderRadius: 22, padding: 16,
   },
   meterLabel: { fontSize: 12, color: c.muted, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.6 },
   meterValue: { fontSize: 24, fontWeight: '800', color: c.text, marginTop: 4 },
   meterGoal: { fontSize: 14, fontWeight: '600', color: c.muted },
-  track: { height: 10, backgroundColor: c.border, borderRadius: 5, marginTop: 10, overflow: 'hidden' },
+  track: { height: 12, backgroundColor: c.border, borderRadius: 6, marginTop: 12 },
   leftText: { fontSize: 14, color: c.muted, textAlign: 'center', marginTop: 10 },
   plannedCard: {
     flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 20, marginTop: 16, padding: 14,

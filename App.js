@@ -77,16 +77,20 @@ function Main() {
         )}
       </SafeAreaView>
 
-      <SafeAreaView style={styles.tabBar} edges={['bottom']}>
-        {TABS.map((t) => {
-          const active = tab === t.key;
-          return (
-            <Pressable key={t.key} onPress={() => setTab(t.key)} style={styles.tab}>
-              <Text style={[styles.tabIcon, !active && { opacity: 0.45 }]}>{t.icon}</Text>
-              <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>{t.label}</Text>
-            </Pressable>
-          );
-        })}
+      <SafeAreaView edges={['bottom']} style={styles.tabWrap}>
+        <View style={styles.tabBar}>
+          {TABS.map((t) => {
+            const active = tab === t.key;
+            return (
+              <Pressable key={t.key} onPress={() => setTab(t.key)} style={[styles.tab, active && styles.tabActive]}>
+                <Text style={[styles.tabIcon, !active && { opacity: 0.5 }]}>{t.icon}</Text>
+                <Text style={[styles.tabLabel, active && styles.tabLabelActive]} numberOfLines={1}>
+                  {t.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </SafeAreaView>
 
       <RecipeDetail recipe={openRecipe} onClose={() => setOpenRecipe(null)} />
@@ -96,9 +100,21 @@ function Main() {
 
 const makeStyles = (c) => ({
   root: { flex: 1, backgroundColor: c.background },
-  tabBar: { flexDirection: 'row', backgroundColor: c.surface, borderTopWidth: 1, borderTopColor: c.border },
-  tab: { flex: 1, alignItems: 'center', paddingVertical: 10 },
-  tabIcon: { fontSize: 22 },
-  tabLabel: { fontSize: 11, color: c.muted, marginTop: 2, fontWeight: '600' },
-  tabLabelActive: { color: c.primary },
+  tabWrap: { backgroundColor: c.background, paddingHorizontal: 10, paddingTop: 6, paddingBottom: 8 },
+  tabBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: c.mode === 'dark' ? '#1E2029' : c.surface,
+    borderWidth: 1,
+    borderColor: c.mode === 'dark' ? '#2C2F3E' : c.border,
+    borderRadius: 26,
+    padding: 6,
+    marginBottom: 6,
+    boxShadow: c.mode === 'dark' ? '0px 12px 30px rgba(0,0,0,0.5)' : '0px 6px 18px rgba(0,0,0,0.08)',
+  },
+  tab: { flex: 1, alignItems: 'center', paddingVertical: 7, borderRadius: 18 },
+  tabActive: { backgroundColor: c.text },
+  tabIcon: { fontSize: 19 },
+  tabLabel: { fontSize: 10.5, color: c.muted, marginTop: 2, fontWeight: '600' },
+  tabLabelActive: { color: c.mode === 'dark' ? c.ink : c.background, fontWeight: '800' },
 });

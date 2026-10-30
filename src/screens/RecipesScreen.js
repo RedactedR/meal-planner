@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HIGH_PROTEIN, SNACKS, allRecipes, cuisinesOf, effectiveRecipe, isSnack, matchesCuisine } from '../data/recipes';
+import { HIGH_PROTEIN, KETO, SNACKS, allRecipes, cuisinesOf, effectiveRecipe, isSnack, matchesCuisine } from '../data/recipes';
 import { StoreSnackShelf } from '../components/StoreSnacks';
 import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
 import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
@@ -9,7 +9,13 @@ import { useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
 import OnlineBrowser from './OnlineBrowser';
 import { money, recipeCosts } from '../pricing';
-import { radius, useStyles, useTheme } from '../theme';
+import { CAT, glow, radius, useStyles, useTheme } from '../theme';
+import { recipeCategory } from '../recipeColor';
+
+const CHIP_COLORS = { [HIGH_PROTEIN]: CAT.protein, [KETO]: CAT.keto, [SNACKS]: CAT.snack, Vegetarian: CAT.veg };
+
+// Keeps the last square half-width when the count is odd.
+const FILLER = { id: '__filler' };
 
 export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   const styles = useStyles(makeStyles);
@@ -89,8 +95,9 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dealsRow}>
             {deals.slice(0, 8).map((r) => {
               const c = costs[r.id];
+              const tint = recipeCategory(r).color;
               return (
-                <Pressable key={r.id} onPress={() => onOpenRecipe(r)} style={styles.deal}>
+                <Pressable key={r.id} onPress={() => onOpenRecipe(r)} style={[styles.deal, { borderColor: tint }, glow(tint, colors.mode, 16, '33')]}>
                   <Text style={styles.dealEmoji}>{r.emoji}</Text>
                   <Text style={styles.dealName} numberOfLines={2}>
                     {r.name}
@@ -118,11 +125,25 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
       />
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-        {CUISINES.map((c) => (
-          <Pressable key={c} onPress={() => setCuisine(c)} style={[styles.chip, cuisine === c && styles.chipActive]}>
-            <Text style={[styles.chipText, cuisine === c && styles.chipTextActive]}>{c}</Text>
-          </Pressable>
-        ))}
+        {CUISINES.map((c) => {
+          const tint = CHIP_COLORS[c];
+          const on = cuisine === c;
+          return (
+            <Pressable
+              key={c}
+              onPress={() => setCuisine(c)}
+              style={[
+                styles.chip,
+                tint && { borderColor: tint },
+                on && styles.chipActive,
+                on && tint && { backgroundColor: tint, borderColor: tint },
+                on && glow(tint || colors.text, colors.mode, 14, '55'),
+              ]}
+            >
+              <Text style={[styles.chipText, tint && { color: tint }, on && styles.chipTextActive]}>{c}</Text>
+            </Pressable>
+          );
+        })}
       </ScrollView>
 
       <View style={styles.toolbar}>
@@ -198,15 +219,19 @@ export default function RecipesScreen({ onOpenRecipe, onGoToKitchen }) {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={results}
+        data={results.length % 2 ? [...results, FILLER] : results}
         keyExtractor={(r) => r.id}
+        numColumns={2}
+        columnWrapperStyle={styles.gridRow}
         ListHeaderComponent={header}
         ListFooterComponent={footer}
-        renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: 20 }}>
-            <RecipeCard recipe={item} onPress={() => onOpenRecipe(item)} />
-          </View>
-        )}
+        renderItem={({ item }) =>
+          item === FILLER ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <RecipeCard variant="tile" recipe={item} onPress={() => onOpenRecipe(item)} />
+          )
+        }
         contentContainerStyle={{ paddingBottom: 24 }}
         ListEmptyComponent={<Text style={styles.empty}>None of your recipes match. Try the web results below.</Text>}
         keyboardShouldPersistTaps="handled"
@@ -305,7 +330,7 @@ const makeStyles = (c) => ({
   modeActive: { backgroundColor: c.primary, borderColor: c.primary },
   modeText: { fontWeight: '700', color: c.text, fontSize: 14 },
   modeTextActive: { color: c.onPrimary },
-  title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8 },
+  title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8, letterSpacing: -0.8 },
   subtitle: { fontSize: 15, color: c.muted, paddingHorizontal: 20, marginTop: 2 },
   search: {
     marginHorizontal: 20,
@@ -329,8 +354,9 @@ const makeStyles = (c) => ({
     borderColor: c.border,
   },
   chipActive: { backgroundColor: c.text, borderColor: c.text },
-  chipText: { color: c.text, fontWeight: '600' },
-  chipTextActive: { color: c.background },
+  chipText: { color: c.text, fontWeight: '700' },
+  chipTextActive: { color: c.ink },
+  gridRow: { paddingHorizontal: 20, gap: 10 },
   toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -340,11 +366,11 @@ const makeStyles = (c) => ({
     gap: 8,
     flexWrap: 'wrap',
   },
-  segment: { flexDirection: 'row', backgroundColor: c.border, borderRadius: 999, padding: 3 },
+  segment: { flexDirection: 'row', backgroundColor: c.surface, borderWidth: 1, borderColor: c.border, borderRadius: 999, padding: 3 },
   segmentBtn: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999 },
-  segmentActive: { backgroundColor: c.surface },
+  segmentActive: { backgroundColor: c.text },
   segmentText: { color: c.muted, fontWeight: '600', fontSize: 13 },
-  segmentTextActive: { color: c.text },
+  segmentTextActive: { color: c.ink, fontWeight: '800' },
   toggle: {
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -377,7 +403,7 @@ const makeStyles = (c) => ({
   dealName: { fontSize: 14, fontWeight: '600', color: c.text, marginTop: 6, minHeight: 36 },
   dealPrices: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 6 },
   dealOld: { fontSize: 12, color: c.muted, textDecorationLine: 'line-through' },
-  dealNew: { fontSize: 16, fontWeight: '800', color: c.primary },
+  dealNew: { fontSize: 16, fontWeight: '800', color: c.text },
   dealOff: { fontSize: 11, color: c.primary, fontWeight: '600', marginTop: 2 },
   hidden: { fontSize: 13, color: c.muted, paddingHorizontal: 20, marginBottom: 10 },
   empty: { textAlign: 'center', color: c.muted, marginTop: 40 },
