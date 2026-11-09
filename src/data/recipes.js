@@ -1233,6 +1233,12 @@ export function getRecipe(id) {
 export const HIGH_PROTEIN = '💪 High protein';
 export const KETO = '🥑 Keto';
 export const SNACKS = '🥨 Snacks';
+export const BUDGET = '💵 Budget';
+
+// Cheap, filling staples meals (see library/budget1.js and budget2.js).
+export function isBudget(recipe) {
+  return !!recipe.budget;
+}
 
 export function isSnack(recipe) {
   return recipe.course === 'snack';
@@ -1252,7 +1258,7 @@ export function isKeto(recipe) {
 export function cuisinesOf(list) {
   const skip = new Set(['Vegetarian', 'Snack']);
   const named = Array.from(new Set(list.map((r) => r.cuisine).filter((c) => c && !skip.has(c)))).sort();
-  return ['All', HIGH_PROTEIN, KETO, SNACKS, 'Vegetarian', ...named];
+  return ['All', BUDGET, HIGH_PROTEIN, KETO, SNACKS, 'Vegetarian', ...named];
 }
 
 // No meat, poultry or seafood, including hidden ones like chicken broth,
@@ -1270,6 +1276,7 @@ export function matchesCuisine(recipe, cuisine) {
   if (cuisine === 'All') return true;
   if (cuisine === 'Vegetarian') return isVegetarian(recipe);
   if (cuisine === HIGH_PROTEIN) return isHighProtein(recipe);
+  if (cuisine === BUDGET) return isBudget(recipe);
   return recipe.cuisine === cuisine;
 }
 

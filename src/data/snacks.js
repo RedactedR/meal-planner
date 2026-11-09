@@ -23,7 +23,6 @@ export const STORE_SNACKS = [
   S('babybel', 'Babybel cheese', '🧀', 'Babybel cheese', 1, '1 round', [70, 5, 0, 6, 0]),
   S('beef-jerky', 'Beef jerky', '🥩', 'Beef jerky', 1, '1 oz', [80, 11, 6, 1, 0]),
   S('meat-stick', 'Meat stick', '🌭', 'Meat sticks', 1, '1 stick', [90, 10, 0, 6, 0]),
-  S('tuna-pouch', 'Tuna pouch', '🐟', 'Tuna pouches', 1, '1 pouch (2.5 oz)', [70, 15, 0, 1, 0]),
   S('protein-milk', 'Protein milk', '🥛', 'Protein milk', 1, '1 cup', [120, 13, 6, 4.5, 0]),
   S('protein-chips', 'Protein chips', '🥔', 'Protein chips', 1, '1 bag (1.1 oz)', [140, 19, 5, 5, 1]),
   S('roasted-edamame', 'Roasted edamame', '🫛', 'Roasted edamame', 0.25, '¼ cup', [130, 14, 9, 4.5, 8]),

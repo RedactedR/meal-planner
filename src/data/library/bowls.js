@@ -71,16 +71,6 @@ export default [
       'Crumble feta over and squeeze on the roasted lemon.',
     ]),
 
-  R('tuna-noodle-casserole', 'Tuna Noodle Casserole', 'American', '🥘', 45, 6, 'easy', false,
-    [520, 28, 50, 22, 3, 0.8],
-    'Egg noodles 12 oz; Canned tuna 3 can; Cremini mushrooms 8 oz; Yellow onion 1; Butter 4 tbsp; All-purpose flour 4 tbsp; Chicken broth 16 oz; Milk 1.5 cup; Frozen peas 1.5 cup; Shredded cheddar 6 oz; Panko 0.75 cup; Kosher salt 1.5 tsp',
-    [
-      'Boil the noodles 2 minutes short of done.',
-      'Brown the mushrooms and onion in 3 tbsp butter, stir in the flour, then whisk in the broth and milk until thick.',
-      ['Fold in the noodles, flaked tuna, peas and half the cheese. Pour into a baking dish.', 'A homemade sauce replaces canned soup and tastes far better.'],
-      'Top with the remaining cheese and panko tossed in the last tbsp of melted butter. Bake at 375°F for 20 minutes.',
-    ]),
-
   R('chicken-fajita-rice', 'One-Pot Chicken Fajita Rice', 'Mexican', '🍚', 40, 4, 'easy', true,
     [560, 36, 62, 16, 6, 1.5],
     'Chicken breasts 1.25 lb; Long grain rice 1.25 cup; Bell peppers 2; Yellow onion 1; Garlic 2 cloves; Chili powder 2 tsp; Ground cumin 1 tsp; Smoked paprika 1 tsp; Diced tomatoes 1 can; Chicken broth 16 oz; Shredded cheddar 4 oz; Limes 1; Vegetable oil 1 tbsp; Cilantro 1 bunch; Kosher salt 1.5 tsp',

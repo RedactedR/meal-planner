@@ -33,13 +33,6 @@ export default {
     'Take the pan off the heat. Swirl in the remaining butter and the lemon juice until the sauce is glossy. Add the rest of the salt.',
     'Return the shrimp, toss with the parsley and spoon over the cauliflower rice.',
   ],
-  'keto-tuna-avocado-salad': [
-    'Drain the canned tuna very well, pressing on the lid, and flake it into a bowl.',
-    'Finely dice a rib of the celery and the red onion. Chop a little dill. Juice the lemon.',
-    ['Add the mayonnaise, Dijon mustard, celery, onion, dill, half the lemon juice, the salt and black pepper to the tuna and mix well.', 'Lemon juice brightens canned fish and cuts the richness of the mayo.'],
-    'Halve the avocados, twist apart and remove the pits with a spoon. Brush the cut sides with the rest of the lemon juice so they don\'t brown.',
-    'Pile the tuna salad into the avocado halves, mounding it high. Eat with a spoon.',
-  ],
   'keto-coconut-curry-cod': [
     'Prep: slice the bell pepper. Mince the garlic and grate the peeled ginger. Cut the cod fillets into 2-inch pieces. Chop the cilantro. Cut the lime in half.',
     'Heat the coconut oil in a large deep skillet with a lid over medium. Cook the bell pepper, garlic and ginger 3 minutes.',
@@ -63,13 +56,6 @@ export default {
     'Heat the avocado oil in a large nonstick skillet over medium. Fry the cakes 3–4 minutes per side, until golden. Turn gently with a thin spatula.',
     'Make the remoulade: stir the rest of the mayonnaise and mustard with the hot sauce and a squeeze of lemon.',
     'Serve the crab cakes on the mixed greens with the remoulade and lemon wedges.',
-  ],
-  'keto-spicy-tuna-poke-bowl': [
-    'Cut the sushi-grade tuna into ¾-inch cubes with a sharp knife. Thinly slice the green onions. In a bowl, toss the tuna with the soy sauce, sesame oil and most of the green onions. Chill while you prep.',
-    ['Warm the cauliflower rice in a dry skillet over medium-high 5 minutes, until tender. Spread on a plate to cool for 10 minutes, then stir in the rice vinegar.', 'Cooling the "rice" keeps the raw fish cold and safe.'],
-    'Slice the avocado and cucumber.',
-    'Stir the sriracha into the mayonnaise.',
-    'Build bowls: cauliflower rice, then the tuna, avocado and cucumber. Drizzle with the spicy mayo, sprinkle with sesame seeds and the rest of the green onions, and crumble the nori sheets over the top.',
   ],
   'keto-blackened-fish-tacos': [
     'Pat the cod fillets dry and coat all over with the Cajun seasoning.',

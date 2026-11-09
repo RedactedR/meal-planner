@@ -75,15 +75,6 @@ export default [
       'Scatter with parsley and serve over the orzo with the pan juices.',
     ]),
 
-  R('tuna-melts', 'Classic Tuna Melts', 'American', '🥪', 20, 4, 'easy', false,
-    [520, 34, 32, 28, 2, 0.3],
-    'Canned tuna 3 can; Mayonnaise 5 tbsp; Celery 0.25 bunch; Red onion 1; Dijon mustard 1 tbsp; Lemons 1; Sandwich bread 8; Shredded cheddar 6 oz; Butter 2 tbsp; Black pepper 0.5 tsp',
-    [
-      'Drain the tuna well and mix with the mayo, finely diced celery and onion, Dijon, a squeeze of lemon and pepper.',
-      'Spread the tuna on 4 slices of bread, top with cheese and the remaining bread.',
-      ['Butter the outsides and cook in a skillet over medium-low, covered, 3–4 minutes per side.', 'Low heat and a lid melt the cheese all the way through before the bread burns.'],
-    ]),
-
   R('coconut-shrimp-curry', 'Coconut Shrimp Curry', 'Indian', '🍛', 30, 4, 'easy', false,
     [560, 32, 60, 22, 4, 1.5],
     'Shrimp 1.25 lb; Coconut milk 1 can; Diced tomatoes 1 can; Yellow onion 1; Garlic 3 cloves; Fresh ginger 1 piece; Curry powder 2 tbsp; Turmeric 0.5 tsp; Baby spinach 5 oz; Limes 1; Vegetable oil 1 tbsp; Basmati rice 1.5 cup; Cilantro 1 bunch; Kosher salt 1.5 tsp',
@@ -145,16 +136,6 @@ export default [
       ['Pat the scallops very dry and season with salt. Remove the small side muscle if attached.', 'Wet scallops won\'t brown. Dry them on paper towels for 10 minutes for a golden crust.', 'how to sear scallops'],
       'Sear in the oil in a very hot skillet, 1½–2 minutes per side, without moving, until a deep golden crust forms. Baste with the last tbsp butter.',
       'Serve the scallops on the risotto.',
-    ]),
-
-  R('tuna-poke-bowls', 'Tuna Poke Bowls', 'Hawaiian', '🍣', 30, 4, 'medium', false,
-    [560, 36, 62, 18, 6, 1.5],
-    'Sushi-grade tuna 1.25 lb; Soy sauce 4 tbsp; Sesame oil 1 tbsp; Rice vinegar 3 tbsp; Granulated sugar 1 tbsp; Green onions 1 bunch; Sushi rice 1.5 cup; Cucumber 1; Avocado 2; Edamame 1 bag; Sesame seeds 1 tbsp; Sriracha 1 tbsp; Mayonnaise 2 tbsp',
-    [
-      ['Rinse and cook the sushi rice. While warm, fold in 2 tbsp vinegar mixed with the sugar and a pinch of salt.', 'Seasoned rice is what makes a poke bowl taste like sushi.'],
-      'Cube the tuna and toss with the soy sauce, sesame oil, remaining vinegar and sliced green onions. Chill 10 minutes.',
-      'Cook the edamame. Mix the sriracha and mayo.',
-      'Build bowls with rice, tuna, cucumber, avocado and edamame. Top with sesame seeds and spicy mayo.',
     ]),
 
   R('shrimp-tacos-chipotle', 'Chipotle Shrimp Tacos', 'Mexican', '🌮', 25, 4, 'easy', false,

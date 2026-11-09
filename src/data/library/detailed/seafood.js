@@ -60,14 +60,6 @@ export default {
     ['Nestle the cod into the tomatoes, lay the lemon slices on top, and bake 10–12 minutes, until the fish is opaque all the way through and flakes easily with a fork.', 'Cod is done when it turns opaque and flakes with a fork. It goes dry quickly after that.'],
     'Chop the parsley and scatter it over. Serve the cod over the orzo with the tomatoes, olives and pan juices spooned on top.',
   ],
-  'tuna-melts': [
-    'Drain the canned tuna very well, pressing the lid down on it over the sink. Finely dice a rib of celery and a quarter of the red onion (save the rest of the onion for another day). Cut the lemon in half.',
-    'In a bowl, mix the tuna with the mayonnaise, celery, onion, Dijon mustard, a squeeze of lemon and the black pepper.',
-    'Lay out 4 slices of sandwich bread. Spread the tuna evenly on them, top with the shredded cheddar and close with the other 4 slices.',
-    'Soften the butter and spread it thinly on the outside of both slices of each sandwich.',
-    ['Heat a large skillet over medium-low. Cook the sandwiches with a lid on top for 3–4 minutes, until the bottoms are golden. Flip, cover again and cook 3–4 minutes more until the cheese has melted.', 'Low heat and a lid melt the cheese all the way through before the bread burns.'],
-    'Cut in half on the diagonal and serve hot.',
-  ],
   'coconut-shrimp-curry': [
     'Cook the basmati rice: rinse until the water runs mostly clear, then 1½ cups water for every cup of rice with a pinch of salt. Boil, cover, lowest heat 15 minutes, then rest covered 10 minutes.',
     'Prep: dice the yellow onion. Mince the garlic and grate the peeled ginger. Peel and devein the shrimp if needed. Chop the cilantro. Cut the lime in half.',

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HIGH_PROTEIN, KETO, SNACKS, allRecipes, cuisinesOf, effectiveRecipe, isSnack, matchesCuisine } from '../data/recipes';
+import { BUDGET, HIGH_PROTEIN, KETO, SNACKS, allRecipes, cuisinesOf, effectiveRecipe, isSnack, matchesCuisine } from '../data/recipes';
 import { StoreSnackShelf } from '../components/StoreSnacks';
 import { allowedRecipes, isExcluded, SORTS, sortRecipes } from '../recipeFilters';
 import { mealDbByCuisine, mealDbLookup, mealDbRandom, searchMealDb } from '../online';
@@ -12,7 +12,7 @@ import { money, recipeCosts } from '../pricing';
 import { CAT, glow, radius, useStyles, useTheme } from '../theme';
 import { recipeCategory } from '../recipeColor';
 
-const CHIP_COLORS = { [HIGH_PROTEIN]: CAT.protein, [KETO]: CAT.keto, [SNACKS]: CAT.snack, Vegetarian: CAT.veg };
+const CHIP_COLORS = { [BUDGET]: CAT.budget, [HIGH_PROTEIN]: CAT.protein, [KETO]: CAT.keto, [SNACKS]: CAT.snack, Vegetarian: CAT.veg };
 
 // Keeps the last square half-width when the count is odd.
 const FILLER = { id: '__filler' };

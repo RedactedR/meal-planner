@@ -226,9 +226,7 @@ const CATALOG_ROWS = [
   // Library batch 3
   ['Cod fillets', 'lb', 8.99, 'protein', 1],
   ['Sea scallops', 'lb', 19.99, 'protein', 1],
-  ['Sushi-grade tuna', 'lb', 15.99, 'protein', 1],
   ['Lump crab meat', 'lb', 24.0, 'protein', 0.5],
-  ['Canned tuna', 'can', 1.29, 'pantry', 1],
   ['Canned salmon', 'can', 4.49, 'pantry', 1],
   ['Canned clams', 'can', 2.49, 'pantry', 1],
   ['Anchovy fillets', '', 0.25, 'pantry', 12],
@@ -357,7 +355,6 @@ const CATALOG_ROWS = [
   ['Pork rinds', 'oz', 0.9, 'snacks', 3.5],
   ['Almonds', 'cup', 3.0, 'snacks', 3.5],
   ['Meat sticks', '', 1.0, 'snacks', 10],
-  ['Tuna pouches', '', 1.6, 'snacks', 1],
   ['Roasted edamame', 'cup', 2.4, 'snacks', 2.75],
   ['Cheese crisps', '', 1.65, 'snacks', 3],
   ['Protein chips', '', 2.0, 'snacks', 4],
@@ -393,6 +390,19 @@ const CATALOG_ROWS = [
   ['Pepperoncini', 'cup', 2.5, 'pantry', 1.5],
   ['Barbecue sauce', 'tbsp', 0.1, 'pantry', 36],
   ['Ground nutmeg', 'tsp', 0.3, 'spices', 20],
+
+  // Budget staples (the cheapest way to buy filling food)
+  ['Dried pinto beans', 'cup', 0.55, 'pantry', 5],
+  ['Dried black beans', 'cup', 0.6, 'pantry', 5],
+  ['Split peas', 'cup', 0.6, 'pantry', 2.5],
+  ['Cornmeal', 'cup', 0.4, 'pantry', 5],
+  ['Chicken leg quarters', 'lb', 1.29, 'protein', 5],
+  ['Smoked sausage', 'oz', 0.27, 'protein', 14],
+  ['Frozen mixed vegetables', 'cup', 0.45, 'frozen', 4],
+  ['Frozen spinach', 'oz', 0.12, 'frozen', 12],
+  ['Chicken bouillon', 'tsp', 0.05, 'pantry', 40],
+  ['Vegetable bouillon', 'tsp', 0.07, 'pantry', 30],
+  ['Instant ramen noodles', '', 0.35, 'pantry', 6],
 ];
 
 export const CATEGORIES = [

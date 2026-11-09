@@ -54,15 +54,6 @@ export default {
     'Check the salmon: it\'s done when it flakes easily at the thickest part (about 125°F). The potatoes should be tender when poked with a knife. If they aren\'t, move the salmon to a plate and roast the vegetables 5 minutes more.',
     'Crumble the feta over everything and squeeze the soft roasted lemon slices over the pan with tongs. Serve straight from the pan.',
   ],
-  'tuna-noodle-casserole': [
-    'Put a rack in the middle of the oven and heat to 375°F. Bring a large pot of salted water to a boil.',
-    'Cook the egg noodles 2 minutes less than the bag says. Drain.',
-    'Prep: slice the cremini mushrooms. Dice the yellow onion. Drain the canned tuna and flake it.',
-    'Melt three-quarters of the butter in a large pot over medium-high. Cook the mushrooms and onion 7 minutes until browned. Stir in the flour for 1 minute, then slowly whisk in the chicken broth and milk. Simmer, stirring, 3 minutes until thick. Add the salt.',
-    ['Turn off the heat. Fold in the noodles, tuna, frozen peas and half the shredded cheddar. Pour into a 9x13-inch baking dish.', 'A homemade sauce replaces canned soup and tastes far better.'],
-    'Melt the rest of the butter and toss it with the panko. Sprinkle the rest of the cheese and then the buttered panko over the top.',
-    'Bake 20 minutes, until bubbling and golden on top.',
-  ],
   'chicken-fajita-rice': [
     'Prep: cut the chicken breasts into ¾-inch cubes. Slice the bell peppers and yellow onion into strips. Mince the garlic. Rinse the long grain rice. Chop the cilantro. Cut the lime into wedges.',
     'In a bowl, toss the chicken with the chili powder, cumin, smoked paprika and salt.',

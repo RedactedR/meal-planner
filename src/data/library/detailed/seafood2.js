@@ -11,14 +11,6 @@ export default {
     'Lay the scallops in flat-side down with space between them. Cook 1½–2 minutes without touching them, until a deep golden crust forms. Flip, add the last of the butter and spoon it over them for 1 minute. They should feel springy, not firm.',
     'Spoon the risotto onto plates and top with the scallops and any butter from the pan.',
   ],
-  'tuna-poke-bowls': [
-    ['Cook the sushi rice: rinse it in a sieve until the water runs clear, then put it in a pot with 1¼ cups water for every cup of rice. Boil, cover, lowest heat 15 minutes, then rest covered 10 minutes. Stir two-thirds of the rice vinegar with the sugar and a pinch of salt until dissolved and gently fold it into the warm rice.', 'Seasoned rice is what makes a poke bowl taste like sushi.'],
-    'Cut the sushi-grade tuna into ¾-inch cubes with a sharp knife. Thinly slice the green onions.',
-    'In a bowl, toss the tuna with the soy sauce, sesame oil, the rest of the rice vinegar and most of the green onions. Cover and chill 10 minutes (no longer than an hour).',
-    'Cook the edamame following the bag (usually boiled or microwaved about 5 minutes) and shell them if they\'re in pods.',
-    'Slice the cucumber into thin rounds. Halve, pit and slice the avocados. Stir the sriracha into the mayonnaise.',
-    'Build bowls: rice, then the tuna, cucumber, avocado and edamame side by side. Drizzle with the spicy mayo and sprinkle with sesame seeds and the rest of the green onions.',
-  ],
   'shrimp-tacos-chipotle': [
     'Prep: peel and devein the shrimp if needed and pat dry. Mince 1 chipotle pepper from the can and the garlic. Juice 1 lime; cut the other into wedges. Thinly shred the red cabbage. Slice the avocado. Chop the cilantro.',
     'In a bowl, toss the shrimp with the minced chipotle, 1 tablespoon of the adobo sauce from the can, the garlic, half the lime juice and the salt.',

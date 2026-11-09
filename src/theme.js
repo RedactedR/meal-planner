@@ -67,6 +67,7 @@ export const CAT = {
   seafood: '#22D3EE',
   snack: '#B07CFF',
   classic: '#FF5A5F',
+  budget: '#FFC24D', // Budget tab and chip (not a recipe color)
 };
 
 // Soft colored glow under a card or button (dark mode only; a plain

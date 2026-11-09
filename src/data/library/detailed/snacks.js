@@ -110,13 +110,6 @@ export default {
     ['Brush lightly with the olive oil and roast 10–12 minutes, until the prosciutto is crisp and the asparagus is tender.', 'No salt needed — the prosciutto seasons it.'],
     'Squeeze the lemon over the top and add the black pepper.',
   ],
-  'snack-tuna-cucumber-boats': [
-    'Drain the canned tuna very well. Chop the dill. Cut the lemon in half.',
-    'In a bowl, mix the tuna with the mayonnaise, dill, a squeeze of lemon and the salt.',
-    ['Halve the cucumber lengthwise and scoop out the seeds with a teaspoon to make a channel.', 'The scooped channel holds the filling and stops the cucumber making it watery.'],
-    'Fill the cucumber halves with the tuna salad, pressing it in.',
-    'Cut each half into 2-inch pieces and serve.',
-  ],
   'snack-coconut-macaroons': [
     'Put a rack in the middle of the oven and heat to 325°F. Line a sheet pan with parchment.',
     ['Separate the eggs, putting the whites in a large clean bowl (save the yolks for another use). Add the monk fruit sweetener and salt and whisk 1–2 minutes until foamy.', 'You don\'t need stiff peaks — just foamy enough to bind the coconut.'],

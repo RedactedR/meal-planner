@@ -8,6 +8,7 @@ import GroceryScreen from './src/screens/GroceryScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import KitchenScreen from './src/screens/KitchenScreen';
 import TodayScreen from './src/screens/TodayScreen';
+import BudgetScreen from './src/screens/BudgetScreen';
 import RecipeDetail from './src/components/RecipeDetail';
 import { ToastProvider } from './src/components/Toast';
 import ErrorBoundary from './src/components/ErrorBoundary';
@@ -16,6 +17,7 @@ import { ThemeContext, palettes, useStyles } from './src/theme';
 
 const TABS = [
   { key: 'recipes', label: 'Recipes', icon: '📖' },
+  { key: 'budget', label: 'Budget', icon: '💵' },
   { key: 'planner', label: 'Week', icon: '📅' },
   { key: 'today', label: 'Today', icon: '💪' },
   { key: 'kitchen', label: 'Kitchen', icon: '🏠' },
@@ -64,6 +66,8 @@ function Main() {
           <ActivityIndicator style={{ marginTop: 80 }} />
         ) : tab === 'recipes' ? (
           <RecipesScreen onOpenRecipe={setOpenRecipe} onGoToKitchen={() => setTab('kitchen')} />
+        ) : tab === 'budget' ? (
+          <BudgetScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'planner' ? (
           <PlannerScreen onOpenRecipe={setOpenRecipe} />
         ) : tab === 'today' ? (
@@ -108,13 +112,13 @@ const makeStyles = (c) => ({
     borderWidth: 1,
     borderColor: c.mode === 'dark' ? '#2C2F3E' : c.border,
     borderRadius: 26,
-    padding: 6,
+    padding: 5,
     marginBottom: 6,
     boxShadow: c.mode === 'dark' ? '0px 12px 30px rgba(0,0,0,0.5)' : '0px 6px 18px rgba(0,0,0,0.08)',
   },
-  tab: { flex: 1, alignItems: 'center', paddingVertical: 7, borderRadius: 18 },
+  tab: { flex: 1, alignItems: 'center', paddingVertical: 7, borderRadius: 16 },
   tabActive: { backgroundColor: c.text },
-  tabIcon: { fontSize: 19 },
-  tabLabel: { fontSize: 10.5, color: c.muted, marginTop: 2, fontWeight: '600' },
+  tabIcon: { fontSize: 18 },
+  tabLabel: { fontSize: 9.5, color: c.muted, marginTop: 2, fontWeight: '600' },
   tabLabelActive: { color: c.mode === 'dark' ? c.ink : c.background, fontWeight: '800' },
 });
