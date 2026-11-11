@@ -33,12 +33,18 @@ export default function CostBreakdown({ cost, portions, servingWord = 'serving' 
           }
           value={money(cost.youPay)}
           strong
+          wide
         />
         <Tile label="Empty kitchen" sub="every package, full price" value={money(cost.total)} />
+        <Tile
+          label={`Per ${servingWord}`}
+          sub={`what the meal uses, ÷ ${portions}`}
+          value={money(cost.perServing)}
+        />
       </View>
       <Text style={styles.explain}>
-        You buy whole packages, so a $3 box of salt counts as $3. The meal itself uses about {money(cost.usedValue)} of
-        it ({money(cost.perServing)} a {servingWord}); the rest stays in your Kitchen for next time.
+        You buy whole packages, so a $3 box of salt counts as $3 to buy. The meal itself only uses about{' '}
+        {money(cost.usedValue)} worth; the rest stays in your Kitchen for next time.
       </Text>
 
       <View style={styles.stack}>
@@ -104,11 +110,13 @@ export default function CostBreakdown({ cost, portions, servingWord = 'serving' 
     </View>
   );
 
-  function Tile({ label, sub, value, strong, accent }) {
+  function Tile({ label, sub, value, strong, accent, wide }) {
     return (
-      <View style={[styles.tile, strong && styles.tileStrong]}>
+      <View style={[styles.tile, strong && styles.tileStrong, wide && { width: '100%' }]}>
         <Text style={styles.tileLabel}>{label}</Text>
-        <Text style={[styles.tileValue, strong && { color: c.primary }, accent && { color: c.accent }]}>{value}</Text>
+        <Text style={[styles.tileValue, strong && styles.tileValueBig, strong && { color: c.primary }, accent && { color: c.accent }]}>
+          {value}
+        </Text>
         <Text style={styles.tileSub}>{sub}</Text>
       </View>
     );
@@ -134,7 +142,8 @@ const makeStyles = (c) => ({
   },
   tileStrong: { borderColor: c.primary, backgroundColor: c.primarySoft },
   tileLabel: { fontSize: 12, fontWeight: '700', color: c.muted, textTransform: 'uppercase', letterSpacing: 0.5 },
-  tileValue: { fontSize: 22, fontWeight: '800', color: c.text, marginTop: 2 },
+  tileValue: { fontSize: 20, fontWeight: '800', color: c.text, marginTop: 2 },
+  tileValueBig: { fontSize: 30 },
   tileSub: { fontSize: 11, color: c.muted, marginTop: 1 },
   explain: { fontSize: 12, color: c.muted, marginTop: 10, lineHeight: 17 },
   stack: { flexDirection: 'row', height: 12, borderRadius: 6, overflow: 'hidden', marginTop: 14, gap: 2 },

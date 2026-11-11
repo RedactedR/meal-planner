@@ -47,6 +47,11 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
             <Text style={styles.tileServing}>{cost.youPay < 0.005 ? 'you have it all' : 'to buy'}</Text>
           </View>
         ) : null}
+        {cost.priced ? (
+          <Text style={styles.tileEach}>
+            {money(cost.perServing)}/{recipe.course === 'snack' ? 'snack' : 'serving'}
+          </Text>
+        ) : null}
       </Pressable>
     );
   }
@@ -98,6 +103,7 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
               : discounted
               ? `to buy · ${money(cost.savings)} already in your Kitchen`
               : 'to buy every ingredient'}
+            {` · ${money(cost.perServing)}/${recipe.course === 'snack' ? 'snack' : 'serving'}`}
           </Text>
         )}
         <View style={styles.badges}>
@@ -127,6 +133,7 @@ const makeStyles = (c) => ({
   tilePrice: { fontSize: 16, fontWeight: '800', color: c.ink },
   tileOld: { fontSize: 11.5, fontWeight: '700', color: c.ink, opacity: 0.55, textDecorationLine: 'line-through' },
   tileServing: { fontSize: 11, fontWeight: '700', color: c.ink, opacity: 0.7 },
+  tileEach: { fontSize: 10.5, fontWeight: '700', color: c.ink, opacity: 0.55, marginTop: -4 },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
