@@ -41,16 +41,6 @@ export default [
       'Stir in the broccoli florets, top with the remaining cheese and panko and bake uncovered 15 minutes more.',
     ]),
 
-  R('salmon-rice-bowls', 'Spicy Salmon Rice Bowls', 'Japanese', '🍣', 30, 4, 'easy', false,
-    [600, 34, 62, 24, 6, 1.5],
-    'Salmon fillets 3; Sushi rice 1.5 cup; Rice vinegar 3 tbsp; Granulated sugar 1 tbsp; Soy sauce 3 tbsp; Mayonnaise 3 tbsp; Sriracha 2 tbsp; Cucumber 1; Avocado 2; Nori sheets 4; Edamame 1 bag; Sesame seeds 1 tbsp; Green onions 1 bunch',
-    [
-      'Cook the rice and season it while warm with the vinegar, sugar and a pinch of salt.',
-      'Roast the salmon brushed with 1 tbsp soy sauce at 400°F for 12 minutes, then flake.',
-      ['Mix the mayo and sriracha into a spicy mayo.', 'This is the viral salmon bowl idea: eat it scooped up with squares of nori, like a hand roll.'],
-      'Build bowls with rice, salmon, cucumber, avocado and edamame. Top with spicy mayo, soy sauce, green onions and sesame, and serve with nori.',
-    ]),
-
   R('sausage-rice-skillet', 'Sausage & Rice Skillet', 'Cajun', '🍳', 40, 4, 'easy', true,
     [560, 24, 58, 24, 4, 1.5],
     'Andouille sausage 12 oz; Long grain rice 1 cup; Bell peppers 1; Yellow onion 1; Celery 0.25 bunch; Garlic 2 cloves; Diced tomatoes 1 can; Chicken broth 16 oz; Cajun seasoning 1 tbsp; Green onions 1 bunch; Vegetable oil 1 tbsp',
@@ -59,16 +49,6 @@ export default [
       'Add the garlic, seasoning and rice and toast 1 minute.',
       ['Add the tomatoes and broth, bring to a boil, cover and simmer on low 20 minutes. Rest 5 minutes.', 'Keep the lid on. Peeking lets out the steam that cooks the rice.'],
       'Fluff and top with green onions.',
-    ]),
-
-  R('greek-sheet-pan-salmon', 'Greek Sheet Pan Salmon', 'Greek', '🐟', 35, 4, 'easy', true,
-    [520, 36, 30, 28, 6, 2],
-    'Salmon fillets 4; Baby potatoes 1 lb; Zucchini 1; Cherry tomatoes 1 pint; Red onion 1; Kalamata olives 0.33 cup; Feta cheese 3 oz; Lemons 1; Dried oregano 2 tsp; Olive oil 3 tbsp; Kosher salt 1.5 tsp',
-    [
-      'Roast the halved potatoes with 1 tbsp oil and salt at 425°F for 15 minutes.',
-      'Add the zucchini, tomatoes, onion and olives tossed with the remaining oil and oregano.',
-      ['Nestle in the seasoned salmon with lemon slices and roast 12 minutes more.', 'Potatoes get a head start so everything finishes at the same time.'],
-      'Crumble feta over and squeeze on the roasted lemon.',
     ]),
 
   R('chicken-fajita-rice', 'One-Pot Chicken Fajita Rice', 'Mexican', '🍚', 40, 4, 'easy', true,

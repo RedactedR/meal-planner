@@ -1,14 +1,5 @@
 // Detailed steps: keto seafood.
 export default {
-  'keto-salmon-lemon-dill': [
-    ['Take the salmon fillets out of the fridge 10 minutes before cooking. Pat them very dry, especially the skin, and season both sides with most of the salt and the black pepper.', 'Dry skin plus a hot pan is how you get skin that shatters like a chip.'],
-    'Prep: snap the woody ends off the asparagus. Mince the garlic. Chop the dill. Juice the lemon.',
-    'Steam the asparagus: put it in a microwave-safe dish with 2 tablespoons water and the rest of the salt, cover and microwave 3–4 minutes until bright green and just tender. Drain.',
-    'Heat the avocado oil in a large (12-inch) nonstick or cast-iron skillet over medium-high until it shimmers. Lay the fillets in skin-side down, pressing each gently with a spatula for 10 seconds so it doesn\'t curl.',
-    ['Cook 5–6 minutes without moving them, until the skin releases on its own and the flesh has turned opaque about two-thirds of the way up the sides. Flip and cook 1 minute more.', 'If the fish sticks, it isn\'t ready to flip. Give it another minute.', 'how to cook crispy skin salmon'],
-    'Turn the heat to low. Add the butter, garlic, dill and lemon juice to the pan, swirl until the butter melts, and spoon it over the fish for 30 seconds.',
-    'Serve the salmon skin-side up with the asparagus, spooning the lemon dill butter over both.',
-  ],
   'keto-garlic-butter-shrimp-zoodles': [
     'Spiralize the zucchini (or cut into long thin strips with a vegetable peeler) and spread on paper towels.',
     'Prep: peel and devein the shrimp if needed and pat very dry. Season with the salt and black pepper. Mince the garlic. Juice the lemon. Grate the Parmesan. Chop the parsley.',
@@ -17,14 +8,6 @@ export default {
     'Add the zoodles and toss with tongs for 1–2 minutes, just until warm. Don\'t overcook or they\'ll go watery.',
     'Return the shrimp, add the lemon juice, Parmesan and parsley, toss and serve right away.',
   ],
-  'keto-cajun-salmon-cream': [
-    'Pat the salmon fillets dry and rub them all over with the Cajun seasoning and salt.',
-    'Prep: halve the cherry tomatoes. Mince the garlic. Grate the Parmesan.',
-    'Melt half the butter in a large (12-inch) skillet over medium-high. Sear the salmon 4 minutes on the first side, flip and cook 2 minutes more. Move to a plate.',
-    'Turn the heat to medium. Add the rest of the butter, the tomatoes and garlic and cook 2 minutes until the tomatoes soften.',
-    ['Pour in the heavy cream, add the Parmesan and simmer 2 minutes, stirring, until slightly thickened. Stir in the baby spinach until wilted.', 'Cajun blends are often salty — taste the sauce before adding more salt.'],
-    'Return the salmon and spoon the sauce over it. Simmer 1 minute to finish cooking (it should flake at the thickest part).',
-  ],
   'keto-shrimp-scampi-cauli': [
     'Prep: peel and devein the shrimp if needed, pat dry and season with half the salt. Thinly slice the garlic. Juice the lemon. Chop the parsley. Cut the butter into 4 pieces.',
     'Heat the olive oil in a large skillet over medium-high. Cook the cauliflower rice with a pinch of salt 6 minutes, stirring now and then, until tender and dry. Divide among plates.',
@@ -32,14 +15,6 @@ export default {
     ['Turn the heat to medium. Add the garlic and red pepper flakes for 30 seconds, then the white wine. Simmer 2 minutes, until reduced by half.', 'Wine adds a gram or two of carbs per serving; swap in chicken broth for strict keto.'],
     'Take the pan off the heat. Swirl in the remaining butter and the lemon juice until the sauce is glossy. Add the rest of the salt.',
     'Return the shrimp, toss with the parsley and spoon over the cauliflower rice.',
-  ],
-  'keto-coconut-curry-cod': [
-    'Prep: slice the bell pepper. Mince the garlic and grate the peeled ginger. Cut the cod fillets into 2-inch pieces. Chop the cilantro. Cut the lime in half.',
-    'Heat the coconut oil in a large deep skillet with a lid over medium. Cook the bell pepper, garlic and ginger 3 minutes.',
-    'Stir in the red curry paste for 1 minute, then the coconut milk and fish sauce. Simmer 5 minutes.',
-    ['Nestle the cod pieces into the sauce, spoon some over the top, cover and simmer gently 6–8 minutes, until the fish is opaque and flakes easily.', 'Poaching in curry keeps delicate fish moist and makes it nearly impossible to overcook.'],
-    'Gently stir in the baby spinach until wilted and squeeze in the lime juice.',
-    'Serve in bowls topped with cilantro.',
   ],
   'keto-scallops-brown-butter': [
     ['Pull the small side muscle off each scallop. Lay them on paper towels, pat the tops dry, and leave them 10 minutes. Season both sides with the salt.', 'Wet scallops won\'t brown. Buy "dry" scallops if you can — they aren\'t soaked in phosphate.', 'how to sear scallops'],
@@ -57,14 +32,6 @@ export default {
     'Make the remoulade: stir the rest of the mayonnaise and mustard with the hot sauce and a squeeze of lemon.',
     'Serve the crab cakes on the mixed greens with the remoulade and lemon wedges.',
   ],
-  'keto-blackened-fish-tacos': [
-    'Pat the cod fillets dry and coat all over with the Cajun seasoning.',
-    'Prep: finely shred a quarter of the red cabbage. Juice 1 lime and cut the other into wedges. Slice the avocado and jalapeño. Chop the cilantro. Separate the butter lettuce leaves.',
-    'Make the slaw: toss the cabbage with half the lime juice and the salt. Make the crema: stir the rest of the lime juice into the sour cream.',
-    ['Turn on the vent fan. Heat a cast-iron skillet over high until very hot, add the avocado oil and sear the fish 3 minutes per side, until blackened outside and flaky inside.', 'Turn on the fan — blackening is supposed to smoke a bit.'],
-    'Flake the fish into large pieces with a fork.',
-    'Fill the lettuce cups with fish, slaw, avocado, jalapeño, a drizzle of crema and cilantro. Serve with lime wedges.',
-  ],
   'keto-shrimp-bacon-chowder': [
     'Prep: chop the bacon. Dice the yellow onion and 2 celery ribs. Mince the garlic. Cut the cauliflower into small florets. Peel and devein the shrimp and chop into bite-size pieces. Slice the green onions.',
     'Cook the bacon in a large pot over medium 7 minutes until crisp. Lift it out with a slotted spoon, leaving the fat.',
@@ -72,21 +39,6 @@ export default {
     ['Add the cauliflower, chicken broth and salt. Simmer 15 minutes, until the cauliflower is very soft. Blend about half the soup with a stick blender and stir it back in.', 'Blending part of the cauliflower thickens chowder the way potatoes do, minus the starch.'],
     'Stir in the heavy cream and shrimp and simmer gently 3 minutes, until the shrimp are just pink.',
     'Serve topped with the bacon and green onions.',
-  ],
-  'keto-pesto-salmon-sheet-pan': [
-    'Put a rack in the middle of the oven and heat to 425°F. Trim the green beans.',
-    'On a large sheet pan, toss the green beans and cherry tomatoes with the olive oil, half the salt and the black pepper. Roast 8 minutes.',
-    'Pat the salmon fillets dry. Push the vegetables to the sides and lay the salmon skin-side down in the middle. Season with the rest of the salt and spread a tablespoon of pesto over each fillet.',
-    ['Roast 10–12 minutes, until the salmon flakes at the thickest part.', 'Salmon is best at about 125°F in the center — still glossy, not chalky.'],
-    'Squeeze the lemon over everything and finish with grated Parmesan.',
-  ],
-  'keto-smoked-salmon-plate': [
-    'Leave the cream cheese out 15 minutes to soften. Hard-boiled eggs: peel if needed.',
-    ['Shave the red onion paper-thin and soak it in a bowl of cold water for 5 minutes, then drain.', 'Soak the onion in cold water 5 minutes to take the harsh bite out.'],
-    'Chop half the dill. Mix it into the cream cheese with a squeeze of lemon.',
-    'Slice the cucumber and radishes thinly. Halve the hard-boiled eggs and sprinkle with the everything bagel seasoning. Cut the rest of the lemon into wedges.',
-    'Arrange the smoked salmon, cucumber, radishes, eggs, onion and a spoonful of the herbed cream cheese on plates.',
-    'Scatter the capers and the rest of the dill over the top and serve with lemon wedges.',
   ],
   'keto-tuscan-shrimp': [
     'Prep: peel and devein the shrimp, pat dry and season with the salt. Mince the garlic. Chop the sun-dried tomatoes. Grate the Parmesan. Shave the zucchini into long ribbons with a vegetable peeler.',

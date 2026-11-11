@@ -45,14 +45,6 @@ export default {
     'Cut the bacon strips in half crosswise. Wrap a half strip around each popper, tucking the ends underneath, and set on the rack.',
     'Bake 20–25 minutes, until the bacon is crisp and the filling bubbles. Cool 5 minutes (the filling is very hot). Two halves per serving.',
   ],
-  'snack-cucumber-salmon-bites': [
-    'Leave the cream cheese out 10 minutes to soften.',
-    ['Slice the cucumber into ¼-inch rounds and pat them dry on paper towels.', 'Pat the cucumber slices dry first so the topping doesn\'t slide off.'],
-    'Chop half the dill and finely grate a little lemon zest. Stir both into the cream cheese.',
-    'Cut the smoked salmon into pieces about the size of the cucumber rounds.',
-    'Spread or pipe a small dab of cream cheese on each cucumber round and top with a folded piece of salmon.',
-    'Finish each with a caper and a small sprig of the remaining dill. Serve within 2 hours.',
-  ],
   'snack-pepperoni-chips': [
     'Put a rack in the middle of the oven and heat to 400°F. Line a sheet pan with parchment paper.',
     'Lay the pepperoni slices on the parchment in a single layer, not touching.',

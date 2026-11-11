@@ -1,13 +1,5 @@
 // Detailed steps: seafood (library), part 1.
 export default {
-  'garlic-butter-salmon': [
-    'Put a rack in the middle of the oven and heat to 400°F. Take the salmon fillets out of the fridge.',
-    'Snap the woody ends off the asparagus (bend each spear — it breaks where the tough part ends). On a large sheet pan, toss the asparagus with the olive oil and a pinch of the salt and spread it out.',
-    'Pat the salmon very dry with paper towels. Season both sides with the rest of the salt and the black pepper and set the fillets skin-side down among the asparagus, with space between them.',
-    'Mince the garlic. Finely grate the zest of the lemon, then juice it. Melt the butter in a small pan (or the microwave) and stir in the garlic, lemon zest and half the lemon juice. Spoon it over the salmon.',
-    ['Roast 12–14 minutes, until the salmon flakes when pressed with a fork at the thickest part and reads 125°F inside. The asparagus should be bright green and tender-crisp.', 'Salmon keeps cooking after it leaves the oven. Pull it a little early and it stays silky instead of chalky.'],
-    'Chop the parsley. Sprinkle it over everything, drizzle with the rest of the lemon juice and spoon the buttery pan juices over the salmon and asparagus.',
-  ],
   'shrimp-scampi': [
     'Bring a large pot of water to a boil with a big pinch of salt for the linguine.',
     'Prep: thinly slice the garlic. Finely grate the lemon zest, then juice the lemon. Chop the parsley. If the shrimp aren\'t peeled, peel them and pull out the dark vein along the back.',
@@ -19,12 +11,11 @@ export default {
     'Toss in the parsley and lemon zest and serve right away.',
   ],
   'fish-tacos': [
-    'Make the slaw: finely shred the green cabbage and chop the cilantro. Juice 2 of the limes; cut the third into wedges. In a bowl, toss the cabbage and most of the cilantro with half the lime juice and a pinch of the salt.',
-    'Make the crema: stir the sour cream with the rest of the lime juice in a small bowl.',
-    ['Pat the cod fillets dry and cut into 1-inch-wide strips. In a bowl, mix the chili powder, cumin, garlic powder and the rest of the salt and sprinkle it over the fish. Spread the flour on a plate and dredge each strip lightly, shaking off the excess.', 'A light flour coat gives a delicate crust without heavy batter, and it protects the fish from overcooking.'],
-    'Heat the vegetable oil in a large nonstick or cast-iron skillet over medium-high until it shimmers. Fry the fish in a single layer (two batches if needed) for 2–3 minutes per side, until golden and the flesh flakes easily. Drain on paper towels.',
-    'Warm the corn tortillas in a dry skillet 30 seconds per side and wrap them in a towel.',
-    'Slice the avocado. Fill each tortilla (double them up if they\'re thin) with fish, slaw, avocado and a drizzle of crema. Serve with lime wedges and the rest of the cilantro.',
+    ['Heat the oven to the temperature on the frozen fish sticks box (usually 425°F). Spread the fish sticks on a sheet pan in one layer, not touching, and bake for the time on the box (usually 15–18 minutes), flipping halfway, until deep golden and crisp.', 'Leaving space between the sticks lets hot air crisp every side — crowded ones steam and go soft.'],
+    'While they bake, make the slaw: finely shred the green cabbage and chop the cilantro. Juice 1 of the limes; cut the other into wedges. Toss the cabbage and most of the cilantro with the lime juice and the kosher salt.',
+    'Make the crema: stir the sour cream with the chili powder and a squeeze from one of the lime wedges.',
+    'Warm the corn tortillas in a dry skillet 30 seconds per side and wrap them in a towel. Slice the avocado.',
+    ['Put 2 fish sticks in each tortilla (double the tortillas if they\'re thin), then pile on slaw, avocado and a drizzle of crema. Serve with the lime wedges and the rest of the cilantro.', 'Assemble right before eating so the fish sticks stay crunchy.'],
   ],
   'cajun-shrimp-grits': [
     ['Make the grits: in a medium saucepan, bring the milk and chicken broth to a simmer over medium heat. Whisking constantly, slowly pour in the grits. Turn the heat to low and cook 20–25 minutes, stirring every few minutes with a spoon, until thick and creamy.', 'Stir grits often, especially near the end. They stick and scorch on the bottom easily.'],
@@ -35,15 +26,6 @@ export default {
     'Add the garlic and stir 30 seconds, then squeeze in the lemon juice and turn off the heat.',
     'Spoon the grits into bowls, top with the shrimp and pan juices, and sprinkle with the bacon and green onions.',
   ],
-  'salmon-teriyaki-sheet-pan': [
-    'Cook the jasmine rice: rinse until the water runs mostly clear, then 1½ cups water for every cup of rice with a pinch of salt. Boil, cover, lowest heat 15 minutes, then rest covered 10 minutes.',
-    'Put a rack in the upper-middle of the oven and heat to 425°F. Line a large sheet pan with foil.',
-    'Make the glaze: whisk the white miso, mirin, honey and soy sauce in a small bowl until smooth.',
-    'Cut the broccoli into florets, toss on the pan with the vegetable oil, spread out and roast 8 minutes.',
-    'Pat the salmon fillets dry. Push the broccoli to the edges and lay the salmon skin-side down in the middle. Brush the tops thickly with the miso glaze.',
-    ['Roast 10 minutes, then switch to broil and broil 1–2 minutes, watching the whole time, until the glaze bubbles and caramelizes in spots.', 'Miso and honey burn fast under the broiler. Watch it the whole time.'],
-    'Slice the green onions. Serve the salmon and broccoli over the rice, sprinkled with green onions and sesame seeds.',
-  ],
   'shrimp-stir-fry': [
     'Cook the jasmine rice: rinse until the water runs mostly clear, then 1½ cups water for every cup of rice with a pinch of salt. Boil, cover, lowest heat 15 minutes, then rest covered 10 minutes.',
     'Prep: trim the stem ends of the snow peas. Slice the bell pepper into thin strips. Mince the garlic and grate the peeled ginger. Peel and devein the shrimp if needed and pat them dry.',
@@ -52,14 +34,6 @@ export default {
     ['Add the rest of the oil, the snow peas and the bell pepper. Stir-fry 2 minutes, then add the garlic and ginger and stir 30 seconds.', 'Snow peas only need a minute or two. They should stay bright green and snap when you bite them.'],
     'Return the shrimp. Stir the sauce, pour it in, and toss 1 minute until it thickens and turns glossy. Serve over the rice.',
   ],
-  'baked-cod-lemon': [
-    'Put a rack in the middle of the oven and heat to 400°F. Bring a medium pot of salted water to a boil.',
-    'Cook the orzo in the boiling water for the time on the box (about 9 minutes). Drain and toss with a third of the olive oil.',
-    'Meanwhile, smash and peel the garlic. In a 9x13-inch baking dish, toss the cherry tomatoes, kalamata olives, garlic, dried oregano and the rest of the olive oil. Roast 10 minutes, until the tomatoes start to split.',
-    'Pat the cod fillets dry and season both sides with the salt. Thinly slice the lemon into rounds.',
-    ['Nestle the cod into the tomatoes, lay the lemon slices on top, and bake 10–12 minutes, until the fish is opaque all the way through and flakes easily with a fork.', 'Cod is done when it turns opaque and flakes with a fork. It goes dry quickly after that.'],
-    'Chop the parsley and scatter it over. Serve the cod over the orzo with the tomatoes, olives and pan juices spooned on top.',
-  ],
   'coconut-shrimp-curry': [
     'Cook the basmati rice: rinse until the water runs mostly clear, then 1½ cups water for every cup of rice with a pinch of salt. Boil, cover, lowest heat 15 minutes, then rest covered 10 minutes.',
     'Prep: dice the yellow onion. Mince the garlic and grate the peeled ginger. Peel and devein the shrimp if needed. Chop the cilantro. Cut the lime in half.',
@@ -67,14 +41,6 @@ export default {
     'Add the diced tomatoes with their juice, the coconut milk and the salt. Simmer 10 minutes, stirring now and then, until slightly thickened.',
     ['Add the shrimp and baby spinach and simmer just 3 minutes, until the shrimp turn pink and curl and the spinach wilts. Turn off the heat right away.', 'Shrimp go from tender to rubbery in about a minute. Add them last and pull the pot off the heat as soon as they curl.'],
     'Squeeze in the lime juice and stir in most of the cilantro. Serve over the rice with the rest of the cilantro.',
-  ],
-  'blackened-salmon-bowls': [
-    'Bring a large pot of salted water to a boil. Add the brown rice and boil uncovered 30 minutes, like pasta, until tender. Drain well.',
-    'Prep: drain and rinse the black beans. Halve the cherry tomatoes. Slice the avocados. Juice 1 lime and cut the other into wedges. Chop the cilantro. Stir the sour cream with the lime juice for a crema.',
-    'Pat the salmon fillets dry and coat the tops and sides generously with the Cajun seasoning.',
-    ['Turn on your vent fan. Heat a cast-iron skillet over high until very hot, add the vegetable oil, and lay the salmon in seasoned-side down. Cook 3–4 minutes, until a dark crust forms, then flip and cook 3 minutes more, until it flakes at the thickest part.', 'Blackening means letting the spices form a dark, toasty crust. Turn on the vent fan first.'],
-    'Move the salmon to a plate. In the same pan over medium-high, cook the frozen corn 3 minutes, until charred in spots. Warm the black beans in a small pot or the microwave.',
-    'Build bowls: brown rice, then beans, corn, tomatoes, avocado and the salmon. Drizzle with the lime crema, sprinkle with cilantro and serve with lime wedges.',
   ],
   'linguine-clams': [
     'Bring a large pot of water to a boil with a big pinch of salt.',
@@ -85,15 +51,6 @@ export default {
     ['Pour in the white wine and add the clams. Cover and cook 5–7 minutes, shaking the pan now and then, until the shells open. Throw away any that stay shut.', 'The clams release their own briny juice — that\'s the sauce.'],
     ['Add the linguine to the skillet and toss for 2 minutes over medium heat, until it absorbs most of the clam juices and is tender. Add the butter and parsley and toss until the butter melts into a glossy sauce, adding pasta water if it seems dry.', 'Finishing pasta in the sauce lets the noodles soak up the briny clam juice.'],
     'Turn off the heat. Add the lemon zest and a good squeeze of lemon juice, toss and serve.',
-  ],
-  'salmon-cakes': [
-    ['Heat the oven to 400°F. Put the salmon fillets skin-side down on a lined sheet pan, sprinkle with a pinch of the salt and roast 12 minutes, until they flake easily. Let them cool 10 minutes.', 'Cooling the fish first keeps the patties from turning mushy.'],
-    'Flake the salmon into a bowl with a fork, leaving the skin behind, and pick out any bones you find.',
-    'Thinly slice the green onions. Chop the dill. Cut the lemon in half.',
-    ['Add the panko, egg, a third of the mayonnaise, the Dijon mustard, green onions, half the dill and the salt to the salmon. Mix gently with a fork. Shape into 8 patties about ¾ inch thick and set on a plate. Chill 10 minutes.', 'Chilling firms the patties so they hold together in the pan.'],
-    'Heat the vegetable oil in a large nonstick skillet over medium until it shimmers. Cook the patties 3–4 minutes per side without moving them, until golden brown and crisp. Flip gently with a thin spatula.',
-    'Make the sauce: stir the rest of the mayonnaise with the rest of the dill and the juice of half the lemon.',
-    'Pile the arugula on plates, squeeze the other lemon half over it, and serve the salmon cakes on top with the sauce.',
   ],
   'shrimp-fried-rice': [
     'Cook the jasmine rice a day ahead if you can (rinse; 1½ cups water per cup of rice; boil, cover, lowest heat 15 minutes, rest 10), then spread it out and refrigerate. Short on time: spread fresh rice on a sheet pan and freeze it 20 minutes.',

@@ -32,27 +32,12 @@ export default {
     'Carefully remove the foil (hot steam). Stir in the broccoli, then sprinkle the rest of the cheddar and the panko over the top.',
     'Bake uncovered 15 minutes more, until the rice is tender, the broccoli is bright and the top is golden. Rest 5 minutes before serving.',
   ],
-  'salmon-rice-bowls': [
-    'Cook the sushi rice: rinse until the water runs clear, then 1¼ cups water for every cup of rice. Boil, cover, lowest heat 15 minutes, rest 10. Stir the rice vinegar, sugar and a pinch of salt until dissolved and fold into the warm rice.',
-    'Put a rack in the middle of the oven and heat to 400°F. Put the salmon fillets on a foil-lined pan, brush with a third of the soy sauce and roast 12 minutes, until they flake. Flake into chunks, leaving the skin behind.',
-    'Cook the edamame following the bag and shell if needed.',
-    ['Mix the mayonnaise and sriracha into a spicy mayo.', 'This is the viral salmon bowl idea: eat it scooped up with squares of nori, like a hand roll.'],
-    'Slice the cucumber and avocados. Thinly slice the green onions. Cut the nori sheets into 4-inch squares with scissors.',
-    'Build bowls: rice, salmon, cucumber, avocado and edamame. Drizzle with the spicy mayo and the rest of the soy sauce, sprinkle with green onions and sesame seeds, and serve with the nori to scoop.',
-  ],
   'sausage-rice-skillet': [
     'Prep: slice the andouille sausage into ¼-inch coins. Dice the yellow onion, bell pepper and celery. Mince the garlic. Rinse the long grain rice. Slice the green onions.',
     'Heat the vegetable oil in a large deep skillet with a tight lid over medium-high. Brown the sausage 4 minutes, stirring. Add the onion, bell pepper and celery and cook 5 minutes until soft.',
     'Add the garlic, Cajun seasoning and rice and stir 1 minute, until the rice looks shiny.',
     ['Add the diced tomatoes with their juice and the chicken broth. Bring to a boil, stir once, then cover, turn to low and simmer 20 minutes without lifting the lid. Turn off the heat and leave covered 5 minutes.', 'Keep the lid on. Peeking lets out the steam that cooks the rice.'],
     'Fluff with a fork and top with the green onions.',
-  ],
-  'greek-sheet-pan-salmon': [
-    'Put a rack in the middle of the oven and heat to 425°F. Halve the baby potatoes and toss them on a large sheet pan with a third of the olive oil and half the salt. Roast 15 minutes.',
-    'Meanwhile, halve the zucchini lengthwise and slice into half-moons. Cut the red onion into thin wedges. Toss the zucchini, cherry tomatoes, onion and kalamata olives with the rest of the olive oil and the dried oregano.',
-    ['Add the vegetables to the pan around the potatoes. Pat the salmon fillets dry, season with the rest of the salt, and nestle them in. Lay thin slices of lemon over the salmon. Roast 12 minutes more, until the salmon flakes.', 'Potatoes get a head start so everything finishes at the same time.'],
-    'Check the salmon: it\'s done when it flakes easily at the thickest part (about 125°F). The potatoes should be tender when poked with a knife. If they aren\'t, move the salmon to a plate and roast the vegetables 5 minutes more.',
-    'Crumble the feta over everything and squeeze the soft roasted lemon slices over the pan with tongs. Serve straight from the pan.',
   ],
   'chicken-fajita-rice': [
     'Prep: cut the chicken breasts into ¾-inch cubes. Slice the bell peppers and yellow onion into strips. Mince the garlic. Rinse the long grain rice. Chop the cilantro. Cut the lime into wedges.',

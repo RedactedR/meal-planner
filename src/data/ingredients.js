@@ -16,7 +16,6 @@ const CATALOG_ROWS = [
   ['Ground turkey', 'lb', 5.49, 'protein', 1],
   ['Flank steak', 'lb', 10.99, 'protein', 1.5],
   ['Shrimp', 'lb', 9.99, 'protein', 1],
-  ['Salmon fillets', '', 4.5, 'protein', 2],
   ['Andouille sausage', 'oz', 0.45, 'protein', 12],
   ['Eggs', '', 0.3, 'dairy', 12],
 
@@ -224,7 +223,7 @@ const CATALOG_ROWS = [
   ['Ground cloves', 'tsp', 0.25, 'spices', 24],
 
   // Library batch 3
-  ['Cod fillets', 'lb', 8.99, 'protein', 1],
+  ['Frozen fish sticks', '', 0.27, 'frozen', 24],
   ['Sea scallops', 'lb', 19.99, 'protein', 1],
   ['Lump crab meat', 'lb', 24.0, 'protein', 0.5],
   ['Littleneck clams', 'lb', 9.99, 'protein', 1],
@@ -306,7 +305,6 @@ const CATALOG_ROWS = [
   ['Skirt steak', 'lb', 10.99, 'protein', 1],
   ['Ground chicken', 'lb', 5.49, 'protein', 1],
   ['Prosciutto', 'oz', 1.5, 'protein', 3],
-  ['Smoked salmon', 'oz', 2.5, 'protein', 4],
   ['Deli turkey', 'lb', 7.99, 'protein', 0.5],
   ['Halloumi', 'oz', 1.0, 'dairy', 8],
   ['Mascarpone', 'oz', 0.75, 'dairy', 8],
