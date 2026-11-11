@@ -43,8 +43,8 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
         {cost.priced ? (
           <View style={styles.tilePriceRow}>
             {discounted && <Text style={styles.tileOld}>{money(cost.total)}</Text>}
-            <Text style={styles.tilePrice}>{money(discounted ? cost.youPay : cost.total)}</Text>
-            <Text style={styles.tileServing}>{money(cost.perServing)}/{recipe.course === 'snack' ? 'snack' : 'serving'}</Text>
+            <Text style={styles.tilePrice}>{money(cost.youPay)}</Text>
+            <Text style={styles.tileServing}>{cost.youPay < 0.005 ? 'you have it all' : 'to buy'}</Text>
           </View>
         ) : null}
       </Pressable>
@@ -93,8 +93,11 @@ export default function RecipeCard({ recipe, onPress, right, note, inventoryOver
         </View>
         {cost.priced && (
           <Text style={styles.recipePrice}>
-            {discounted ? 'to buy' : 'all ingredients'} · recipe uses {money(cost.usedValue)} ·{' '}
-            {money(cost.perServing)}/{recipe.course === 'snack' ? 'snack' : 'serving'}
+            {cost.youPay < 0.005
+              ? 'you have everything'
+              : discounted
+              ? `to buy · ${money(cost.savings)} already in your Kitchen`
+              : 'to buy every ingredient'}
           </Text>
         )}
         <View style={styles.badges}>

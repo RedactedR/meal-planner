@@ -6,39 +6,44 @@ import { approxAmount, packageWord, packLabel } from '../packages';
 import { radius, useStyles, useTheme } from '../theme';
 import { StockIcon } from './Badges';
 
-// Two prices for every recipe:
-//   All ingredients – every package you'd buy with an empty kitchen
-//   This recipe     – just the amounts the recipe uses (1 tbsp of a $5 bottle ≈ 15¢)
-// …plus what you'd actually pay after what's in your Kitchen, and a
-// line per ingredient.
+// The price that matters is what you'd spend at the store: whole
+// packages of everything you're missing (a $3 box of salt, not 10¢ of
+// it). Also shown: the empty-kitchen price, and a line per ingredient.
+// What the meal actually uses up is a small footnote.
 export default function CostBreakdown({ cost, portions, servingWord = 'serving' }) {
   const styles = useStyles(makeStyles);
   const c = useTheme();
-  const items = [...cost.items].sort((a, b) => (b.usedValue || 0) - (a.usedValue || 0));
-  const max = Math.max(...items.map((i) => i.usedValue || 0), 0.01);
-  const sections = CATEGORIES.filter((cat) => cost.usedByCategory[cat.key] > 0.005);
+  const items = [...cost.items].sort((a, b) => (b.buyCost || 0) - (a.buyCost || 0) || (b.cost || 0) - (a.cost || 0));
+  const max = Math.max(...items.map((i) => i.buyCost || 0), 0.01);
+  const buyByCategory = {};
+  for (const i of cost.items) buyByCategory[i.category] = (buyByCategory[i.category] || 0) + (i.buyCost || 0);
+  const sections = CATEGORIES.filter((cat) => buyByCategory[cat.key] > 0.005);
 
   return (
     <View>
       <View style={styles.grid}>
-        <Tile label="All ingredients" sub="every package, full price" value={money(cost.total)} />
-        <Tile label="This recipe" sub="only what it uses" value={money(cost.usedValue)} strong />
-        <Tile label={`Per ${servingWord}`} sub={`${portions} ${servingWord}s`} value={money(cost.perServing)} />
         <Tile
-          label="You pay today"
-          sub={cost.savings > 0.005 ? `${money(cost.savings)} already in your Kitchen` : 'nothing in your Kitchen yet'}
+          label="To buy"
+          sub={
+            cost.youPay < 0.005
+              ? 'you have everything'
+              : cost.savings > 0.005
+              ? `at the store · ${money(cost.savings)} already in your Kitchen`
+              : 'at the store, every ingredient'
+          }
           value={money(cost.youPay)}
-          accent
+          strong
         />
+        <Tile label="Empty kitchen" sub="every package, full price" value={money(cost.total)} />
       </View>
       <Text style={styles.explain}>
-        You buy whole packages, so the first time costs more. What the recipe doesn't use stays in your Kitchen and makes
-        the next meal cheaper.
+        You buy whole packages, so a $3 box of salt counts as $3. The meal itself uses about {money(cost.usedValue)} of
+        it ({money(cost.perServing)} a {servingWord}); the rest stays in your Kitchen for next time.
       </Text>
 
       <View style={styles.stack}>
         {sections.map((cat) => (
-          <View key={cat.key} style={{ flex: cost.usedByCategory[cat.key], backgroundColor: c.categories[cat.key] }} />
+          <View key={cat.key} style={{ flex: buyByCategory[cat.key], backgroundColor: c.categories[cat.key] }} />
         ))}
       </View>
       <View style={styles.legend}>
@@ -46,7 +51,7 @@ export default function CostBreakdown({ cost, portions, servingWord = 'serving' 
           <View key={cat.key} style={styles.legendItem}>
             <View style={[styles.dot, { backgroundColor: c.categories[cat.key] }]} />
             <Text style={styles.legendText}>
-              {cat.label} {money(cost.usedByCategory[cat.key])}
+              {cat.label} {money(buyByCategory[cat.key])}
             </Text>
           </View>
         ))}
@@ -54,7 +59,7 @@ export default function CostBreakdown({ cost, portions, servingWord = 'serving' 
 
       <View style={styles.headRow}>
         <Text style={styles.headText}>Ingredient</Text>
-        <Text style={styles.headText}>Recipe uses</Text>
+        <Text style={styles.headText}>To buy</Text>
       </View>
       <View style={styles.list}>
         {items.map((i) => (
@@ -65,12 +70,14 @@ export default function CostBreakdown({ cost, portions, servingWord = 'serving' 
                 <Text style={styles.name} numberOfLines={1}>
                   {i.name}
                 </Text>
-                <Text style={styles.cost}>{money(i.usedValue || 0)}</Text>
+                <Text style={[styles.cost, i.buyPacks === 0 && { color: c.primary }]}>
+                  {i.buyPacks === 0 ? 'Have it' : money(i.buyCost)}
+                </Text>
               </View>
               <View style={styles.track}>
                 <View
                   style={{
-                    width: `${Math.max(3, ((i.usedValue || 0) / max) * 100)}%`,
+                    width: `${Math.max(3, ((i.buyCost || 0) / max) * 100)}%`,
                     height: '100%',
                     borderRadius: 3,
                     backgroundColor: c.categories[i.category],

@@ -26,8 +26,9 @@ const TIPS = [
   ['🥄', 'Bouillon instead of carton broth saves about $3 a pot.'],
 ];
 
-// Cheap, filling meals: what a serving costs after what's already in
-// your Kitchen, a one-tap "cheapest week" plan, and money-saving tips.
+// Cheap, filling meals ranked by what they cost to buy at the store
+// (whole packages of what you're missing), a weekly budget, a one-tap
+// plan that fits it, and money-saving tips.
 export default function BudgetScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
@@ -42,9 +43,9 @@ export default function BudgetScreen({ onOpenRecipe }) {
       .filter(isBudget)
       .map((r) => {
         const cost = recipeCosts(effectiveRecipe(r, settings), settings.portions, inventory, settings);
-        // What one serving costs you today: already-owned food is free.
-        const serving = cost.priced ? Math.min(cost.perServing, cost.youPay / settings.portions) : Infinity;
-        return { recipe: r, cost, serving };
+        // What you'd spend at the store: whole packages of what's missing.
+        const buy = cost.priced ? cost.youPay : Infinity;
+        return { recipe: r, cost, buy };
       });
   }, [settings, inventory]);
 
@@ -52,10 +53,11 @@ export default function BudgetScreen({ onOpenRecipe }) {
     const list = meals.filter(({ recipe }) =>
       kind === 'All' ? true : kind === 'Meatless' ? isVegetarian(recipe) : !isVegetarian(recipe)
     );
-    const per = (m, key) => (m.recipe.nutrition?.[key] || 0) / Math.max(m.serving, 0.01);
+    // Per dollar you'd spend: whole meal's calories or protein / cost to buy.
+    const per = (m, key) => ((m.recipe.nutrition?.[key] || 0) * settings.portions) / Math.max(m.buy, 0.5);
     if (sort === 'filling') return [...list].sort((a, b) => per(b, 'calories') - per(a, 'calories'));
     if (sort === 'protein') return [...list].sort((a, b) => per(b, 'protein') - per(a, 'protein'));
-    return [...list].sort((a, b) => a.serving - b.serving);
+    return [...list].sort((a, b) => a.buy - b.buy);
   }, [meals, sort, kind]);
 
   const budget = settings.weeklyBudget || 0;
@@ -71,7 +73,7 @@ export default function BudgetScreen({ onOpenRecipe }) {
     return { total, meals, snacks: Math.max(0, total - meals), staples };
   }, [plannedKey, settings, inventory, snackList]);
 
-  const cheapest = meals.length ? Math.min(...meals.map((m) => m.serving)) : 0;
+  const cheapest = meals.length ? Math.min(...meals.map((m) => m.buy)) : 0;
 
   // Fill the week with the best dinners that fit the budget (or the
   // cheapest week when no budget is set). Runs after a frame so the
@@ -125,7 +127,7 @@ export default function BudgetScreen({ onOpenRecipe }) {
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Budget</Text>
           <Text style={styles.subtitle}>
-            {meals.length} cheap meals · from {money(cheapest)} a serving
+            {meals.length} cheap meals · from {money(cheapest)} to buy
           </Text>
         </View>
         <View style={styles.budgetBox}>
@@ -215,10 +217,10 @@ export default function BudgetScreen({ onOpenRecipe }) {
       </View>
       <Text style={styles.hint}>
         {sort === 'cheap'
-          ? 'Cheapest first, counting what’s already in your Kitchen.'
+          ? 'Cheapest to buy first — whole packages, minus what’s already in your Kitchen.'
           : sort === 'filling'
-          ? 'Most calories per dollar first — the best fuel for the money.'
-          : 'Most protein per dollar first.'}
+          ? 'Most calories for the money you’d spend first.'
+          : 'Most protein for the money you’d spend first.'}
       </Text>
     </View>
   );
