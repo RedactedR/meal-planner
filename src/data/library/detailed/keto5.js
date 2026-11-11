@@ -168,7 +168,7 @@ export default {
     'Put a rack in the middle of the oven and heat to 400°F. Finely grate the Parmesan.',
     'Line a sheet pan with parchment. Drop tablespoon mounds of about half the Parmesan 2 inches apart and flatten slightly. Bake 6 minutes, until lacy and golden. Cool on the pan to crisp up.',
     'Season the chicken breasts with the salt. Heat the olive oil in a skillet over medium-high and cook 6 minutes per side until 165°F. Rest 5 minutes and slice.',
-    ['Make the dressing: mince the anchovy fillets and garlic together, then mash to a paste with the side of your knife. In a large bowl, whisk the paste with the mayonnaise, the juice of the lemon, the Dijon mustard, Worcestershire sauce, the rest of the Parmesan and the black pepper.', 'Anchovies are the secret of real Caesar — they melt in and add savory depth, not fishiness.'],
+    ['Make the dressing: mince the garlic, sprinkle it with a pinch of the salt and mash to a paste with the side of your knife. In a large bowl, whisk the paste with the mayonnaise, the juice of the lemon, the Dijon mustard, Worcestershire sauce, the rest of the Parmesan and the black pepper.', 'Worcestershire and plenty of parmesan give the dressing its savory Caesar punch.'],
     'Chop the romaine lettuce and toss it in the bowl with the dressing.',
     'Top with the chicken and break the Parmesan crisps over the top like croutons.',
   ],

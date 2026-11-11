@@ -41,7 +41,6 @@ const ONE_WAY = {
   'Light brown sugar': ['Granulated sugar'],
   'Rice vinegar': ['Apple cider vinegar'],
   'Dijon mustard': ['Yellow mustard'],
-  'Seafood stock': ['Bottled clam juice'],
 };
 
 const SUBS = new Map();

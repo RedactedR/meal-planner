@@ -38,10 +38,12 @@ export default {
     'Thinly shred the green cabbage and cut the limes into wedges. Serve the pozole with cabbage, cilantro leaves and lime.',
   ],
   'clam-chowder': [
-    'Prep: chop the bacon. Dice the yellow onion and celery. Peel the russet potatoes and cut into ½-inch cubes. Drain the canned clams over a bowl, keeping the juice.',
+    ['Scrub the littleneck clams under cold water, throwing away any that are cracked or stay open when tapped. Put them in a large pot with 2 cups of water, cover and boil 6–8 minutes until they open.', 'The water they steam in becomes a briny clam broth — better than anything bottled.'],
+    'Lift out the clams (throw away any that stayed shut) and pull the meat from the shells; chop it roughly. Pour the broth through a paper-towel-lined strainer into a bowl to catch any sand. Wipe out the pot.',
+    'Prep: chop the bacon. Dice the yellow onion and celery. Peel the russet potatoes and cut into ½-inch cubes.',
     'Cook the bacon in a large pot over medium 7 minutes until crisp. Lift it out onto paper towels. Add the butter to the fat in the pot, then the onion and celery, and cook 5 minutes until soft. Stir in the flour for 1 minute.',
-    'Slowly whisk in the bottled clam juice and the juice from the canned clams. Add the potatoes, dried thyme, bay leaf and salt. Simmer 15 minutes, until the potatoes are tender.',
-    ['Turn the heat to low. Stir in the milk, heavy cream and clams and warm gently 3–4 minutes without letting it boil.', 'Clams turn rubbery if boiled. Just warm them through.'],
+    'Slowly whisk in the clam broth. Add the potatoes, dried thyme, bay leaf and salt. Simmer 15 minutes, until the potatoes are tender.',
+    ['Turn the heat to low. Stir in the milk, heavy cream and chopped clams and warm gently 3–4 minutes without letting it boil.', 'Clams turn rubbery if boiled. Just warm them through.'],
     'Fish out the bay leaf. Taste and season, then serve topped with the bacon.',
   ],
   'tortellini-soup': [

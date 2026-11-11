@@ -58,7 +58,7 @@ export default {
   'pasta-puttanesca': [
     'Bring a large pot of water to a boil with the salt for the spaghetti.',
     'Prep: thinly slice the garlic. Roughly chop the kalamata olives. Drain the capers. Chop the parsley.',
-    ['Heat the olive oil in a large (12-inch) skillet over medium. Add the anchovy fillets, garlic and red pepper flakes and cook 2–3 minutes, mashing the anchovies with a wooden spoon until they dissolve into the oil.', 'Anchovies melt into the sauce and add deep savory flavor, not fishiness. You won\'t taste them as fish.'],
+    ['Heat the olive oil in a large (12-inch) skillet over medium. Add the garlic, red pepper flakes and tomato paste and cook 2 minutes, stirring, until the paste turns brick red.', 'Toasted tomato paste and extra capers give the sauce its deep, salty punch.'],
     'Add the crushed tomatoes, olives and capers. Simmer 10 minutes, stirring now and then, until slightly thickened.',
     'Meanwhile cook the spaghetti 1 minute less than the box says. Scoop out ½ cup of pasta water, then drain.',
     'Add the spaghetti to the sauce with a splash of pasta water and toss over medium heat for 1 minute until coated. Taste — it rarely needs salt. Toss with the parsley and serve.',

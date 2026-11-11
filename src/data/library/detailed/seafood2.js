@@ -28,10 +28,10 @@ export default {
     ['Add the pasta and peas, the Parmesan and a splash of pasta water and toss until creamy. Turn off the heat, then gently fold in the salmon, dill and lemon juice. Taste and add salt.', 'Fold the salmon in last and gently so it stays in big, tender flakes.'],
   ],
   'cioppino': [
-    'Prep: dice the yellow onion. Trim the fennel bulb, cut it in half, cut out the hard core and slice thinly. Thinly slice the garlic. Cut the cod fillets into 1½-inch chunks. Peel and devein the shrimp if needed. Drain the canned clams, keeping the juice. Chop the parsley.',
+    'Prep: dice the yellow onion. Trim the fennel bulb, cut it in half, cut out the hard core and slice thinly. Thinly slice the garlic. Cut the cod fillets into 1½-inch chunks. Peel and devein the shrimp if needed. Scrub the littleneck clams under cold water and throw away any that are cracked or stay open when tapped. Chop the parsley.',
     'Heat the olive oil in a large pot over medium. Cook the onion and fennel 8 minutes, stirring, until soft. Add the garlic and red pepper flakes and stir 1 minute.',
-    'Pour in the white wine and simmer 3 minutes. Add the crushed tomatoes, seafood stock, the clam juice, the bay leaf and the salt. Bring to a boil, then simmer 15 minutes.',
-    ['Add the cod and simmer 3 minutes. Then add the shrimp and clams and simmer 2 minutes more, until the shrimp are pink and the cod flakes.', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
+    'Pour in the white wine and simmer 3 minutes. Add the crushed tomatoes, seafood stock, the bay leaf and the salt. Bring to a boil, then simmer 15 minutes.',
+    ['Add the clams, cover and simmer 3 minutes until they start to open. Add the cod and shrimp, cover again and simmer 3–4 minutes more, until the shrimp are pink, the cod flakes and the clams are open (throw away any that stay shut).', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
     'Turn off the heat and fish out the bay leaf. Stir in most of the parsley.',
     'Slice the crusty bread thickly and toast it. Ladle the stew into bowls, sprinkle with the rest of the parsley and serve with the bread for dunking.',
   ],

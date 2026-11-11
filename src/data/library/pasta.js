@@ -65,10 +65,10 @@ export default [
 
   R('pasta-puttanesca', 'Pasta Puttanesca', 'Italian', '🫒', 25, 4, 'easy', false,
     [540, 16, 84, 14, 5, 1],
-    'Spaghetti 1 lb; Crushed tomatoes 1 can; Kalamata olives 0.5 cup; Capers 2 tbsp; Anchovy fillets 4; Garlic 4 cloves; Red pepper flakes 0.5 tsp; Olive oil 3 tbsp; Fresh parsley 1 bunch; Kosher salt 1 tbsp',
+    'Spaghetti 1 lb; Crushed tomatoes 1 can; Kalamata olives 0.5 cup; Capers 3 tbsp; Tomato paste 1 tbsp; Garlic 4 cloves; Red pepper flakes 0.5 tsp; Olive oil 3 tbsp; Fresh parsley 1 bunch; Kosher salt 1 tbsp',
     [
       'Boil the spaghetti.',
-      ['Melt the anchovies in the oil with the garlic and pepper flakes over medium heat, mashing them until they dissolve.', "Anchovies melt into the sauce and add deep savory flavor, not fishiness. You won't taste them as fish."],
+      ['Cook the garlic, pepper flakes and tomato paste in the oil over medium heat until the paste darkens.', 'Toasted tomato paste and extra capers give the sauce its deep, salty punch.'],
       'Add the tomatoes, olives and capers and simmer 10 minutes.',
       'Toss with the pasta and a splash of pasta water, and finish with parsley.',
     ]),

@@ -98,20 +98,20 @@ export default [
 
   R('linguine-clams', 'Linguine with Clams', 'Italian', '🐚', 30, 4, 'medium', false,
     [580, 28, 72, 16, 3, 0.2],
-    'Canned clams 3 can; Linguine 1 lb; Garlic 6 cloves; Olive oil 4 tbsp; Dry white wine 0.5 cup; Red pepper flakes 0.5 tsp; Butter 2 tbsp; Fresh parsley 1 bunch; Lemons 1; Kosher salt 2 tsp',
+    'Littleneck clams 3 lb; Linguine 1 lb; Garlic 6 cloves; Olive oil 4 tbsp; Dry white wine 0.5 cup; Red pepper flakes 0.5 tsp; Butter 2 tbsp; Fresh parsley 1 bunch; Lemons 1; Kosher salt 2 tsp',
     [
       'Boil the linguine 2 minutes short of the package time. Save 1 cup pasta water.',
       'Cook the sliced garlic and pepper flakes in the oil over medium until pale gold.',
-      'Add the wine and the juice from the clams and simmer 3 minutes.',
-      ['Add the pasta and finish cooking it in the sauce, tossing, for 2 minutes. Add the clams, butter and parsley and toss until glossy.', 'Finishing pasta in the sauce lets the noodles soak up the briny clam juice.'],
+      'Add the wine and the clams, cover and steam 5–7 minutes until they open.',
+      ['Add the pasta and finish cooking it in the briny juices, tossing, for 2 minutes. Add the butter and parsley and toss until glossy.', 'Finishing pasta in the sauce lets the noodles soak up the briny clam juice.'],
       'Add lemon zest and a squeeze of juice.',
     ]),
 
   R('salmon-cakes', 'Salmon Cakes with Lemon Dill Sauce', 'American', '🐟', 30, 4, 'easy', false,
     [480, 30, 26, 28, 3, 1],
-    'Canned salmon 2 can; Panko 0.75 cup; Eggs 1; Mayonnaise 5 tbsp; Dijon mustard 1 tbsp; Green onions 1 bunch; Fresh dill 1 bunch; Lemons 1; Vegetable oil 3 tbsp; Arugula 5 oz; Kosher salt 0.5 tsp',
+    'Salmon fillets 3; Panko 0.75 cup; Eggs 1; Mayonnaise 5 tbsp; Dijon mustard 1 tbsp; Green onions 1 bunch; Fresh dill 1 bunch; Lemons 1; Vegetable oil 3 tbsp; Arugula 5 oz; Kosher salt 0.5 tsp',
     [
-      'Drain the salmon, remove any large bones and flake it.',
+      'Roast the salmon at 400°F for 12 minutes, cool, and flake it off the skin.',
       ['Mix with the panko, egg, 2 tbsp mayo, Dijon, green onions and half the dill. Shape into 8 patties and chill 10 minutes.', 'Chilling firms the patties so they hold together in the pan.'],
       'Fry in the oil over medium heat, 3–4 minutes per side, until golden.',
       'Stir the remaining mayo with the rest of the dill and lemon juice. Serve the cakes on arugula with the sauce.',
@@ -160,11 +160,11 @@ export default [
 
   R('cioppino', "Fisherman's Stew (Cioppino)", 'Italian', '🍲', 45, 6, 'medium', true,
     [380, 34, 22, 14, 3, 1.5],
-    'Cod fillets 1 lb; Shrimp 1 lb; Canned clams 2 can; Yellow onion 1; Fennel bulb 1; Garlic 5 cloves; Crushed tomatoes 1 can; Dry white wine 1 cup; Seafood stock 32 oz; Red pepper flakes 0.5 tsp; Bay leaves 1; Olive oil 3 tbsp; Fresh parsley 1 bunch; Crusty bread 1 loaf; Kosher salt 1.5 tsp',
+    'Cod fillets 1 lb; Shrimp 1 lb; Littleneck clams 1.5 lb; Yellow onion 1; Fennel bulb 1; Garlic 5 cloves; Crushed tomatoes 1 can; Dry white wine 1 cup; Seafood stock 32 oz; Red pepper flakes 0.5 tsp; Bay leaves 1; Olive oil 3 tbsp; Fresh parsley 1 bunch; Crusty bread 1 loaf; Kosher salt 1.5 tsp',
     [
       'Cook the onion and sliced fennel in the oil for 8 minutes. Add the garlic and pepper flakes for 1 minute.',
-      'Add the wine and simmer 3 minutes, then the tomatoes, stock, clam juice and bay leaf. Simmer 15 minutes.',
-      ['Add the cod chunks for 3 minutes, then the shrimp and clams for 2 minutes more.', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
+      'Add the wine and simmer 3 minutes, then the tomatoes, stock and bay leaf. Simmer 15 minutes.',
+      ['Add the clams, covered, for 3 minutes, then the cod and shrimp for 3–4 minutes more.', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
       'Finish with parsley and serve with crusty bread for dunking.',
     ]),
 

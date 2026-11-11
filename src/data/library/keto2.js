@@ -341,11 +341,11 @@ export default [
     ]),
   R('keto-chicken-caesar', 'Chicken Caesar Salad with Parmesan Crisps', 'American', '🥗', 30, 4, 'easy', false,
     [520, 41, 6, 37, 2, 1.5],
-    'Chicken breasts 1.5 lb; Romaine lettuce 2 head; Parmesan 3 oz; Mayonnaise 4 tbsp; Lemons 1; Anchovy fillets 3; Dijon mustard 1 tsp; Garlic 2 cloves; Worcestershire sauce 1 tsp; Olive oil 2 tbsp; Kosher salt 1 tsp; Black pepper 0.5 tsp',
+    'Chicken breasts 1.5 lb; Romaine lettuce 2 head; Parmesan 3 oz; Mayonnaise 4 tbsp; Lemons 1; Dijon mustard 2 tsp; Garlic 2 cloves; Worcestershire sauce 2 tsp; Olive oil 2 tbsp; Kosher salt 1 tsp; Black pepper 0.5 tsp',
     [
       'Heat the oven to 400°F. Drop tablespoon mounds of grated parmesan (about half) onto a lined sheet and bake 6 minutes until lacy and golden. Cool to crisp up.',
       'Season and sear the chicken in the oil, 6 minutes per side. Rest and slice.',
-      ['Mash the anchovies and garlic to a paste, then whisk in the mayo, lemon juice, mustard, Worcestershire, the rest of the parmesan and pepper.', 'Anchovies are the secret of real Caesar — they melt in and add savory depth, not fishiness.'],
+      ['Mash the garlic to a paste, then whisk in the mayo, lemon juice, mustard, Worcestershire, the rest of the parmesan and pepper.', 'Worcestershire and plenty of parmesan give the dressing its savory Caesar punch.'],
       'Toss the chopped romaine with the dressing.',
       'Top with the chicken and break the parmesan crisps over like croutons.',
     ]),
