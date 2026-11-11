@@ -9,12 +9,14 @@ import { useToast } from '../components/Toast';
 import { pairingSuggestions, sharedLabel } from '../pairing';
 import { recipeCosts, weekLeftovers } from '../pricing';
 import { radius, useStyles, useTheme } from '../theme';
+import BudgetMeter from '../components/BudgetMeter';
+import { weekSpend } from '../budgetPlan';
 
 export default function PlannerScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { plan, days, settings, ratings, inventory, setMeal, setMeals, setDayCount, clearWeek } = useAppState();
+  const { plan, days, settings, ratings, inventory, snackList, setMeal, setMeals, setDayCount, clearWeek } = useAppState();
   const [pickingDay, setPickingDay] = useState(null);
 
   const choices = useMemo(
@@ -23,6 +25,11 @@ export default function PlannerScreen({ onOpenRecipe }) {
   );
   const plannedCount = days.filter((d) => plan.meals[d]).length;
   const plannedIds = days.map((d) => plan.meals[d]).filter(Boolean);
+  // Grocery bill for the week, shown against the weekly budget.
+  const spent = useMemo(
+    () => (settings.weeklyBudget > 0 ? weekSpend(plannedIds, settings, inventory, snackList) : 0),
+    [plannedIds.join(','), settings, inventory, snackList]
+  );
   const rawPairs = useMemo(() => pairingSuggestions(plannedIds, choices), [plannedIds.join(','), choices]);
   // Your Kitchen after shopping for and cooking this week's meals, so
   // pairings show what they'd really cost with the leftovers.
@@ -99,6 +106,7 @@ export default function PlannerScreen({ onOpenRecipe }) {
         {plannedCount} of {days.length} dinners planned · {settings.portions}{' '}
         {settings.portions === 1 ? 'person' : 'people'}
       </Text>
+      {settings.weeklyBudget > 0 && <BudgetMeter compact spent={spent} budget={settings.weeklyBudget} label="Groceries" />}
 
       <View style={styles.toolbar}>
         <View style={styles.segment}>

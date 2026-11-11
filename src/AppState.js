@@ -28,6 +28,7 @@ const DEFAULT_STATE = {
     showTips: true, // pro tips under recipe steps
     scratchSauces: true, // make sauces/seasonings from scratch instead of buying
     swaps: true, // use a stand-in you have (olive oil for vegetable oil) instead of buying
+    weeklyBudget: 0, // whole-household food budget per week in dollars; 0 = not set
   },
   ratings: {}, // { recipeId: 1..5 }
   inventory: {}, // { 'garlic': { name: 'Garlic', qty: 10, unit: 'cloves', category: 'produce' } }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
-import { getRecipe } from '../data/recipes';
+import { getRecipe, isBudget } from '../data/recipes';
 import { boughtQty, buildGroceryList, formatQty, itemAmount } from '../grocery';
 import { money } from '../pricing';
 import { useAppState } from '../AppState';
@@ -10,6 +10,8 @@ import CartMatcher from '../components/CartMatcher';
 import { snackExtras } from '../snackPlan';
 import { CAT, glow, radius, useStyles, useTheme } from '../theme';
 import { recipeCategory } from '../recipeColor';
+import { bestSwap } from '../budgetPlan';
+import { allowedRecipes } from '../recipeFilters';
 
 function Check({ on, styles, color }) {
   const c = useTheme();
@@ -24,7 +26,7 @@ export default function GroceryScreen() {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { plan, days, settings, inventory, addToInventory, kroger, snackList, setSnackCount } = useAppState();
+  const { plan, days, settings, inventory, addToInventory, kroger, snackList, setSnackCount, setMeal } = useAppState();
   const [cartOpen, setCartOpen] = useState(false);
   const connected = !!(kroger.serverUrl && kroger.tokens?.accessToken && kroger.store);
 
@@ -50,6 +52,19 @@ export default function GroceryScreen() {
   const itemsToBuy = needed.filter((i) => !skippedItems.has(i.key));
   const estTotal = itemsToBuy.reduce((s, i) => s + i.price, 0);
   const unpricedCount = itemsToBuy.filter((i) => i.unpriced).length;
+  const budget = settings.weeklyBudget || 0;
+  const overBy = budget > 0 ? estTotal - budget : 0;
+  // Over budget: the one dinner swap (to a budget meal) that saves the most.
+  const swap = useMemo(() => {
+    if (overBy <= 0.005 || !selected.length) return null;
+    return bestSwap({
+      plannedIds: selected.map((p) => p.recipe.id),
+      candidates: allowedRecipes(settings).filter(isBudget),
+      settings,
+      inventory,
+      snackList,
+    });
+  }, [overBy > 0.005, selectedIds, settings, inventory, snackList]);
   const allSelected = selected.length === planned.length;
 
   function toggle(setter, key) {
@@ -120,7 +135,33 @@ export default function GroceryScreen() {
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={styles.totalSide}>{itemsToBuy.length} items</Text>
               {unpricedCount ? <Text style={styles.totalSub}>+ {unpricedCount} unpriced</Text> : null}
+              {budget > 0 ? (
+                <Text style={[styles.totalSide, overBy > 0.005 && { color: '#7A0A0E' }]}>
+                  {overBy > 0.005 ? `${money(overBy)} over ${money(budget)}` : `${money(-overBy)} under ${money(budget)}`}
+                </Text>
+              ) : null}
             </View>
+          </View>
+        )}
+        {swap && (
+          <View style={styles.swapCard}>
+            <Text style={styles.swapTitle}>Get back under budget</Text>
+            <Text style={styles.swapText}>
+              Swap {getRecipe(swap.from)?.name} for {getRecipe(swap.to)?.name} — saves {money(swap.saves)}
+              {swap.total <= budget ? '' : ` (still ${money(swap.total - budget)} over)`}.
+            </Text>
+            <Pressable
+              onPress={() => {
+                const day = selected.find((p) => p.recipe.id === swap.from)?.day;
+                if (day) {
+                  setMeal(day, swap.to);
+                  toast(`Swapped in ${getRecipe(swap.to)?.name} ✓`);
+                }
+              }}
+              style={({ pressed }) => [styles.swapBtn, pressed && { opacity: 0.8 }]}
+            >
+              <Text style={styles.swapBtnText}>Swap it</Text>
+            </Pressable>
           </View>
         )}
         {planned.length > 0 && (<>
@@ -299,6 +340,11 @@ const makeStyles = (c) => ({
     borderTopColor: c.border,
   },
   cartBtn: { backgroundColor: c.primary, borderRadius: radius.md, paddingVertical: 16, alignItems: 'center', ...glow(c.primary, c.mode, 22, '66') },
+  swapCard: { marginTop: 10, backgroundColor: c.surface, borderWidth: 1.5, borderColor: CAT.protein, borderRadius: 18, padding: 14, gap: 8 },
+  swapTitle: { fontSize: 15, fontWeight: '800', color: CAT.protein },
+  swapText: { fontSize: 14, color: c.text, lineHeight: 20 },
+  swapBtn: { alignSelf: 'flex-start', backgroundColor: CAT.protein, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 9 },
+  swapBtnText: { color: c.ink, fontWeight: '800', fontSize: 14 },
   totalCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', backgroundColor: CAT.veg, borderRadius: 24, padding: 18, marginTop: 8 },
   totalLabel: { fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', color: c.ink, opacity: 0.75 },
   totalValue: { fontSize: 38, fontWeight: '800', color: c.ink, letterSpacing: -1 },

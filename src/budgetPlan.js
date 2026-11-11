@@ -1,6 +1,7 @@
 import { buildGroceryList } from './grocery';
 import { recipeCategory } from './recipeColor';
 import { snackExtras } from './snackPlan';
+import { isStaple } from './data/ingredients';
 
 // What the week costs at the store: every package on the grocery list,
 // planned meals plus the snack list, minus what's already in your Kitchen.
@@ -69,4 +70,31 @@ export function planWithinBudget({ candidates, dayCount, budget, settings, inven
     if (!improved) break;
   }
   return { ids, total, over: false };
+}
+
+// Pantry basics (oil, salt, spices…) on a grocery list: they cost a lot
+// the first time but last for months, so the budget card calls them out.
+export function staplesSpend(recipeIds, settings, inventory, snackList) {
+  const snacks = snackExtras(snackList || {});
+  const items = buildGroceryList(recipeIds, settings.portions, inventory, settings, {
+    recipes: snacks.recipes,
+    items: snacks.items,
+  });
+  return items.filter((i) => i.qty > 0 && isStaple(i.name)).reduce((s, i) => s + (i.price || 0), 0);
+}
+
+// One meal swap that brings an over-budget week back under (or as close
+// as possible): the swap that saves the most. Returns null if none saves.
+export function bestSwap({ plannedIds, candidates, settings, inventory, snackList }) {
+  const now = weekSpend(plannedIds, settings, inventory, snackList);
+  let best = null;
+  plannedIds.forEach((id, slot) => {
+    for (const r of candidates) {
+      if (r.breakfast || plannedIds.includes(r.id)) continue;
+      const next = plannedIds.map((x, i) => (i === slot ? r.id : x));
+      const c = weekSpend(next, settings, inventory, snackList);
+      if (now - c > 0.5 && (!best || c < best.total)) best = { from: id, to: r.id, total: c, saves: now - c };
+    }
+  });
+  return best;
 }

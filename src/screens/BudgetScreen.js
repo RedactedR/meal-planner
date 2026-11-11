@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, Text, View } from 'react-native';
-import { effectiveRecipe, isBudget, isVegetarian } from '../data/recipes';
+import { ActivityIndicator, Alert, FlatList, Pressable, Text, View } from 'react-native';
+import { effectiveRecipe, getRecipe, isBudget, isVegetarian } from '../data/recipes';
 import { allowedRecipes } from '../recipeFilters';
-import { useAppState } from '../AppState';
+import { DAY_NAMES, useAppState } from '../AppState';
 import RecipeCard from '../components/RecipeCard';
 import { useToast } from '../components/Toast';
 import { money, recipeCosts } from '../pricing';
 import { CAT, glow, radius, useStyles, useTheme } from '../theme';
+import { BudgetInput, meterColor } from '../components/BudgetMeter';
+import { planWithinBudget, staplesSpend, weekSpend } from '../budgetPlan';
 
 const SORTS = [
   { key: 'cheap', label: 'Cheapest' },
@@ -30,7 +32,8 @@ export default function BudgetScreen({ onOpenRecipe }) {
   const styles = useStyles(makeStyles);
   const colors = useTheme();
   const toast = useToast();
-  const { settings, inventory, days, plan, setMeals } = useAppState();
+  const { settings, inventory, days, plan, setMeals, snackList, updateSettings } = useAppState();
+  const [planning, setPlanning] = useState(false);
   const [sort, setSort] = useState('cheap');
   const [kind, setKind] = useState('All');
 
@@ -55,54 +58,146 @@ export default function BudgetScreen({ onOpenRecipe }) {
     return [...list].sort((a, b) => a.serving - b.serving);
   }, [meals, sort, kind]);
 
-  // The cheapest week: the N cheapest budget dinners, one per planned day.
-  const week = useMemo(() => {
-    const picks = [...meals].sort((a, b) => a.serving - b.serving).slice(0, days.length);
-    const total = picks.reduce((s, m) => s + m.serving * settings.portions, 0);
-    return { picks, total, perServing: picks.length ? total / (picks.length * settings.portions) : 0 };
-  }, [meals, days.length, settings.portions]);
+  const budget = settings.weeklyBudget || 0;
+  const plannedIds = days.map((d) => plan.meals[d]).filter(Boolean);
+  const plannedKey = plannedIds.join(',');
+
+  // What this week's grocery list costs: every package for the planned
+  // meals and the snack list, minus what's already in your Kitchen.
+  const spend = useMemo(() => {
+    const total = weekSpend(plannedIds, settings, inventory, snackList);
+    const meals = weekSpend(plannedIds, settings, inventory, {});
+    const staples = staplesSpend(plannedIds, settings, inventory, snackList);
+    return { total, meals, snacks: Math.max(0, total - meals), staples };
+  }, [plannedKey, settings, inventory, snackList]);
 
   const cheapest = meals.length ? Math.min(...meals.map((m) => m.serving)) : 0;
 
+  // Fill the week with the best dinners that fit the budget (or the
+  // cheapest week when no budget is set). Runs after a frame so the
+  // "Planning…" spinner shows while it works.
   function planWeek() {
-    const apply = () => {
-      setMeals(Object.fromEntries(days.map((d, i) => [d, week.picks[i]?.recipe.id || null])));
-      toast(`Planned ${week.picks.length} budget dinners ✓`);
+    const run = () => {
+      setPlanning(true);
+      setTimeout(() => {
+        const result = planWithinBudget({
+          candidates: meals.map((m) => m.recipe),
+          dayCount: days.length,
+          budget: budget || 0,
+          settings,
+          inventory,
+          snackList,
+        });
+        setPlanning(false);
+        const apply = () => {
+          setMeals(Object.fromEntries(days.map((d, i) => [d, result.ids[i] || null])));
+          toast(`Planned ${result.ids.length} dinners · ${money(result.total)} ✓`);
+        };
+        if (budget && result.over) {
+          Alert.alert(
+            'That budget is tight',
+            `The cheapest week the app can find costs ${money(result.total)} — ${money(result.total - budget)} over your ${money(budget)}. ` +
+              'Adding pantry basics you already have to your Kitchen (oil, salt, spices) usually brings it down a lot.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Plan cheapest anyway', onPress: apply },
+            ]
+          );
+          return;
+        }
+        apply();
+      }, 30);
     };
-    const taken = days.filter((d) => plan.meals[d]).length;
-    if (!taken) return apply();
+    const taken = plannedIds.length;
+    if (!taken) return run();
     Alert.alert('Replace your week?', `This swaps out the ${taken} ${taken === 1 ? 'meal' : 'meals'} already planned.`, [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Replace', onPress: apply },
+      { text: 'Replace', onPress: run },
     ]);
   }
 
+  const over = budget > 0 && spend.total > budget + 0.005;
+  const barColor = budget > 0 ? meterColor(spend.total, budget) : CAT.budget;
+
   const header = (
     <View>
-      <Text style={styles.title}>Budget</Text>
-      <Text style={styles.subtitle}>
-        {meals.length} cheap, filling meals · from {money(cheapest)} a serving
-      </Text>
-
-      {week.picks.length > 0 && (
-        <View style={[styles.hero, glow(CAT.budget, colors.mode, 40, '55')]}>
-          <Text style={styles.heroLabel}>Cheapest week</Text>
-          <View style={styles.heroRow}>
-            <Text style={styles.heroValue}>{money(week.total)}</Text>
-            <Text style={styles.heroSide}>
-              {week.picks.length} dinners for {settings.portions}
-              {'\n'}
-              {money(week.perServing)} a serving
-            </Text>
-          </View>
-          <Text style={styles.heroList} numberOfLines={2}>
-            {week.picks.map((m) => m.recipe.name).join(' · ')}
+      <View style={styles.titleRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>Budget</Text>
+          <Text style={styles.subtitle}>
+            {meals.length} cheap meals · from {money(cheapest)} a serving
           </Text>
-          <Pressable onPress={planWeek} style={({ pressed }) => [styles.heroBtn, pressed && { opacity: 0.8 }]}>
-            <Text style={styles.heroBtnText}>Plan my week with these</Text>
-          </Pressable>
         </View>
-      )}
+        <View style={styles.budgetBox}>
+          <Text style={styles.budgetLabel}>Weekly budget</Text>
+          <BudgetInput value={budget} onChange={(weeklyBudget) => updateSettings({ weeklyBudget })} />
+        </View>
+      </View>
+
+      <View style={[styles.hero, glow(CAT.budget, colors.mode, 40, '55')]}>
+        <View style={styles.heroTop}>
+          <Text style={styles.heroLabel}>
+            This week · {plannedIds.length} of {days.length} dinners for {settings.portions}
+          </Text>
+          {budget > 0 && (
+            <Text style={[styles.heroLeft, over && { color: '#7A0A0E' }]}>
+              {over ? `${money(spend.total - budget)} over` : `${money(budget - spend.total)} left`}
+            </Text>
+          )}
+        </View>
+        <View style={styles.heroRow}>
+          <Text style={styles.heroValue}>{money(spend.total)}</Text>
+          {budget > 0 && <Text style={styles.heroOf}>of {money(budget)}</Text>}
+        </View>
+        {budget > 0 && (
+          <View style={styles.heroTrack}>
+            <View
+              style={{
+                width: `${Math.min(100, (spend.total / budget) * 100)}%`,
+                height: '100%',
+                borderRadius: 6,
+                backgroundColor: barColor === CAT.budget ? colors.ink : barColor,
+              }}
+            />
+          </View>
+        )}
+        <Text style={styles.heroSplit}>
+          Meals {money(spend.meals)} · Snacks {money(spend.snacks)} · Kitchen items free
+        </Text>
+        {spend.staples >= 1 && (
+          <Text style={styles.heroNote}>
+            Includes {money(spend.staples)} of pantry basics (oil, salt, spices) that last for months.
+          </Text>
+        )}
+        {plannedIds.length > 0 && (
+          <View style={styles.weekList}>
+            {days.map((d, i) => {
+              const r = getRecipe(plan.meals[d]);
+              if (!r) return null;
+              return (
+                <Pressable key={d} onPress={() => onOpenRecipe(r)} style={[styles.weekRow, i > 0 && styles.weekRowLine]}>
+                  <Text style={styles.weekDay}>{(DAY_NAMES[d] || d).slice(0, 3)}</Text>
+                  <Text style={styles.weekName} numberOfLines={1}>
+                    {r.emoji} {r.name}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
+        <Pressable onPress={planWeek} disabled={planning} style={({ pressed }) => [styles.heroBtn, pressed && { opacity: 0.8 }]}>
+          {planning ? (
+            <ActivityIndicator color={CAT.budget} />
+          ) : (
+            <Text style={styles.heroBtnText}>{budget > 0 ? `Plan my week under ${money(budget)}` : 'Plan my cheapest week'}</Text>
+          )}
+        </Pressable>
+        <Text style={styles.heroHint}>
+          {budget > 0
+            ? 'Picks the most protein and variety that still fits. Counts everything on your grocery list, snacks too.'
+            : 'Set a weekly budget above and the app will plan the best week that fits it.'}
+        </Text>
+      </View>
 
       <View style={styles.segment}>
         {SORTS.map((s) => (
@@ -160,14 +255,27 @@ export default function BudgetScreen({ onOpenRecipe }) {
 }
 
 const makeStyles = (c) => ({
-  title: { fontSize: 30, fontWeight: '800', color: c.text, paddingHorizontal: 20, marginTop: 8, letterSpacing: -0.8 },
-  subtitle: { fontSize: 15, color: c.muted, paddingHorizontal: 20, marginTop: 2 },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 20, marginTop: 8, gap: 12 },
+  title: { fontSize: 30, fontWeight: '800', color: c.text, letterSpacing: -0.8 },
+  subtitle: { fontSize: 14, color: c.muted, marginTop: 2 },
+  budgetBox: { alignItems: 'flex-end', gap: 4 },
+  budgetLabel: { fontSize: 11, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', color: c.muted },
   hero: { marginHorizontal: 20, marginTop: 16, backgroundColor: CAT.budget, borderRadius: 24, padding: 18, gap: 8 },
-  heroLabel: { fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', color: c.ink, opacity: 0.75 },
-  heroRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
+  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  heroLabel: { fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', color: c.ink, opacity: 0.75, flexShrink: 1 },
+  heroLeft: { fontSize: 13, fontWeight: '800', color: c.ink },
+  heroRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
   heroValue: { fontSize: 38, fontWeight: '800', color: c.ink, letterSpacing: -1 },
-  heroSide: { fontSize: 13, fontWeight: '800', color: c.ink, textAlign: 'right', lineHeight: 18 },
-  heroList: { fontSize: 13, fontWeight: '600', color: c.ink, opacity: 0.8, lineHeight: 18 },
+  heroOf: { fontSize: 16, fontWeight: '700', color: c.ink, opacity: 0.7 },
+  heroTrack: { height: 12, borderRadius: 6, backgroundColor: 'rgba(11,13,20,0.16)', overflow: 'hidden' },
+  heroSplit: { fontSize: 12.5, fontWeight: '700', color: c.ink, opacity: 0.8 },
+  heroNote: { fontSize: 12.5, fontWeight: '600', color: c.ink, opacity: 0.8, lineHeight: 17 },
+  heroHint: { fontSize: 12, fontWeight: '600', color: c.ink, opacity: 0.7, textAlign: 'center', lineHeight: 17 },
+  weekList: { backgroundColor: 'rgba(11,13,20,0.10)', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 2 },
+  weekRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8 },
+  weekRowLine: { borderTopWidth: 1, borderTopColor: 'rgba(11,13,20,0.12)' },
+  weekDay: { width: 34, fontSize: 12, fontWeight: '800', color: c.ink, opacity: 0.7 },
+  weekName: { flex: 1, fontSize: 13.5, fontWeight: '700', color: c.ink },
   heroBtn: { marginTop: 4, backgroundColor: c.ink, borderRadius: 16, paddingVertical: 14, alignItems: 'center' },
   heroBtnText: { color: CAT.budget, fontSize: 15, fontWeight: '800' },
   segment: {

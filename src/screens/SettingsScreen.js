@@ -4,6 +4,7 @@ import { ALLERGENS, BALANCED_RULES } from '../data/recipes';
 import { PORTION_OPTIONS, useAppState } from '../AppState';
 import { useToast } from '../components/Toast';
 import KrogerSettings from '../components/KrogerSettings';
+import { BudgetInput } from '../components/BudgetMeter';
 import { radius, useStyles, useTheme } from '../theme';
 
 const THEMES = [
@@ -66,6 +67,14 @@ export default function SettingsScreen() {
       <Text style={styles.section}>Appearance</Text>
       <View style={styles.card}>
         <Segmented options={THEMES} value={settings.theme} onChange={(theme) => updateSettings({ theme })} />
+      </View>
+
+      <Text style={styles.section}>Weekly budget</Text>
+      <View style={styles.card}>
+        <Text style={styles.cardText}>
+          What you want to spend on groceries each week for the whole household, snacks included. Leave it empty for no budget.
+        </Text>
+        <BudgetInput value={settings.weeklyBudget} onChange={(weeklyBudget) => updateSettings({ weeklyBudget })} style={{ alignSelf: 'flex-start' }} />
       </View>
 
       <Text style={styles.section}>Portion size</Text>
