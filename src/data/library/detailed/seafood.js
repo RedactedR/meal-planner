@@ -42,16 +42,6 @@ export default {
     ['Add the shrimp and baby spinach and simmer just 3 minutes, until the shrimp turn pink and curl and the spinach wilts. Turn off the heat right away.', 'Shrimp go from tender to rubbery in about a minute. Add them last and pull the pot off the heat as soon as they curl.'],
     'Squeeze in the lime juice and stir in most of the cilantro. Serve over the rice with the rest of the cilantro.',
   ],
-  'linguine-clams': [
-    'Bring a large pot of water to a boil with a big pinch of salt.',
-    ['Scrub the littleneck clams under cold running water. Throw away any with cracked shells, or any open ones that don\'t close when you tap them on the counter.', 'A clam that stays open when tapped is dead — never cook it.'],
-    'Prep: thinly slice the garlic. Chop the parsley. Finely grate the lemon zest and cut the lemon in half.',
-    'Cook the linguine 2 minutes less than the box says. Scoop out 1 cup of pasta water and drain.',
-    'Meanwhile, heat the olive oil in a large (12-inch) skillet over medium. Add the garlic and red pepper flakes and cook 2 minutes, stirring, until the garlic is pale gold.',
-    ['Pour in the white wine and add the clams. Cover and cook 5–7 minutes, shaking the pan now and then, until the shells open. Throw away any that stay shut.', 'The clams release their own briny juice — that\'s the sauce.'],
-    ['Add the linguine to the skillet and toss for 2 minutes over medium heat, until it absorbs most of the clam juices and is tender. Add the butter and parsley and toss until the butter melts into a glossy sauce, adding pasta water if it seems dry.', 'Finishing pasta in the sauce lets the noodles soak up the briny clam juice.'],
-    'Turn off the heat. Add the lemon zest and a good squeeze of lemon juice, toss and serve.',
-  ],
   'shrimp-fried-rice': [
     'Cook the jasmine rice a day ahead if you can (rinse; 1½ cups water per cup of rice; boil, cover, lowest heat 15 minutes, rest 10), then spread it out and refrigerate. Short on time: spread fresh rice on a sheet pan and freeze it 20 minutes.',
     'Prep: break up clumps of rice with your fingers. Mince the garlic. Slice the green onions, keeping whites and greens separate. Beat the eggs. Peel and devein the shrimp if needed, pat dry and cut large ones in half.',

@@ -226,7 +226,6 @@ const CATALOG_ROWS = [
   ['Frozen fish sticks', '', 0.27, 'frozen', 24],
   ['Sea scallops', 'lb', 19.99, 'protein', 1],
   ['Lump crab meat', 'lb', 24.0, 'protein', 0.5],
-  ['Littleneck clams', 'lb', 9.99, 'protein', 1],
   ['Seafood stock', 'oz', 0.15, 'pantry', 32],
   ['Vegetable broth', 'oz', 0.1, 'pantry', 32],
   ['Asparagus', 'lb', 3.49, 'produce', 1],

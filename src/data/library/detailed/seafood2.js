@@ -20,10 +20,10 @@ export default {
     'Fill doubled tortillas with shrimp, cabbage, avocado, a drizzle of crema and cilantro. Serve with lime wedges.',
   ],
   'cioppino': [
-    'Prep: dice the yellow onion. Trim the fennel bulb, cut it in half, cut out the hard core and slice thinly. Thinly slice the garlic. Peel and devein the shrimp if needed. Scrub the littleneck clams under cold water and throw away any that are cracked or stay open when tapped. Chop the parsley.',
+    'Prep: dice the yellow onion. Trim the fennel bulb, cut it in half, cut out the hard core and slice thinly. Thinly slice the garlic. Peel and devein the shrimp if needed. Chop the parsley.',
     'Heat the olive oil in a large pot over medium. Cook the onion and fennel 8 minutes, stirring, until soft. Add the garlic and red pepper flakes and stir 1 minute.',
     'Pour in the white wine and simmer 3 minutes. Add the crushed tomatoes, seafood stock, the bay leaf and the salt. Bring to a boil, then simmer 15 minutes.',
-    ['Add the clams, cover and simmer 3 minutes until they start to open. Add the shrimp, cover again and simmer 3 minutes more, until the shrimp are pink and curled and the clams are open (throw away any that stay shut).', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
+    ['Add the shrimp, stir so they\'re all under the broth, and simmer 3 minutes, just until pink and curled.', 'Shrimp go rubbery fast — pull the pot off the heat the moment they turn opaque.'],
     'Turn off the heat and fish out the bay leaf. Stir in most of the parsley.',
     'Slice the crusty bread thickly and toast it. Ladle the stew into bowls, sprinkle with the rest of the parsley and serve with the bread for dunking.',
   ],

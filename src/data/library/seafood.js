@@ -52,17 +52,6 @@ export default [
       'Finish with lime juice and cilantro and serve with rice.',
     ]),
 
-  R('linguine-clams', 'Linguine with Clams', 'Italian', '🐚', 30, 4, 'medium', false,
-    [580, 28, 72, 16, 3, 0.2],
-    'Littleneck clams 3 lb; Linguine 1 lb; Garlic 6 cloves; Olive oil 4 tbsp; Dry white wine 0.5 cup; Red pepper flakes 0.5 tsp; Butter 2 tbsp; Fresh parsley 1 bunch; Lemons 1; Kosher salt 2 tsp',
-    [
-      'Boil the linguine 2 minutes short of the package time. Save 1 cup pasta water.',
-      'Cook the sliced garlic and pepper flakes in the oil over medium until pale gold.',
-      'Add the wine and the clams, cover and steam 5–7 minutes until they open.',
-      ['Add the pasta and finish cooking it in the briny juices, tossing, for 2 minutes. Add the butter and parsley and toss until glossy.', 'Finishing pasta in the sauce lets the noodles soak up the briny clam juice.'],
-      'Add lemon zest and a squeeze of juice.',
-    ]),
-
   R('shrimp-fried-rice', 'Shrimp Fried Rice', 'Chinese', '🍤', 25, 4, 'easy', true,
     [520, 28, 64, 16, 3, 1],
     'Shrimp 1 lb; Jasmine rice 1.5 cup; Eggs 3; Frozen peas and carrots 1.5 cup; Green onions 1 bunch; Garlic 3 cloves; Soy sauce 3 tbsp; Sesame oil 1 tbsp; Vegetable oil 2 tbsp',
@@ -94,13 +83,13 @@ export default [
       'Fill warm tortillas with shrimp, shredded cabbage, avocado, chipotle crema and cilantro.',
     ]),
 
-  R('cioppino', 'Shrimp & Clam Cioppino', 'Italian', '🍲', 45, 6, 'medium', true,
-    [380, 33, 23, 14, 3, 1.5],
-    'Shrimp 2 lb; Littleneck clams 1.5 lb; Yellow onion 1; Fennel bulb 1; Garlic 5 cloves; Crushed tomatoes 1 can; Dry white wine 1 cup; Seafood stock 32 oz; Red pepper flakes 0.5 tsp; Bay leaves 1; Olive oil 3 tbsp; Fresh parsley 1 bunch; Crusty bread 1 loaf; Kosher salt 1.5 tsp',
+  R('cioppino', 'Shrimp Cioppino', 'Italian', '🍲', 45, 6, 'medium', true,
+    [370, 32, 23, 14, 3, 1.5],
+    'Shrimp 2.5 lb; Yellow onion 1; Fennel bulb 1; Garlic 5 cloves; Crushed tomatoes 1 can; Dry white wine 1 cup; Seafood stock 32 oz; Red pepper flakes 0.5 tsp; Bay leaves 1; Olive oil 3 tbsp; Fresh parsley 1 bunch; Crusty bread 1 loaf; Kosher salt 1.5 tsp',
     [
       'Cook the onion and sliced fennel in the oil for 8 minutes. Add the garlic and pepper flakes for 1 minute.',
       'Add the wine and simmer 3 minutes, then the tomatoes, stock and bay leaf. Simmer 15 minutes.',
-      ['Add the clams, covered, for 3 minutes, then the shrimp for 3 minutes more.', 'Add seafood in order of cooking time so everything finishes perfectly at once.'],
+      ['Add the shrimp and simmer 3 minutes, just until pink and curled.', 'Shrimp go rubbery fast — pull the pot off the heat the moment they turn opaque.'],
       'Finish with parsley and serve with crusty bread for dunking.',
     ]),
 

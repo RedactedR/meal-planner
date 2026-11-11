@@ -171,17 +171,6 @@ export default [
       'Serve with shredded cabbage, cilantro leaves and lime.',
     ]),
 
-  R('clam-chowder', 'New England Clam Chowder', 'American', '🐚', 45, 4, 'medium', true,
-    [520, 22, 40, 30, 3, 0.5],
-    'Littleneck clams 3 lb; Bacon 4 oz; Yellow onion 1; Celery 0.25 bunch; Russet potatoes 1.5 lb; Butter 2 tbsp; All-purpose flour 3 tbsp; Milk 1.5 cup; Heavy cream 0.5 cup; Dried thyme 1 tsp; Bay leaves 1; Kosher salt 1 tsp',
-    [
-      'Steam the clams in 2 cups of water until they open, then chop the meat and strain the broth.',
-      'Cook the bacon, then the onion and celery in the fat and butter for 5 minutes. Stir in the flour.',
-      'Whisk in the clam broth, add the potatoes, thyme and bay leaf, and simmer 15 minutes.',
-      ['Add the milk, cream and clams and heat gently without boiling.', 'Clams turn rubbery if boiled. Just warm them through.'],
-      'Season and top with the bacon.',
-    ]),
-
   R('tortellini-soup', 'Sausage Tortellini Soup', 'Italian', '🥣', 30, 6, 'easy', true,
     [480, 24, 40, 24, 4, 1.5],
     'Cheese tortellini 20 oz; Italian sausage 1 lb; Diced tomatoes 1 can; Yellow onion 1; Garlic 3 cloves; Chicken broth 48 oz; Baby spinach 5 oz; Italian seasoning 1 tsp; Parmesan 2 oz; Olive oil 1 tbsp',
