@@ -10,6 +10,7 @@ import {
   freshToken,
   priceOf,
   searchProducts,
+  rankProducts,
   searchTerm,
   suggestedQuantity,
 } from '../kroger';
@@ -53,7 +54,9 @@ function Matcher({ items, onClose, onMarkBought }) {
         const i = next++;
         const item = items[i];
         try {
-          let options = await searchProducts(kroger.serverUrl, kroger.store.locationId, searchTerm(item.name), 6);
+          const term = searchTerm(item.name);
+          // Ask for a few extra so a good match is likely in the list, then put it first.
+          let options = rankProducts(term, await searchProducts(kroger.serverUrl, kroger.store.locationId, term, 10)).slice(0, 6);
           const pref = kroger.productPrefs[item.name.toLowerCase()];
           let chosen = 0;
           if (pref) {

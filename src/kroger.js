@@ -113,6 +113,45 @@ export function searchTerm(name) {
     .trim();
 }
 
+// Words that change what a product IS: "chicken stock" is not chicken,
+// "tomato paste" is not tomatoes. If the ingredient ends in one of these,
+// the product must say it too.
+const PRODUCT_FORMS = [
+  'stock', 'broth', 'bouillon', 'base', 'soup', 'sauce', 'paste', 'puree', 'juice', 'powder', 'seasoning',
+  'spice', 'oil', 'vinegar', 'extract', 'flakes', 'seeds', 'flour', 'milk', 'cream', 'butter', 'cheese',
+  'dressing', 'mix', 'chips', 'noodles', 'pasta', 'rice', 'beans', 'tortillas', 'bread', 'buns', 'syrup',
+  'jam', 'salsa', 'gravy', 'stuffing', 'crumbs', 'breadcrumbs', 'sausage', 'bacon',
+];
+// Same word for matching purposes: plurals, and stock = broth.
+const SAME_WORD = { broth: 'stock', bouillon: 'stock' };
+const stem = (w) => {
+  const s = w.replace(/(ies)$/, 'y').replace(/(es|s)$/, '');
+  return SAME_WORD[s] || s;
+};
+
+// Kroger's search sometimes lists a different product first (chicken
+// thighs for "chicken stock"). Score each result by how well its name
+// matches the ingredient and put the best match first; Kroger's own order
+// breaks ties. A product missing the ingredient's last word (the thing it
+// is: stock, paste, sauce…) drops to the bottom.
+export function rankProducts(term, products) {
+  const words = term.toLowerCase().split(/[^a-z]+/).filter((w) => w.length > 1);
+  if (!words.length) return products;
+  const head = stem(words[words.length - 1]);
+  const headIsForm = PRODUCT_FORMS.map(stem).includes(head);
+  const scored = products.map((p, i) => {
+    const desc = new Set((p.description || '').toLowerCase().split(/[^a-z]+/).filter(Boolean).map(stem));
+    const hits = words.filter((w) => desc.has(stem(w))).length;
+    const hasHead = desc.has(head);
+    // A plain "chicken" product when you asked for a sauce/stock/etc. is wrong.
+    const formMissing = headIsForm && !hasHead;
+    const score = (formMissing ? -100 : 0) + (hasHead ? 10 : 0) + hits * 3;
+    return { p, i, score };
+  });
+  scored.sort((a, b) => b.score - a.score || a.i - b.i);
+  return scored.map((s) => s.p);
+}
+
 // How many of a product to add for a shopping-list item.
 // Matches the shopping list's whole packages (4 onions, 1 jar of
 // paprika). The user can adjust before adding.

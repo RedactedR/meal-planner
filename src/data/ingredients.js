@@ -422,8 +422,18 @@ export function keyOf(name) {
   return name.trim().toLowerCase();
 }
 
+// Different names for things the price list knows under one name.
+const SAME_AS = {
+  'chicken stock': 'chicken broth',
+  'beef stock': 'beef broth',
+  'vegetable stock': 'vegetable broth',
+  'veggie stock': 'vegetable broth',
+  'veggie broth': 'vegetable broth',
+};
+
 export function catalogItem(name) {
-  return CATALOG[keyOf(name)];
+  const key = keyOf(name);
+  return CATALOG[key] || CATALOG[SAME_AS[key]];
 }
 
 // Things almost every kitchen has on hand; left out of pairing

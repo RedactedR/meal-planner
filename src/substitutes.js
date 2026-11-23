@@ -29,6 +29,10 @@ const GROUPS = [
   ['Ground beef', 'Ground turkey'],
   ['Naan or flatbread', 'Pita bread'],
   ['Hoagie rolls', 'Ciabatta rolls'],
+  // Stock and broth are used the same way in cooking.
+  ['Chicken broth', 'Chicken stock'],
+  ['Beef broth', 'Beef stock'],
+  ['Vegetable broth', 'Vegetable stock'],
 ];
 
 // One direction only: the recipe ingredient (left) can be replaced by

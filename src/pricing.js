@@ -12,6 +12,10 @@ export function haveQty(inventory, name, unit) {
 
 // For online/imported recipes without exact amounts: do you have
 // something by that name? "Garlic" in your kitchen matches "Minced garlic".
+// Words that make an ingredient a different product from its first word:
+// having "chicken" doesn't mean you have "chicken stock".
+const FORM_WORDS = /\b(stock|broth|bouillon|base|soup|sauce|paste|puree|juice|powder|seasoning|spice|oil|vinegar|extract|flakes|seeds|flour|milk|cream|butter|cheese|dressing|mix|syrup|jam|salsa|gravy|stuffing|crumbs|sausage|bacon|leaves|zest)\b/;
+
 export function findInventoryItem(inventory, name) {
   const key = keyOf(name);
   if (inventory[key]?.qty > 0) return inventory[key];
@@ -19,7 +23,12 @@ export function findInventoryItem(inventory, name) {
     if (item.qty <= 0) continue;
     const k = keyOf(item.name);
     const esc = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    if (new RegExp(`\\b${esc}s?\\b`).test(key)) return item;
+    if (!new RegExp(`\\b${esc}s?\\b`).test(key)) continue;
+    // What the ingredient says beyond your item's name ("stock" in
+    // "chicken stock") must not turn it into a different product.
+    const rest = key.replace(new RegExp(`\\b${esc}s?\\b`), ' ');
+    if (FORM_WORDS.test(rest) && !FORM_WORDS.test(k)) continue;
+    return item;
   }
   return null;
 }
